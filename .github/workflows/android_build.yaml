@@ -1,9 +1,8 @@
 name: Android Build
 
+# 69 mod: the original test build only runs when started by hand; "Build 69-Next Player" makes the app
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+  workflow_dispatch:
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
