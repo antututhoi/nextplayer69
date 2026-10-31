@@ -71,8 +71,13 @@ class VolumeAndBrightnessGestureState(
     fun onDragStart(offset: Offset, size: IntSize) {
         val viewCenterX = size.width / 2
         job?.cancel()
+        val edge = size.width * dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.gestureEdgePercent / 100f
+        val leftSide = offset.x < viewCenterX
+        val brightnessSide = if (dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.swapGestureSides) !leftSide else leftSide
         activeGesture = when {
-            offset.x < viewCenterX -> VerticalGesture.BRIGHTNESS.takeIf { enableBrightnessGesture }
+            // 69 mod: ignore swipes that start at the very edges (system back gesture area)
+            edge > 0f && (offset.x < edge || offset.x > size.width - edge) -> null
+            brightnessSide -> VerticalGesture.BRIGHTNESS.takeIf { enableBrightnessGesture }
             else -> VerticalGesture.VOLUME.takeIf { enableVolumeGesture }
         }
         startingY = offset.y

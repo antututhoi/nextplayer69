@@ -7,6 +7,9 @@ import androidx.annotation.OptIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69SubStore
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat.getSystemService
@@ -27,48 +30,42 @@ fun SubtitleView(
     configuration: SubtitleConfiguration,
 ) {
     val cuesState = rememberCuesState(player = player)
+    val context = androidx.compose.ui.platform.LocalContext.current
+    androidx.compose.runtime.LaunchedEffect(Unit) { Mod69SubStore.init(context) }
+    // 69 mod: colours, edge, background box, position and custom font
+    val mod69 by Mod69SubStore.state.collectAsState()
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
-        factory = { context ->
-            SubtitleView(context).apply {
-                val captioningManager =
-                    getSystemService(
-                        context,
-                        CaptioningManager::class.java,
-                    ) ?: return@apply
-                if (configuration.useSystemCaptionStyle) {
-                    val systemCaptionStyle = CaptionStyleCompat.createFromCaptionStyle(
-                        captioningManager.userStyle,
-                    )
-                    setStyle(systemCaptionStyle)
-                } else {
-                    val userStyle = CaptionStyleCompat(
-                        android.graphics.Color.WHITE,
-                        android.graphics.Color.BLACK.takeIf { configuration.showBackground }
-                            ?: android.graphics.Color.TRANSPARENT,
-                        android.graphics.Color.TRANSPARENT,
-                        CaptionStyleCompat.EDGE_TYPE_DROP_SHADOW,
-                        android.graphics.Color.BLACK,
-                        Typeface.create(
-                            configuration.font.toTypeface(),
-                            Typeface.BOLD.takeIf { configuration.textBold } ?: Typeface.NORMAL,
-                        ),
-                    )
-                    setStyle(userStyle)
-                    setFixedTextSize(
-                        TypedValue.COMPLEX_UNIT_SP,
-                        configuration.textSize.toFloat(),
-                    )
-                }
-                setApplyEmbeddedStyles(configuration.applyEmbeddedStyles)
-            }
-        },
+        factory = { ctx -> SubtitleView(ctx) },
         update = { subtitleView ->
+            val captioningManager = getSystemService(subtitleView.context, CaptioningManager::class.java)
+            if (configuration.useSystemCaptionStyle && captioningManager != null) {
+                subtitleView.setStyle(CaptionStyleCompat.createFromCaptionStyle(captioningManager.userStyle))
+            } else {
+                val base = Mod69SubStore.typeface(mod69.fontPath) ?: configuration.font.toTypeface()
+                val bg = when {
+                    mod69.bgColor != 0 -> mod69.bgColor
+                    configuration.showBackground -> android.graphics.Color.BLACK
+                    else -> android.graphics.Color.TRANSPARENT
+                }
+                subtitleView.setStyle(
+                    CaptionStyleCompat(
+                        mod69.textColor,
+                        bg,
+                        android.graphics.Color.TRANSPARENT,
+                        mod69.edgeType,
+                        mod69.edgeColor,
+                        Typeface.create(base, if (configuration.textBold) Typeface.BOLD else Typeface.NORMAL),
+                    ),
+                )
+            }
+            subtitleView.setApplyEmbeddedStyles(configuration.applyEmbeddedStyles)
+            subtitleView.setBottomPaddingFraction(mod69.bottomPercent / 100f)
             subtitleView.setCues(cuesState.currentCues?.cues)
             if (isInPictureInPictureMode) {
                 subtitleView.setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION)
-            } else {
+            } else if (!configuration.useSystemCaptionStyle) {
                 subtitleView.setFixedTextSize(
                     TypedValue.COMPLEX_UNIT_SP,
                     configuration.textSize.toFloat(),

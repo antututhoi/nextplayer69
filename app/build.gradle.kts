@@ -1,3 +1,4 @@
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -14,9 +15,11 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        applicationId = "dev.anilbeesetti.nextplayer"
-        versionCode = 77
-        versionName = "0.20.0"
+        // 69 mod: its own app id (installs next to the original), and a version code that goes up with every
+        // GitHub build so updates install over the old app without uninstalling
+        applicationId = "dev.anilbeesetti.nextplayer.mod69"
+        versionCode = 100000 + (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0)
+        versionName = "0.20.0-69." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -34,6 +37,25 @@ android {
         targetCompatibility = JavaVersion.toVersion(libs.versions.android.jvm.get().toInt())
     }
 
+    signingConfigs {
+        val mod69Props = rootProject.file("keystore.properties")
+        if (mod69Props.exists() && mod69Props.readText().isNotBlank()) {
+            val props = Properties().apply { mod69Props.inputStream().use { load(it) } }
+            create("mod69") {
+                storeFile = file(props.getProperty("storeFile"))
+                storePassword = props.getProperty("storePassword")
+                keyAlias = props.getProperty("keyAlias")
+                keyPassword = props.getProperty("keyPassword")
+            }
+        }
+        getByName("debug") {
+            storeFile = file("${project.rootDir}/app/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -42,6 +64,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // 69 mod: the same key as every other 69 app (KEYSTORE_B64 secret -> keystore.properties)
+            if (signingConfigs.findByName("mod69") != null) {
+                signingConfig = signingConfigs.getByName("mod69")
+            }
         }
 
         getByName("debug") {
@@ -57,15 +83,6 @@ android {
         }
     }
 
-    signingConfigs {
-        getByName("debug") {
-            storeFile = file("${project.rootDir}/app/debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-        }
-    }
-
     splits {
         abi {
             //noinspection WrongGradleMethod
@@ -75,13 +92,9 @@ android {
 
             isEnable = !isBuildingBundle
             reset()
-            include(
-                "armeabi-v7a",
-                "arm64-v8a",
-                "x86",
-                "x86_64",
-            )
-            isUniversalApk = true
+            // 69 mod: phones only (arm64)
+            include("arm64-v8a")
+            isUniversalApk = false
         }
     }
 

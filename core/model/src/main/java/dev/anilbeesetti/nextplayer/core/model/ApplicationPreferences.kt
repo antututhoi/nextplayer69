@@ -37,6 +37,14 @@ data class ApplicationPreferences(
     val thumbnailGenerationStrategy: ThumbnailGenerationStrategy =
         ThumbnailGenerationStrategy.FRAME_AT_PERCENTAGE,
     val thumbnailFramePosition: Float = DEFAULT_THUMBNAIL_FRAME_POSITION,
+
+    // 69 mod: grid columns in portrait (0 = automatic, as before)
+    val mod69VideoColumns: Int = 2,
+    val mod69FolderColumns: Int = 2,
+    // Long side of saved thumbnails in pixels (0 = original size, old behaviour).
+    val mod69ThumbnailMaxPx: Int = 384,
+    val mod69MarkLastInFolder: Boolean = true,
+    val mod69ScrollToLast: Boolean = true,
 ) {
 
     companion object {

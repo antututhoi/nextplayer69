@@ -62,6 +62,9 @@ class AppModule {
                             )
                         }
                     },
+                    maxCachePx = {
+                        preferencesRepository.applicationPreferences.value.mod69ThumbnailMaxPx
+                    },
                 ),
             )
         }

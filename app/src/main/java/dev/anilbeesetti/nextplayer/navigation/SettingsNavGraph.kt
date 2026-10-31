@@ -22,6 +22,8 @@ import dev.anilbeesetti.nextplayer.settings.navigation.navigateToLibraries
 import dev.anilbeesetti.nextplayer.settings.navigation.navigateToMediaLibraryPreferencesScreen
 import dev.anilbeesetti.nextplayer.settings.navigation.navigateToPlayerPreferences
 import dev.anilbeesetti.nextplayer.settings.navigation.navigateToSubtitlePreferences
+import dev.anilbeesetti.nextplayer.settings.navigation.mod69PreferencesEntry
+import dev.anilbeesetti.nextplayer.settings.navigation.navigateToMod69Preferences
 import dev.anilbeesetti.nextplayer.settings.navigation.navigateToThumbnailPreferencesScreen
 import dev.anilbeesetti.nextplayer.settings.navigation.playerPreferencesEntry
 import dev.anilbeesetti.nextplayer.settings.navigation.settingsEntry
@@ -33,6 +35,7 @@ fun EntryProviderScope<NavKey>.settingsNavGraph(backStack: NavBackStack<NavKey>)
         onNavigateUp = { backStack.removeLastIfNotRoot() },
         onItemClick = { setting ->
             when (setting) {
+                Setting.MOD69 -> backStack.navigateToMod69Preferences()
                 Setting.APPEARANCE -> backStack.navigateToAppearancePreferences()
                 Setting.MEDIA_LIBRARY -> backStack.navigateToMediaLibraryPreferencesScreen()
                 Setting.PLAYER -> backStack.navigateToPlayerPreferences()
@@ -43,6 +46,9 @@ fun EntryProviderScope<NavKey>.settingsNavGraph(backStack: NavBackStack<NavKey>)
                 Setting.ABOUT -> backStack.navigateToAboutPreferences()
             }
         },
+    )
+    mod69PreferencesEntry(
+        onNavigateUp = { backStack.removeLastIfNotRoot() },
     )
     appearancePreferencesEntry(
         onNavigateUp = { backStack.removeLastIfNotRoot() },

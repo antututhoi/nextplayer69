@@ -4,6 +4,12 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- 69 mod: cut / MP3 through 69-Media Helper (same signing key) -->
+    <uses-permission android:name="com.gor69.mediahelper.permission.USE" />
+
+    <queries>
+        <package android:name="com.gor69.mediahelper" />
+    </queries>
 
     <application android:usesCleartextTraffic="true">
         <activity

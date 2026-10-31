@@ -11,6 +11,7 @@ import dev.anilbeesetti.nextplayer.core.common.di.DiQualifiers
 import dev.anilbeesetti.nextplayer.core.common.extensions.getStorageVolumes
 import dev.anilbeesetti.nextplayer.core.common.extensions.scanPaths
 import dev.anilbeesetti.nextplayer.core.common.extensions.scanStorage
+import dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary
 import dev.anilbeesetti.nextplayer.core.common.storagePermission
 import dev.anilbeesetti.nextplayer.core.database.converter.UriListConverter
 import dev.anilbeesetti.nextplayer.core.database.dao.MediumStateDao
@@ -41,10 +42,20 @@ class LocalMediaSynchronizer(
 
     private var mediaSyncingJob: Job? = null
 
-    override suspend fun refresh(path: String?): Boolean = path?.let {
-        context.scanPaths(paths = listOf(element = path))
+    override suspend fun refresh(path: String?): Boolean {
+        // 69 mod: cloud (RSAF) folders are rescanned through their folder access.
+        if (path != null && SafLibrary.isVirtualPath(path)) {
+            SafLibrary.rootForPath(context, path)?.let { SafLibrary.rescanInBackground(context, it) }
+            return true
+        }
+        if (path == null && SafLibrary.roots(context).isNotEmpty()) {
+            SafLibrary.rescanInBackground(context)
+        }
+        return path?.let {
+            context.scanPaths(paths = listOf(element = path))
+        }
+            ?: context.getStorageVolumes().all { context.scanStorage(it.path) }
     }
-        ?: context.getStorageVolumes().all { context.scanStorage(it.path) }
 
     override fun startSync() {
         if (mediaSyncingJob?.isActive == true) return

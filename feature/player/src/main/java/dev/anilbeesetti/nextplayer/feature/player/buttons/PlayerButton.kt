@@ -44,7 +44,7 @@ fun PlayerButton(
     enabled: Boolean = true,
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
-    containerColor: Color = Color.Transparent,
+    containerColor: Color = dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonBackground.current,
     contentPadding: PaddingValues = PaddingValues(8.dp),
     content: @Composable BoxScope.() -> Unit,
 ) {

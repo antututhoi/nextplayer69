@@ -7,23 +7,32 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun File.getSubtitles(): List<File> = withContext(Dispatchers.IO) {
+suspend fun File.getSubtitles(extraFolder: String? = null): List<File> = withContext(Dispatchers.IO) {
     val mediaName = this@getSubtitles.nameWithoutExtension
     val parentDir = this@getSubtitles.parentFile
-    val subtitleExtensions = listOf(
+    val subtitleExtensions = setOf(
         "srt",
         "ssa",
         "ass",
         "vtt",
         "ttml",
     )
-
-    subtitleExtensions.mapNotNull { extension ->
-        val file = File(
-            parentDir,
-            "$mediaName.$extension",
-        )
-        file.takeIf { it.exists() && it.isFile }
+    // 69 mod: also "Movie.en.srt" style names, a "Subs" folder next to the video,
+    // and an extra subtitle folder chosen in the player.
+    val folders = buildList {
+        parentDir?.let { dir ->
+            add(dir)
+            listOf("Subs", "subs", "Subtitles", "subtitles", "Sub", "sub").forEach { add(File(dir, it)) }
+            add(File(dir, "Subs/$mediaName"))
+        }
+        extraFolder?.takeIf { it.isNotBlank() }?.let { add(File(it)) }
+    }.distinctBy { it.path }
+    folders.flatMap { dir ->
+        (dir.listFiles() ?: emptyArray()).filter { file ->
+            file.isFile &&
+                file.extension.lowercase() in subtitleExtensions &&
+                (file.nameWithoutExtension == mediaName || file.name.startsWith("$mediaName."))
+        }.sortedBy { it.name.length }
     }
 }
 
@@ -33,7 +42,8 @@ suspend fun File.getLocalSubtitles(
 ): List<Uri> = withContext(Dispatchers.Default) {
     val excludeSubsPathSet = excludeSubsList.mapNotNull { context.getPath(uri = it) }.toSet()
 
-    getSubtitles().mapNotNull { file ->
+    val extraFolder = context.getSharedPreferences("mod69_subs", Context.MODE_PRIVATE).getString("folder", null)
+    getSubtitles(extraFolder = extraFolder).mapNotNull { file ->
         if (file.path !in excludeSubsPathSet) {
             file.toUri()
         } else {

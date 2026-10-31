@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.hls)
     implementation(libs.androidx.media3.exoplayer.rtsp)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.effect)
     implementation(libs.androidx.media3.ui.compose)
     implementation(libs.androidx.media3.session)
     implementation(libs.github.anilbeesetti.nextlib.media3ext)

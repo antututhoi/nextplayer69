@@ -105,6 +105,7 @@ private fun SettingsScreenContent(onAction: (SettingsAction) -> Unit) {
 }
 
 enum class Setting {
+    MOD69,
     APPEARANCE,
     MEDIA_LIBRARY,
     PLAYER,
@@ -121,6 +122,12 @@ private enum class SettingRow(
     val icon: ImageVector,
     val setting: Setting,
 ) {
+    MOD69(
+        titleResId = R.string.mod69_settings,
+        descriptionResId = R.string.mod69_settings_description,
+        icon = NextIcons.SmartButton,
+        setting = Setting.MOD69,
+    ),
     APPEARANCE(
         titleResId = R.string.appearance_name,
         descriptionResId = R.string.appearance_description,

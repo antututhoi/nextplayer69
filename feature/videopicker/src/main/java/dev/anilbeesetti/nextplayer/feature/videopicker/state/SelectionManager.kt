@@ -16,6 +16,32 @@ import java.io.Serializable
 fun rememberSelectionManager(): SelectionManager =
     rememberSaveable(saver = SelectionManager.Saver) { SelectionManager() }
 
+/**
+ * 69 mod: one marking session for the whole video list, so marks stay while you open other folders,
+ * go back up, or watch a video. It ends only with the close button or after an action (move, delete...).
+ */
+object SharedSelection {
+    val manager = SelectionManager()
+}
+
+/** How many different folders the marked videos come from. */
+fun SelectionManager.markedFolderCount(): Int = selectionItems
+    .map { item ->
+        when (item) {
+            is SelectionItem.Video -> item.path.substringBeforeLast('/')
+            is SelectionItem.Folder -> item.path.substringBeforeLast('/')
+        }
+    }
+    .toSet()
+    .size
+
+fun SelectionManager.remove(item: SelectionItem) {
+    when (item) {
+        is SelectionItem.Video -> if (isVideoSelectedById(item.id)) toggleById(item)
+        is SelectionItem.Folder -> if (isVideoSelectedById(item.id)) toggleById(item)
+    }
+}
+
 @Stable
 class SelectionManager(
     initialSelectionItems: Set<SelectionItem> = emptySet(),
@@ -68,6 +94,13 @@ class SelectionManager(
     fun selectVideo(video: Video) {
         enterSelectionMode()
         selectionItems = selectionItems + video.toSelectedVideo()
+    }
+
+    internal fun isVideoSelectedById(id: String): Boolean = selectionItems.any { it.id == id }
+
+    internal fun toggleById(item: SelectionItem) {
+        selectionItems = selectionItems.filterNot { it.id == item.id }.toSet()
+        if (selectionItems.isEmpty()) exitSelectionMode()
     }
 
     fun clearSelection() {

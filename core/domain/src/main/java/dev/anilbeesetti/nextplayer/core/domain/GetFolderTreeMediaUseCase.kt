@@ -70,7 +70,35 @@ class GetFolderTreeMediaUseCase(
         thresholdDays: Int,
         nowMillis: Long,
     ): MediaHolder {
-        val volumeRoots = videos.mapNotNull { volumeRootOf(it.path) }.distinct()
+        val allRoots = videos.mapNotNull { volumeRootOf(it.path) }.distinct()
+        // 69 mod: cloud (RSAF) folders are listed next to the phone's own folders
+        // instead of pushing "Internal Storage" one level down.
+        val cloudRoots = allRoots.filter { it.startsWith(prefix = "/storage/\u2601 ") }
+        val volumeRoots = allRoots - cloudRoots.toSet()
+        if (cloudRoots.isNotEmpty() && volumeRoots.size <= 1) {
+            val local = volumeRoots.firstOrNull()?.let {
+                mediaUnder(
+                    root = it,
+                    videos = videos,
+                    excludedFolders = excludedFolders,
+                    sort = sort,
+                    thresholdDays = thresholdDays,
+                    nowMillis = nowMillis,
+                )
+            } ?: MediaHolder(videos = emptyList(), folders = emptyList())
+            val cloud = cloudRoots.filterNot { it in excludedFolders }.map { root ->
+                summarize(
+                    path = root,
+                    descendantVideos = videosUnder(path = root, videos = videos),
+                    thresholdDays = thresholdDays,
+                    nowMillis = nowMillis,
+                )
+            }
+            return MediaHolder(
+                videos = local.videos,
+                folders = cloud.sortedWith(sort.folderComparator()) + local.folders,
+            )
+        }
         if (volumeRoots.size <= 1) {
             val root = volumeRoots.firstOrNull()
                 ?: return MediaHolder(
@@ -86,7 +114,7 @@ class GetFolderTreeMediaUseCase(
                 nowMillis = nowMillis,
             )
         }
-        val folders = volumeRoots
+        val folders = allRoots
             .filterNot { it in excludedFolders }
             .map { volumeRoot ->
                 summarize(

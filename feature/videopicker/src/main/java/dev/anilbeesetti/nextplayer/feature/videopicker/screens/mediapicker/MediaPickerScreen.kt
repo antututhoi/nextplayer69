@@ -129,7 +129,9 @@ import dev.anilbeesetti.nextplayer.feature.videopicker.composables.vault.VaultBi
 import dev.anilbeesetti.nextplayer.feature.videopicker.composables.vault.VaultProgressDialog
 import dev.anilbeesetti.nextplayer.feature.videopicker.screens.vault.VAULT_PIN_LENGTH
 import dev.anilbeesetti.nextplayer.feature.videopicker.state.SelectionItem
-import dev.anilbeesetti.nextplayer.feature.videopicker.state.rememberSelectionManager
+import dev.anilbeesetti.nextplayer.feature.videopicker.state.SharedSelection
+import dev.anilbeesetti.nextplayer.feature.videopicker.state.markedFolderCount
+import dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69MarkedListDialog
 import dev.anilbeesetti.nextplayer.feature.videopicker.state.toSelectedFolder
 import dev.anilbeesetti.nextplayer.feature.videopicker.state.toSelectedVideo
 import kotlin.math.roundToInt
@@ -156,7 +158,9 @@ internal fun MediaPickerScreenContent(
     state: MediaPickerUiState,
     onAction: (MediaPickerAction) -> Unit = {},
 ) {
-    val selectionManager = rememberSelectionManager()
+    // 69 mod: one marking session shared by every folder screen
+    val selectionManager = SharedSelection.manager
+    var showMarkedList by rememberSaveable { mutableStateOf(value = false) }
     val context = LocalContext.current
     val isTv = remember { context.isTelevision }
     val focusState = rememberRestorableFocusState()
@@ -255,13 +259,15 @@ internal fun MediaPickerScreenContent(
                                 imageVector = NextIcons.Close,
                                 contentDescription = stringResource(id = R.string.navigate_up),
                             )
+                            // 69 mod: total marked from every folder; tap it to see / untick them
                             Text(
                                 text = stringResource(
-                                    R.string.m_n_selected,
+                                    R.string.mod69_marked_count,
                                     selectedItemsSize,
-                                    totalItemsSize,
+                                    selectionManager.markedFolderCount(),
                                 ),
                                 style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.clickable { showMarkedList = true },
                             )
                         }
                     } else if (state.folderName != null) {
@@ -463,6 +469,9 @@ internal fun MediaPickerScreenContent(
                                 onFolderClick = {
                                     onAction(MediaPickerAction.OnFolderClick(folderPath = it))
                                 },
+                                onVideoPlayInSelection = {
+                                    onAction(MediaPickerAction.OnPlayVideo(uri = it))
+                                },
                                 onVideoClick = {
                                     onAction(MediaPickerAction.OnPlayVideo(uri = it))
                                 },
@@ -486,8 +495,17 @@ internal fun MediaPickerScreenContent(
         }
     }
 
-    BackHandler(enabled = selectionManager.isInSelectionMode) {
+    // 69 mod: inside a folder, Back goes up a folder and keeps the marks; on the main list it ends marking
+    BackHandler(enabled = selectionManager.isInSelectionMode && state.folderName == null) {
         selectionManager.exitSelectionMode()
+    }
+
+    if (showMarkedList) {
+        Mod69MarkedListDialog(
+            selectionManager = selectionManager,
+            onPlay = { onAction(MediaPickerAction.OnPlayVideo(uri = it.toUri())) },
+            onDismiss = { showMarkedList = false },
+        )
     }
 
     if (showQuickSettingsDialog) {

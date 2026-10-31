@@ -2,6 +2,7 @@ package dev.anilbeesetti.nextplayer.feature.player
 
 import android.graphics.Rect
 import androidx.annotation.OptIn
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -48,7 +49,7 @@ fun PlayerContentFrame(
                             size.copy(
                                 width = with(LocalDensity.current) {
                                     (
-                                        displayAspectRatio?.let {
+                                        (dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.aspect ?: displayAspectRatio)?.let {
                                             size.height * it
                                         } ?: size.width
                                         ).toDp().value
@@ -74,6 +75,24 @@ fun PlayerContentFrame(
                         translationY = videoZoomAndContentScaleState.offset.y
                     },
             )
+        }
+
+        // 69 mod: night mode
+        val nightDim = dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.nightDim
+        val nightWarm = dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.nightWarm
+        if (nightDim > 0f || nightWarm) {
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = nightDim)),
+            )
+            if (nightWarm) {
+                Box(
+                    Modifier
+                        .matchParentSize()
+                        .background(androidx.compose.ui.graphics.Color(0x33FF8F00)),
+                )
+            }
         }
 
         SubtitleView(

@@ -12,6 +12,8 @@ import androidx.annotation.RequiresApi
 import dev.anilbeesetti.nextplayer.core.common.di.DiQualifiers
 import dev.anilbeesetti.nextplayer.core.common.extensions.VIDEO_COLLECTION_URI
 import dev.anilbeesetti.nextplayer.core.common.extensions.prettyName
+import dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary
+import kotlinx.coroutines.flow.combine
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
@@ -81,6 +83,7 @@ class MediaStoreMediaService(
         trySend(element = Unit)
         awaitClose { context.contentResolver.unregisterContentObserver(observer) }
     }
+        .combine(SafLibrary.version) { _, _ -> Unit }
         .debounce(OBSERVER_DEBOUNCE_MS.milliseconds)
         .shareIn(
             scope = applicationScope,
@@ -142,9 +145,28 @@ class MediaStoreMediaService(
         }
 
     override suspend fun fetchVideos(folderPath: String?): List<MediaVideo> =
-        withContext(Dispatchers.IO) { queryVideos(folderPath = folderPath) }
+        withContext(Dispatchers.IO) {
+            val local = if (SafLibrary.isVirtualPath(folderPath)) emptyList() else queryVideos(folderPath = folderPath)
+            local + SafLibrary.entriesUnder(context, folderPath).map { it.toMediaVideo() }
+        }
+
+    private fun SafLibrary.Entry.toMediaVideo() = MediaVideo(
+        id = id,
+        uri = Uri.parse(uri),
+        path = path,
+        title = name,
+        parentPath = parentPath,
+        displayName = name,
+        duration = duration,
+        size = size,
+        width = width,
+        height = height,
+        dateModified = modified / 1000,
+        dateAdded = modified / 1000,
+    )
 
     override suspend fun findVideo(uri: Uri): MediaVideo? = withContext(Dispatchers.IO) {
+        SafLibrary.findByUri(context, uri)?.let { return@withContext it.toMediaVideo() }
         return@withContext try {
             context.contentResolver.query(
                 uri,
@@ -166,7 +188,7 @@ class MediaStoreMediaService(
 
     override suspend fun findFolder(path: String): MediaFolder? = withContext(Dispatchers.IO) {
         val folderFile = File(path)
-        if (!folderFile.exists()) return@withContext null
+        if (!SafLibrary.isVirtualPath(path) && !folderFile.exists()) return@withContext null
 
         val allVideos = fetchVideos(folderPath = path)
         if (allVideos.isEmpty()) return@withContext null

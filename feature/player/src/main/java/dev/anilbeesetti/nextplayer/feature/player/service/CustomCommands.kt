@@ -30,6 +30,7 @@ enum class CustomCommands(val customAction: String) {
     SET_VIDEO_DECODER_MODE(customAction = "SET_VIDEO_DECODER_MODE"),
     SET_AUDIO_DECODER_MODE(customAction = "SET_AUDIO_DECODER_MODE"),
     TRY_DECODER_FALLBACK(customAction = "TRY_DECODER_FALLBACK"),
+    MOD69(customAction = "MOD69"),
     ;
 
     val sessionCommand = SessionCommand(
@@ -277,4 +278,15 @@ suspend fun MediaController.tryDecoderFallback(): Boolean {
 internal fun Bundle.decoderMode(key: String): DecoderMode? {
     val value = getString(key) ?: return null
     return DecoderMode.entries.find { it.name == value }
+}
+
+/** 69 mod: send one op to [Mod69ServiceHandler] and get its state back. */
+suspend fun MediaController.mod69(op: String, fill: Bundle.() -> Unit = {}): Bundle {
+    val args = Bundle().apply {
+        putString(Mod69ServiceHandler.OP, op)
+        fill()
+    }
+    return runCatching {
+        sendCustomCommand(CustomCommands.MOD69.sessionCommand, args).await().extras
+    }.getOrDefault(Bundle.EMPTY)
 }

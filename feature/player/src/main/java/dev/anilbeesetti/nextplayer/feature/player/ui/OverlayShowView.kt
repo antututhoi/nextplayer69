@@ -9,6 +9,7 @@ import androidx.media3.common.Player
 import androidx.media3.extractor.metadata.Chapter
 import dev.anilbeesetti.nextplayer.core.model.VideoContentScale
 import dev.anilbeesetti.nextplayer.feature.player.extensions.noRippleClickable
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69ToolsView
 import dev.anilbeesetti.nextplayer.feature.player.state.SubtitleOptionsEvent
 import io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode
 
@@ -82,6 +83,13 @@ fun BoxScope.OverlayShowView(
         player = player,
     )
 
+    Mod69ToolsView(
+        show = overlayView == OverlayView.MOD69_TOOLS,
+        player = player,
+        videoDecoderMode = videoDecoderMode,
+        onDismiss = onDismiss,
+    )
+
     ChaptersView(
         show = overlayView == OverlayView.CHAPTERS,
         chapters = chapters,
@@ -101,4 +109,5 @@ enum class OverlayView {
     VIDEO_CONTENT_SCALE,
     PLAYLIST,
     CHAPTERS,
+    MOD69_TOOLS,
 }

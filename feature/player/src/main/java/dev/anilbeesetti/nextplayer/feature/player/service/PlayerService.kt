@@ -2,6 +2,7 @@ package dev.anilbeesetti.nextplayer.feature.player.service
 
 import android.app.PendingIntent
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
@@ -25,6 +26,9 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlaybackException
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.audio.AudioSink
+import androidx.media3.exoplayer.audio.DefaultAudioSink
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69AudioProcessor
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.session.CommandButton
@@ -131,6 +135,10 @@ class PlayerService : MediaSessionService() {
     private var loudnessEnhancer: LoudnessEnhancer? = null
     private var currentVolumeGain: Int = 0
 
+    private val mod69AudioProcessor = Mod69AudioProcessor()
+    private val mod69Handler by lazy {
+        Mod69ServiceHandler(applicationContext, { mediaSession?.player }, mod69AudioProcessor)
+    }
     private lateinit var decoderManager: DecoderManager
     private lateinit var trackSelector: DefaultTrackSelector
     private val decoderRecoveryManager = DecoderRecoveryManager()
@@ -233,7 +241,14 @@ class PlayerService : MediaSessionService() {
 
                 metadata.positionMs?.takeIf {
                     mediaItem.hasApiPosition ||
-                        playerPreferences.resume == Resume.YES
+                        (
+                            playerPreferences.resume == Resume.YES &&
+                                // 69 mod: optionally resume only the video you opened, not the next ones
+                                !(
+                                    playerPreferences.mod69ResumeFirstOnly &&
+                                        reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED
+                                    )
+                            )
                 }?.let {
                     mediaSession?.player?.seekTo(it)
                 }
@@ -820,6 +835,10 @@ class PlayerService : MediaSessionService() {
                     savePositionAndStopSession()
                     return@future SessionResult(SessionResult.RESULT_SUCCESS)
                 }
+
+                CustomCommands.MOD69 -> {
+                    return@future SessionResult(SessionResult.RESULT_SUCCESS, mod69Handler.handle(args))
+                }
             }
         }
     }
@@ -920,9 +939,18 @@ class PlayerService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
         decoderManager = DecoderManager()
-        val renderersFactory = NextRenderersFactory(
-            context = applicationContext,
-        ).setDecoderManager(decoderManager = decoderManager)
+        val renderersFactory = object : NextRenderersFactory(applicationContext) {
+            // 69 mod: add the sound processor (delay, mono/swap, fade, levelling)
+            override fun buildAudioSink(
+                context: Context,
+                enableFloatOutput: Boolean,
+                enableAudioOutputPlaybackParams: Boolean,
+            ): AudioSink? = DefaultAudioSink.Builder(context)
+                .setEnableFloatOutput(enableFloatOutput)
+                .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+                .setAudioProcessors(arrayOf(mod69AudioProcessor))
+                .build()
+        }.setDecoderManager(decoderManager = decoderManager)
 
         trackSelector = DefaultTrackSelector(applicationContext).apply {
             setParameters(
@@ -965,6 +993,7 @@ class PlayerService : MediaSessionService() {
             }
 
         decoderManager.attach(player = player)
+        handler69Attach(player)
         player.addAnalyticsListener(decoderAnalyticsListener)
 
         try {
@@ -1036,10 +1065,15 @@ class PlayerService : MediaSessionService() {
         }
     }
 
+    private fun handler69Attach(player: Player) {
+        android.os.Handler(android.os.Looper.getMainLooper()).post { mod69Handler.attach() }
+    }
+
     override fun onDestroy() {
         cancelPendingMediaItems()
         super.onDestroy()
         artworkLoadJob?.cancel()
+        mod69Handler.release()
         loudnessEnhancer?.release()
         loudnessEnhancer = null
         mediaSession?.run {
@@ -1090,6 +1124,11 @@ class PlayerService : MediaSessionService() {
                 }
                 val localSubs = if (!isNetwork) {
                     (videoState?.path ?: getPath(uri = uri))?.let {
+                        if (dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.isVirtualPath(it)) {
+                            return@let dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary
+                                .subtitlesFor(this@PlayerService, it)
+                                .filter { sub -> sub !in externalSubs }
+                        }
                         File(it).getLocalSubtitles(
                             context = this@PlayerService,
                             excludeSubsList = externalSubs,

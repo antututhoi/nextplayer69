@@ -17,7 +17,10 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.state.ProgressStateWithTickInterval
 import dev.anilbeesetti.nextplayer.core.model.ControlButtonsPosition
 import dev.anilbeesetti.nextplayer.core.model.PlayerPreferences
+import dev.anilbeesetti.nextplayer.core.common.extensions.isTelevision
 import dev.anilbeesetti.nextplayer.feature.player.extensions.nameRes
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69BottomControls
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69QuickRow
 import dev.anilbeesetti.nextplayer.feature.player.state.ChaptersState
 import dev.anilbeesetti.nextplayer.feature.player.state.ControlsVisibilityState
 import dev.anilbeesetti.nextplayer.feature.player.state.SeekGestureState
@@ -52,6 +55,10 @@ fun PlayerControls(
     modifier: Modifier = Modifier,
     middleControlsModifier: Modifier = Modifier,
 ) {
+    val mod69Layout = playerPreferences.mod69BottomPlayControls
+    val isTv = androidx.compose.ui.platform.LocalContext.current.let { ctx ->
+        androidx.compose.runtime.remember { ctx.isTelevision }
+    }
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -62,20 +69,65 @@ fun PlayerControls(
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                ControlsTopView(
-                    title = title,
-                    videoDecoderMode = videoDecoderMode,
-                    onDecoderClick = { onShowOverlay(OverlayView.DECODER_SELECTOR) },
-                    onAudioClick = { onShowOverlay(OverlayView.AUDIO_SELECTOR) },
-                    onSubtitleClick = { onShowOverlay(OverlayView.SUBTITLE_SELECTOR) },
-                    onPlaylistClick = { onShowOverlay(OverlayView.PLAYLIST) },
-                    onBackClick = onBackClick,
-                )
+                Column {
+                    ControlsTopView(
+                        title = title,
+                        videoDecoderMode = videoDecoderMode,
+                        onDecoderClick = { onShowOverlay(OverlayView.DECODER_SELECTOR) },
+                        onAudioClick = { onShowOverlay(OverlayView.AUDIO_SELECTOR) },
+                        onSubtitleClick = { onShowOverlay(OverlayView.SUBTITLE_SELECTOR) },
+                        onPlaylistClick = { onShowOverlay(OverlayView.PLAYLIST) },
+                        onBackClick = onBackClick,
+                    )
+                    if (mod69Layout && !controlsVisibilityState.controlsLocked) {
+                        // 69 mod: MX-style quick icons under the title
+                        Mod69QuickRow(
+                            player = player,
+                            preferences = playerPreferences,
+                            isPipSupported = isPipSupported,
+                            isTv = isTv,
+                            onPlaybackSpeedClick = { onShowOverlay(OverlayView.PLAYBACK_SPEED) },
+                            onPlayInBackgroundClick = onPlayInBackgroundClick,
+                            onPictureInPictureClick = onPictureInPictureClick,
+                            onToolsClick = { onShowOverlay(OverlayView.MOD69_TOOLS) },
+                        )
+                    }
+                }
             }
             Spacer(modifier = Modifier.weight(weight = 1f))
             AnimatedVisibility(
                 visible =
-                    controlsVisibilityState.controlsVisible &&
+                    mod69Layout && controlsVisibilityState.controlsVisible &&
+                        !controlsVisibilityState.controlsLocked,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                // 69 mod: play/pause, previous and next at the bottom, nothing over the middle of the video
+                Mod69BottomControls(
+                    player = player,
+                    progressState = progressState,
+                    chaptersState = chaptersState,
+                    seekIncrementMs = playerPreferences.seekIncrement * 1000L,
+                    showRemainingTime = playerPreferences.showRemainingTime,
+                    videoContentScale = videoZoomAndContentScaleState.videoContentScale,
+                    onToggleTimeDisplay = onToggleTimeDisplay,
+                    onSeek = seekGestureState::onSeek,
+                    onSeekEnd = seekGestureState::onSeekEnd,
+                    seekPreview = playerPreferences.mod69SeekPreview,
+                    onLockControlsClick = {
+                        controlsVisibilityState.showControls()
+                        controlsVisibilityState.lockControls()
+                    },
+                    onVideoContentScaleClick = {
+                        controlsVisibilityState.showControls()
+                        videoZoomAndContentScaleState.switchToNextVideoContentScale()
+                    },
+                    onVideoContentScaleLongClick = { onShowOverlay(OverlayView.VIDEO_CONTENT_SCALE) },
+                )
+            }
+            AnimatedVisibility(
+                visible =
+                    !mod69Layout && controlsVisibilityState.controlsVisible &&
                         !controlsVisibilityState.controlsLocked,
                 enter = fadeIn(),
                 exit = fadeOut(),
@@ -127,7 +179,7 @@ fun PlayerControls(
                 info = stringResource(videoZoomAndContentScaleState.videoContentScale.nameRes()),
             )
 
-            controlsVisibilityState.controlsVisible -> ControlsMiddleView(
+            controlsVisibilityState.controlsVisible && !mod69Layout -> ControlsMiddleView(
                 player = player,
                 modifier = middleControlsModifier,
             )

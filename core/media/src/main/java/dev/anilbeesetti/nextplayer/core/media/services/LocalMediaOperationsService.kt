@@ -20,6 +20,7 @@ import dev.anilbeesetti.nextplayer.core.common.extensions.getFilenameFromUri
 import dev.anilbeesetti.nextplayer.core.common.extensions.getPath
 import dev.anilbeesetti.nextplayer.core.common.extensions.scanPaths
 import dev.anilbeesetti.nextplayer.core.common.extensions.updateMedia
+import dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -64,6 +65,17 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
 
     override suspend fun deleteMedia(uris: List<Uri>, permanently: Boolean): Boolean =
         withContext(Dispatchers.IO) {
+            // 69 mod: cloud (RSAF) files are deleted straight through their folder access.
+            val (safUris, mediaUris) = uris.partition { SafLibrary.findByUri(context, it) != null }
+            if (safUris.isNotEmpty()) {
+                val deleted = safUris.filter {
+                    runCatching { DocumentsContract.deleteDocument(contentResolver, it) }.getOrDefault(false)
+                }
+                SafLibrary.removeEntries(context, deleted.map { it.toString() })
+                if (mediaUris.isEmpty()) return@withContext deleted.size == safUris.size
+            }
+            @Suppress("NAME_SHADOWING")
+            val uris = mediaUris
             return@withContext if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (permanently) deleteMediaR(uris = uris) else trashMediaR(uris = uris)
             } else {
@@ -80,6 +92,17 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
     }
 
     override suspend fun renameMedia(uri: Uri, to: String): Boolean = withContext(Dispatchers.IO) {
+        SafLibrary.findByUri(context, uri)?.let { entry ->
+            val newUri = runCatching {
+                DocumentsContract.renameDocument(contentResolver, uri, to)
+            }.getOrNull() ?: return@withContext false
+            SafLibrary.replaceEntry(
+                context,
+                entry.uri,
+                entry.copy(uri = newUri.toString(), name = to, path = entry.parentPath + "/" + to),
+            )
+            return@withContext true
+        }
         return@withContext if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             renameMediaR(
                 uri = uri,

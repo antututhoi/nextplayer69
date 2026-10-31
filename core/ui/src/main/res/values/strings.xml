@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Next Player</string>
+    <string name="app_name" translatable="false">69-Next Player</string>
     <string name="about_description">Version, support, credits</string>
     <string name="about_name">About</string>
     <string name="appearance_description">Adjust the app to your liking</string>
@@ -546,4 +546,45 @@
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
     </plurals>
+    <!-- 69 mod -->
+    <string name="mod69_marked_count">%1$d marked · %2$d folders</string>
+    <string name="mod69_marked_title">Marked videos</string>
+    <string name="mod69_settings">69 mod</string>
+    <string name="mod69_settings_description">Player look, list columns, MX-style options</string>
+    <string name="mod69_player_look">Player look</string>
+    <string name="mod69_bottom_controls">Play controls at the bottom</string>
+    <string name="mod69_bottom_controls_description">Play/pause, previous and next sit in the bottom row (MX style) instead of the middle of the video</string>
+    <string name="mod69_button_background">Button background</string>
+    <string name="mod69_button_background_description">Colour and see-through amount behind the player buttons</string>
+    <string name="mod69_mini_progress">Progress line when controls are hidden</string>
+    <string name="mod69_mini_progress_description">A thin bar along the bottom edge</string>
+    <string name="mod69_mini_progress_color">Progress line colour</string>
+    <string name="mod69_corner_time">Time in the top-left corner</string>
+    <string name="mod69_corner_time_description">Elapsed / total time while the controls are hidden</string>
+    <string name="mod69_corner_battery">Battery and clock in the top-right corner</string>
+    <string name="mod69_corner_battery_description">While the controls are hidden</string>
+    <string name="mod69_quick_items">Quick icons under the title</string>
+    <string name="mod69_quick_items_description">Choose which icons show and their order</string>
+    <string name="mod69_list">Video list</string>
+    <string name="mod69_video_columns">Video columns</string>
+    <string name="mod69_folder_columns">Folder columns</string>
+    <string name="mod69_columns_description">In portrait; landscape shows twice as many. 0 = automatic</string>
+    <string name="mod69_quick_speed">Speed</string>
+    <string name="mod69_quick_background">Background play</string>
+    <string name="mod69_quick_rotate">Rotate</string>
+    <string name="mod69_quick_loop">Loop</string>
+    <string name="mod69_quick_shuffle">Shuffle</string>
+    <string name="mod69_quick_pip">Popup / picture-in-picture</string>
+    <string name="mod69_transparency">See-through</string>
+    <string name="mod69_cloud_folders">Cloud folders (RSAF / rclone)</string>
+    <string name="mod69_cloud_folders_description">Folders picked here show in the library like phone storage. Pick an RSAF remote (or any folder) in the picker.</string>
+    <string name="mod69_cloud_add">Add folder</string>
+    <string name="mod69_cloud_rescan">Rescan</string>
+    <string name="mod69_cloud_scanning">Scanning: %1$s</string>
+    <string name="mod69_cloud_remove">Remove</string>
+    <string name="mod69_cloud_count">%1$d videos</string>
+    <string name="mod69_thumb_size">Saved thumbnail size</string>
+    <string name="mod69_thumb_size_description">Thumbnails are kept (not re-made) in the app\'s files, as small WebP. Smaller = less space. Clear thumbnails in General after changing.</string>
+    <string name="mod69_seek_preview">Picture preview while seeking</string>
+    <string name="mod69_seek_preview_description">Small picture above the seekbar while you drag it</string>
 </resources>

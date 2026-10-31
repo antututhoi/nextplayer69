@@ -43,6 +43,10 @@ import dev.anilbeesetti.nextplayer.feature.player.state.rememberChaptersState
 import dev.anilbeesetti.nextplayer.feature.player.state.rememberMediaPresentationState
 import dev.anilbeesetti.nextplayer.feature.player.state.rememberMetadataState
 import dev.anilbeesetti.nextplayer.feature.player.state.rememberPlayerKeyInputState
+import dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonBackground
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69CornerInfo
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69MiniProgressBar
+import dev.anilbeesetti.nextplayer.feature.player.mod69.toArgbColor
 import dev.anilbeesetti.nextplayer.feature.player.ui.DpadSeekIndicator
 import dev.anilbeesetti.nextplayer.feature.player.ui.OverlayShowView
 import dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView
@@ -66,6 +70,9 @@ internal fun MediaPlayerControls(
     dpadUpDown: Int? = null,
 ) {
     val playerPreferences = state.playerPreferences
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.swapGestureSides = playerPreferences.mod69SwapGestureSides
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.gestureEdgePercent = playerPreferences.mod69GestureEdgePercent
+    var lastBackPress by remember { mutableStateOf(0L) }
     val metadataState = rememberMetadataState(player = player)
     val mediaPresentationState = rememberMediaPresentationState(player = player)
     val progressState = rememberProgressStateWithTickInterval(player = player)
@@ -119,6 +126,7 @@ internal fun MediaPlayerControls(
     CompositionLocalProvider(
         LocalControlsVisibilityState provides controlsVisibilityState,
         LocalUseMaterialYouControls provides playerPreferences.useMaterialYouControls,
+        LocalMod69ButtonBackground provides playerPreferences.mod69ButtonBackgroundColor.toArgbColor(),
     ) {
         Box(
             modifier = modifier
@@ -159,6 +167,13 @@ internal fun MediaPlayerControls(
                         .align(Alignment.Center)
                         .size(72.dp),
                 )
+            }
+            // 69 mod: thin progress line and corner info while the controls are hidden
+            if (!controlsVisibilityState.controlsVisible && overlayView == null) {
+                if (playerPreferences.mod69MiniProgressBar) {
+                    Mod69MiniProgressBar(progressState = progressState, preferences = playerPreferences)
+                }
+                Mod69CornerInfo(progressState = progressState, preferences = playerPreferences)
             }
             PlayerGestureIndicators(tapGestureState = tapGestureState)
             DpadSeekIndicator(
@@ -238,6 +253,12 @@ internal fun MediaPlayerControls(
 
             isTv && controlsVisibilityState.controlsVisible ->
                 controlsVisibilityState.hideControls()
+
+            playerPreferences.mod69DoubleBackToExit &&
+                android.os.SystemClock.elapsedRealtime() - lastBackPress > 2000 -> {
+                lastBackPress = android.os.SystemClock.elapsedRealtime()
+                android.widget.Toast.makeText(context, "Press back again to close", android.widget.Toast.LENGTH_SHORT).show()
+            }
 
             else -> onAction(PlayerAction.NavigateUp)
         }

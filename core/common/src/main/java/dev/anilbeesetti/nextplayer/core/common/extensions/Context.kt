@@ -56,6 +56,7 @@ val Context.isTelevision: Boolean
  * @return path of the file
  */
 fun Context.getPath(uri: Uri): String? {
+    dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.findByUri(this, uri)?.let { return it.path }
     if (DocumentsContract.isDocumentUri(
             this,
             uri,

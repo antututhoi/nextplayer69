@@ -37,6 +37,7 @@ class VideoThumbnailDecoder(
     private val options: Options,
     private val strategy: ThumbnailStrategy,
     private val diskCache: Lazy<DiskCache?>,
+    private val maxCachePx: Int = 0,
 ) : Decoder {
 
     private val diskCacheKey: String
@@ -71,7 +72,10 @@ class VideoThumbnailDecoder(
             val requestedHeight = options.size.height.pxOrElse { 0 }
 
             // Cache is sufficient only if requested size <= cached size (or size is unspecified)
-            val cacheIsSufficient = (requestedWidth == 0 || requestedWidth <= cachedWidth) &&
+            // 69 mod: saved thumbnails are capped to a small size; a capped one is good enough.
+            val cachedIsCapped = maxCachePx > 0 && maxOf(cachedWidth, cachedHeight) >= maxCachePx - 1
+            val cacheIsSufficient = cachedIsCapped ||
+                (requestedWidth == 0 || requestedWidth <= cachedWidth) &&
                 (requestedHeight == 0 || requestedHeight <= cachedHeight)
 
             if (cacheIsSufficient) {
@@ -230,13 +234,28 @@ class VideoThumbnailDecoder(
         if (!options.diskCachePolicy.writeEnabled) return
         val editor = diskCache.value?.openEditor(key = diskCacheKey) ?: return
         try {
-            editor.data.toFile().outputStream().use { output ->
-                inBitmap.compress(
-                    Bitmap.CompressFormat.JPEG,
-                    90,
-                    output,
+            val longSide = maxOf(inBitmap.width, inBitmap.height)
+            val small = if (maxCachePx > 0 && longSide > maxCachePx) {
+                val f = maxCachePx.toFloat() / longSide
+                Bitmap.createScaledBitmap(
+                    inBitmap,
+                    (inBitmap.width * f).roundToInt().coerceAtLeast(1),
+                    (inBitmap.height * f).roundToInt().coerceAtLeast(1),
+                    true,
                 )
+            } else {
+                inBitmap
             }
+            editor.data.toFile().outputStream().use { output ->
+                if (maxCachePx > 0) {
+                    @Suppress("DEPRECATION")
+                    val webp = if (SDK_INT >= 30) Bitmap.CompressFormat.WEBP_LOSSY else Bitmap.CompressFormat.WEBP
+                    small.compress(webp, 75, output)
+                } else {
+                    small.compress(Bitmap.CompressFormat.JPEG, 90, output)
+                }
+            }
+            if (small !== inBitmap) small.recycle()
             editor.commit()
         } catch (_: Exception) {
             runCatching { editor.abort() }
@@ -316,7 +335,10 @@ class VideoThumbnailDecoder(
         )
     }
 
-    class Factory(private val thumbnailStrategy: () -> ThumbnailStrategy) : Decoder.Factory {
+    class Factory(
+        private val thumbnailStrategy: () -> ThumbnailStrategy,
+        private val maxCachePx: () -> Int = { 0 },
+    ) : Decoder.Factory {
         override fun create(
             result: SourceFetchResult,
             options: Options,
@@ -328,6 +350,7 @@ class VideoThumbnailDecoder(
                 options = options,
                 strategy = thumbnailStrategy(),
                 diskCache = lazy { imageLoader.diskCache },
+                maxCachePx = maxCachePx(),
             )
         }
 
