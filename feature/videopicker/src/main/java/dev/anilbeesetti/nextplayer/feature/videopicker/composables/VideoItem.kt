@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -238,7 +239,7 @@ fun VideoGridItem(
         content = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = if (preferences.mod69TitleLeft) Alignment.Start else Alignment.CenterHorizontally,
             ) {
                 ThumbnailView(
                     video = video,
@@ -253,7 +254,7 @@ fun VideoGridItem(
                     maxLines = 2,
                     style = textStyle.copy(lineBreak = LineBreak.Heading),
                     overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center,
+                    textAlign = if (preferences.mod69TitleLeft) TextAlign.Start else TextAlign.Center,
                     color = if (isRecentlyPlayedVideo && preferences.markLastPlayedMedia) {
                         MaterialTheme.colorScheme.primary
                     } else {
@@ -309,7 +310,7 @@ private fun ThumbnailView(
             tint = MaterialTheme.colorScheme.surfaceColorAtElevation(100.dp),
             modifier = Modifier
                 .align(Alignment.Center)
-                .fillMaxSize(fraction = 0.5f),
+                .size(36.dp),
         )
         if (preferences.showThumbnailField && isLocalVideo) {
             AsyncImage(
@@ -349,6 +350,7 @@ private fun ThumbnailView(
             )
         }
 
+        LocalMod69ThumbOverlay.current?.invoke(this)
         if (preferences.showPlayedProgress && video.playedPercentage != null) {
             Box(
                 modifier = Modifier
@@ -412,3 +414,7 @@ fun VideoGridItemPreview() {
         )
     }
 }
+
+/** 69 mod: extra content drawn on top of a thumbnail (the play button while marking). */
+val LocalMod69ThumbOverlay =
+    androidx.compose.runtime.compositionLocalOf<(@Composable androidx.compose.foundation.layout.BoxScope.() -> Unit)?> { null }

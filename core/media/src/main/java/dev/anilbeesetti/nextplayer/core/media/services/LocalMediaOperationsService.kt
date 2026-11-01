@@ -298,11 +298,22 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
 
             succeeded++
             overallCopied += copied.bytes
-            context.getPath(copied.uri)?.let { createdPaths.add(element = it) }
+            (runCatching { context.getPath(copied.uri) }.getOrNull() ?: documentPath(copied.uri))
+                ?.let { createdPaths.add(element = it) }
             if (mode == TransferMode.MOVE) movedSources.add(element = source)
         }
 
         if (createdPaths.isNotEmpty()) context.scanPaths(paths = createdPaths)
+        // 69 mod: copied into a cloud (rclone) folder -> refresh that folder's list
+        dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.roots(context)
+            .firstOrNull { root ->
+                runCatching {
+                    DocumentsContract.getTreeDocumentId(Uri.parse(root.treeUri)) ==
+                        DocumentsContract.getTreeDocumentId(destinationDir) &&
+                        Uri.parse(root.treeUri).authority == destinationDir.authority
+                }.getOrDefault(false)
+            }
+            ?.let { dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.rescanInBackground(context, it) }
 
         // The copies are already in place, so a failed deletion still counts as a move;
         // the originals are just left behind, which we report separately.
@@ -310,6 +321,85 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
             movedSources.isNotEmpty() &&
             !deleteMedia(uris = movedSources)
 
+        emit(
+            TransferEvent.Completed(
+                result = TransferResult(
+                    succeeded = succeeded,
+                    failed = sources.size - succeeded,
+                    sameFolderSkipped = sameFolder.size,
+                    originalsNotDeleted = originalsNotDeleted,
+                ),
+            ),
+        )
+    }.flowOn(Dispatchers.IO)
+
+    override fun transferMediaToPath(
+        uris: List<Uri>,
+        dirPath: String,
+        mode: TransferMode,
+    ): Flow<TransferEvent> = flow {
+        val dir = File(dirPath)
+        val (sameFolder, sources) = if (mode == TransferMode.MOVE) {
+            uris.partition { uri -> runCatching { context.getPath(uri = uri) }.getOrNull()?.let { File(it).parent == dir.path } == true }
+        } else {
+            emptyList<Uri>() to uris
+        }
+        val sizes = sources.map { sizeOf(uri = it) }
+        val overallTotal = sizes.sum()
+        val createdPaths = mutableListOf<String>()
+        val movedSources = mutableListOf<Uri>()
+        var overallCopied = 0L
+        var succeeded = 0
+        sources.forEachIndexed { index, source ->
+            val name = context.getFilenameFromUri(uri = source).takeIf { it.isNotBlank() }
+            val currentTotal = sizes[index]
+            fun progress(copied: Long) = TransferProgress(
+                totalFiles = sources.size,
+                currentIndex = index,
+                currentName = name,
+                currentBytesCopied = copied,
+                currentBytesTotal = currentTotal,
+                overallBytesCopied = overallCopied + copied,
+                overallBytesTotal = overallTotal,
+            )
+            emit(TransferEvent.Progress(progress = progress(copied = 0)))
+            if (name == null) return@forEachIndexed
+            // Never overwrite: "name (1).ext", "name (2).ext", ...
+            var target = File(dir, name)
+            var n = 1
+            while (target.exists()) {
+                target = File(dir, name.substringBeforeLast('.') + " ($n)" + name.substringAfterLast('.', "").let { if (it.isEmpty()) "" else ".$it" })
+                n++
+            }
+            val bytes = try {
+                contentResolver.openInputStream(source)?.use { input ->
+                    FileOutputStream(target).use { output ->
+                        copyStream(input = input, output = output, expectedTotal = currentTotal) { c ->
+                            emit(TransferEvent.Progress(progress = progress(copied = c)))
+                        }
+                    }
+                }
+            } catch (e: CancellationException) {
+                target.delete()
+                throw e
+            } catch (e: Exception) {
+                target.delete()
+                null
+            } ?: return@forEachIndexed
+            succeeded++
+            overallCopied += bytes
+            createdPaths += target.path
+            if (mode == TransferMode.MOVE) movedSources += source
+        }
+        if (createdPaths.isNotEmpty()) context.scanPaths(paths = createdPaths)
+        val originalsNotDeleted = mode == TransferMode.MOVE && movedSources.isNotEmpty() && !run {
+            // With "All files access" a plain delete works and avoids a system prompt.
+            val leftover = movedSources.filterNot { uri ->
+                val p = runCatching { context.getPath(uri = uri) }.getOrNull()
+                p != null && File(p).delete().also { ok -> if (ok) runCatching { context.scanPaths(paths = listOf(p)) } }
+            }
+            leftover.isEmpty() || deleteMedia(uris = leftover)
+        }
         emit(
             TransferEvent.Completed(
                 result = TransferResult(
@@ -382,10 +472,25 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
         }
     }
 
-    private fun Uri.toTreeDocumentUri(): Uri = DocumentsContract.buildDocumentUriUsingTree(
-        this,
-        DocumentsContract.getTreeDocumentId(this),
-    )
+    private fun Uri.toTreeDocumentUri(): Uri =
+        if (DocumentsContract.isDocumentUri(context, this)) {
+            this // 69 mod: a sub-folder picked inside the app
+        } else {
+            DocumentsContract.buildDocumentUriUsingTree(
+                this,
+                DocumentsContract.getTreeDocumentId(this),
+            )
+        }
+
+    /** 69 mod: real path of a document on the phone's own storage ("primary:Movies/a.mp4"). */
+    private fun documentPath(uri: Uri): String? = runCatching {
+        val id = DocumentsContract.getDocumentId(uri)
+        if (!id.contains(':')) return@runCatching null
+        val volume = id.substringBefore(':')
+        val rel = id.substringAfter(':')
+        val base = if (volume.equals("primary", true)) "/storage/emulated/0" else "/storage/$volume"
+        if (rel.isEmpty()) base else "$base/$rel"
+    }.getOrNull()?.takeIf { java.io.File(it).exists() }
 
     private fun sizeOf(uri: Uri): Long = runCatching {
         contentResolver.openFileDescriptor(

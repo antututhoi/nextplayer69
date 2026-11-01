@@ -103,6 +103,8 @@ data class PlayerPreferences(
     val mod69UserAgent: String = "",
     /** Accent colour for the player (seek bar, highlights). 0 = app colour. */
     val mod69PlayerAccent: Long = 0L,
+    /** True once the button background was picked in 69 settings (overrides Material You buttons). */
+    val mod69ButtonBgCustom: Boolean = false,
 ) {
 
     companion object {

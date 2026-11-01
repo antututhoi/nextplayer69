@@ -21,7 +21,7 @@ internal fun NextButton(modifier: Modifier = Modifier, player: Player?) {
     val controlsVisibilityState = LocalControlsVisibilityState.current
 
     PlayerButton(
-        modifier = modifier.size(48.dp),
+        modifier = modifier.size(dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonSize.current ?: 48.dp),
         enabled = state.isEnabled,
         onClick = {
             state.onClick()

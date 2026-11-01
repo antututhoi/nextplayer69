@@ -90,6 +90,12 @@ import kotlinx.coroutines.delay
 /** 69 mod: background colour behind every player button (transparent by default). */
 val LocalMod69ButtonBackground = compositionLocalOf { Color.Transparent }
 
+/** Background picked in 69 settings, or null to keep the normal (Material You) look. */
+val LocalMod69ButtonBgOverride = compositionLocalOf<Color?> { null }
+
+/** Same size for every round player button in the 69 layout (null = original sizes). */
+val LocalMod69ButtonSize = compositionLocalOf<androidx.compose.ui.unit.Dp?> { null }
+
 fun Long.toArgbColor(): Color = Color(this.toInt())
 
 /** The quick icons that can show in the row under the title. */
@@ -418,6 +424,7 @@ internal fun Mod69BottomControls(
             PlayerButton(
                 onClick = onToggleTimeDisplay,
                 contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
+                fixedSize = false,
             ) {
                 Text(
                     text = if (showRemainingTime && duration != C.TIME_UNSET) {

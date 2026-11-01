@@ -155,6 +155,13 @@ class MediaPickerViewModel(
                 TransferMode.MOVE,
             )
 
+            is MediaPickerAction.TransferSelectedTo -> transferSelectedItems(
+                action.selectionItems,
+                if (action.move) TransferMode.MOVE else TransferMode.COPY,
+                localPath = action.localPath,
+                cloudFolderUri = action.cloudFolderUri,
+            )
+
             is MediaPickerAction.CancelTransfer -> cancelTransfer()
 
             is MediaPickerAction.RequestHideSelectedItems -> requestHideSelectedItems(
@@ -375,9 +382,18 @@ class MediaPickerViewModel(
         }
     }
 
-    private fun transferSelectedItems(selectedItems: Set<SelectionItem>, mode: TransferMode) {
+    private fun transferSelectedItems(
+        selectedItems: Set<SelectionItem>,
+        mode: TransferMode,
+        localPath: String? = null,
+        cloudFolderUri: String? = null,
+    ) {
         transferJob = viewModelScope.launch {
-            val treeUri = systemService.pickFolder() ?: return@launch
+            val treeUri = when {
+                localPath != null -> android.net.Uri.EMPTY
+                cloudFolderUri != null -> android.net.Uri.parse(cloudFolderUri)
+                else -> systemService.pickFolder() ?: return@launch
+            }
             val videoUris = selectedItems.toVideoUris()
             if (videoUris.isEmpty()) return@launch
 
@@ -390,11 +406,13 @@ class MediaPickerViewModel(
                 )
             }
 
-            mediaOperationsService.transferMedia(
-                uris = videoUris,
-                folderUri = treeUri,
-                mode = mode,
-            ).collect { event ->
+            (
+                if (localPath != null) {
+                    mediaOperationsService.transferMediaToPath(uris = videoUris, dirPath = localPath, mode = mode)
+                } else {
+                    mediaOperationsService.transferMedia(uris = videoUris, folderUri = treeUri, mode = mode)
+                }
+                ).collect { event ->
                 when (event) {
                     is TransferEvent.Progress -> stateInternal.update {
                         (it.transferFlow as? TransferFlowState.Processing)?.let { state ->
@@ -634,6 +652,14 @@ sealed interface MediaPickerAction {
     ) : MediaPickerAction
     data class ShareSelectedItems(val selectionItems: Set<SelectionItem>) : MediaPickerAction
     data class CopySelectedItems(val selectionItems: Set<SelectionItem>) : MediaPickerAction
+
+    /** 69 mod: destination picked in the app's own folder picker (local path or cloud folder uri). */
+    data class TransferSelectedTo(
+        val selectionItems: Set<SelectionItem>,
+        val move: Boolean,
+        val localPath: String?,
+        val cloudFolderUri: String?,
+    ) : MediaPickerAction
     data class MoveSelectedItems(val selectionItems: Set<SelectionItem>) : MediaPickerAction
     data object CancelTransfer : MediaPickerAction
     data class ShowMediaInfo(val video: Video) : MediaPickerAction

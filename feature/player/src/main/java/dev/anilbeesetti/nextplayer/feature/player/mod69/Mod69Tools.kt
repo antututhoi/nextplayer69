@@ -26,6 +26,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.automirrored.rounded.PlaylistPlay
+import androidx.compose.material.icons.rounded.ZoomOutMap
+import androidx.compose.material.icons.rounded.Memory
+import androidx.compose.material.icons.rounded.Speed
+import androidx.compose.material.icons.rounded.Subtitles
+import androidx.compose.material.icons.rounded.Audiotrack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Bookmark
@@ -91,6 +101,7 @@ internal fun BoxScope.Mod69ToolsView(
     player: Player,
     videoDecoderMode: DecoderMode?,
     onDismiss: () -> Unit,
+    onOpenOverlay: (dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView) -> Unit = {},
 ) {
     var page by remember { mutableStateOf(ToolsPage.MAIN) }
     LaunchedEffect(show) {
@@ -132,7 +143,7 @@ internal fun BoxScope.Mod69ToolsView(
                 }
             }
             when (page) {
-                ToolsPage.MAIN -> MainPage(player = player, onOpen = { page = it }, onDismiss = onDismiss)
+                ToolsPage.MAIN -> MainPage(player = player, onOpen = { page = it }, onDismiss = onDismiss, onOpenOverlay = onOpenOverlay)
                 ToolsPage.HELP -> HelpPage()
                 ToolsPage.SLEEP -> SleepPage(player)
                 ToolsPage.AB -> AbPage(player)
@@ -151,13 +162,27 @@ internal fun BoxScope.Mod69ToolsView(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun MainPage(player: Player, onOpen: (ToolsPage) -> Unit, onDismiss: () -> Unit) {
+private fun MainPage(
+    player: Player,
+    onOpen: (ToolsPage) -> Unit,
+    onDismiss: () -> Unit,
+    onOpenOverlay: (dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView) -> Unit = {},
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        maxItemsInEachRow = 4,
+        modifier = Modifier.fillMaxWidth(),
     ) {
+        ToolButton(Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) }
+        ToolButton(Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) }
+        ToolButton(Icons.Rounded.Speed, "Speed") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYBACK_SPEED) }
+        ToolButton(Icons.Rounded.Memory, "Decoder") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) }
+        ToolButton(Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) }
+        ToolButton(Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.VIDEO_CONTENT_SCALE) }
+        ToolButton(Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) }
         ToolButton(Icons.Rounded.Bedtime, "Sleep timer") { onOpen(ToolsPage.SLEEP) }
         ToolButton(Icons.Rounded.Repeat, "A-B repeat") { onOpen(ToolsPage.AB) }
         ToolButton(Icons.Rounded.CameraAlt, "Screenshot") {
@@ -166,12 +191,10 @@ private fun MainPage(player: Player, onOpen: (ToolsPage) -> Unit, onDismiss: () 
         ToolButton(Icons.Rounded.Bookmark, "Bookmarks") { onOpen(ToolsPage.BOOKMARKS) }
         ToolButton(Icons.Rounded.NightsStay, "Night mode") { onOpen(ToolsPage.NIGHT) }
         ToolButton(Icons.Rounded.Tune, "Picture") { onOpen(ToolsPage.PICTURE) }
-        ToolButton(Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) }
-        ToolButton(Icons.Rounded.Info, "Information") { onOpen(ToolsPage.INFO) }
-        ToolButton(Icons.Rounded.GraphicEq, "Audio / EQ") { onOpen(ToolsPage.AUDIO) }
+        ToolButton(Icons.Rounded.GraphicEq, "Equalizer") { onOpen(ToolsPage.AUDIO) }
         ToolButton(Icons.Rounded.ClosedCaption, "Subtitle look") { onOpen(ToolsPage.SUBTITLE) }
+        ToolButton(Icons.Rounded.Info, "Information") { onOpen(ToolsPage.INFO) }
         ToolButton(Icons.Rounded.ContentCut, "Cut / MP3") { onOpen(ToolsPage.CUT) }
-        ToolButton(Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) }
         ToolButton(Icons.Rounded.Share, "Share") {
             player.currentMediaItem?.localConfiguration?.uri?.let { uri ->
                 val send = Intent(Intent.ACTION_SEND).apply {
@@ -184,6 +207,7 @@ private fun MainPage(player: Player, onOpen: (ToolsPage) -> Unit, onDismiss: () 
                 }
             }
         }
+        ToolButton(Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) }
     }
     HorizontalDivider(Modifier.padding(vertical = 12.dp))
     Text("Frame step (pauses the video)", style = MaterialTheme.typography.labelLarge)
@@ -201,9 +225,31 @@ private fun MainPage(player: Player, onOpen: (ToolsPage) -> Unit, onDismiss: () 
 
 @Composable
 private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit) {
-    FilledTonalButton(onClick = onClick, modifier = Modifier.width(150.dp)) {
-        Icon(icon, contentDescription = null)
-        Text("  $label", maxLines = 1)
+    // MX-style tile: round icon with the name under it (never cut off)
+    androidx.compose.foundation.layout.Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .width(76.dp)
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 4.dp),
+    ) {
+        androidx.compose.foundation.layout.Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(44.dp)
+                .clip(androidx.compose.foundation.shape.CircleShape)
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+        ) {
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+        }
+        Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            maxLines = 2,
+            modifier = Modifier.padding(top = 4.dp),
+        )
     }
 }
 

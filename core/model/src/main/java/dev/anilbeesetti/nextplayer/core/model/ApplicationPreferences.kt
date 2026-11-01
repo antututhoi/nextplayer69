@@ -47,6 +47,19 @@ data class ApplicationPreferences(
     val mod69ScrollToLast: Boolean = true,
     /** Folder path bar at the bottom of the video list. */
     val mod69PathBar: Boolean = true,
+    /** Folder/video list title bar at the bottom of the screen. */
+    val mod69ListBarAtBottom: Boolean = false,
+    /** Hide the words under the buttons of the long-press (selection) bar. */
+    val mod69HideActionLabels: Boolean = false,
+    /** Folders always sorted A–Z by name, whatever the video sort is (like MX). */
+    val mod69FoldersByName: Boolean = true,
+    /** Video names left-aligned under grid thumbnails (like MX). */
+    val mod69TitleLeft: Boolean = true,
+    /** Play button shown on videos while marking: icon / background colours (ARGB). */
+    val mod69PlayIconUnmarked: Long = 0xFFFFFFFFL,
+    val mod69PlayBgUnmarked: Long = 0x8C000000L,
+    val mod69PlayIconMarked: Long = 0xFF000000L,
+    val mod69PlayBgMarked: Long = 0xE6FFFFFFL,
     /** App accent colour (ARGB). 0 = theme default / dynamic. */
     val mod69AccentColor: Long = 0L,
 

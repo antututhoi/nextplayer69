@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.RippleAlpha
@@ -46,8 +47,11 @@ fun PlayerButton(
     onLongClick: (() -> Unit)? = null,
     containerColor: Color = dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonBackground.current,
     contentPadding: PaddingValues = PaddingValues(8.dp),
+    fixedSize: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
+    val mod69Size = if (fixedSize) dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonSize.current else null
+    val mod69Bg = dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonBgOverride.current
     val interactionSource = remember { MutableInteractionSource() }
     val viewConfiguration = LocalViewConfiguration.current
     val hapticFeedback = LocalHapticFeedback.current
@@ -77,7 +81,9 @@ fun PlayerButton(
         }
     }
 
-    val colors = if (LocalUseMaterialYouControls.current) {
+    val colors = if (mod69Bg != null) {
+        IconButtonDefaults.iconButtonColors(contentColor = Color.White, containerColor = mod69Bg)
+    } else if (LocalUseMaterialYouControls.current) {
         IconButtonDefaults.filledTonalIconButtonColors()
     } else {
         IconButtonDefaults.iconButtonColors(
@@ -110,6 +116,7 @@ fun PlayerButton(
     ) {
         Box(
             modifier = modifier
+                .then(if (mod69Size != null) Modifier.size(mod69Size) else Modifier)
                 .clip(shape = CircleShape)
                 .background(
                     color = if (enabled) colors.containerColor else colors.disabledContainerColor,

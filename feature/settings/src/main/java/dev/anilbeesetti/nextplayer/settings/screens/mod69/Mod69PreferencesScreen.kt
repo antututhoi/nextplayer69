@@ -165,15 +165,13 @@ private fun Mod69PreferencesContent(
                     description = stringResource(R.string.mod69_button_background_description),
                     color = p.mod69ButtonBackgroundColor,
                     showAlpha = true,
-                    onChange = { c -> player { it.copy(mod69ButtonBackgroundColor = c) } },
+                    onChange = { c -> player { it.copy(mod69ButtonBackgroundColor = c, mod69ButtonBgCustom = true) } },
                 )
-                PreferenceSwitch(
-                    title = "Title bar at the bottom",
-                    description = "Move the title and quick icons from the top to just above the bottom controls",
-                    icon = NextIcons.ArrowDownward,
-                    isChecked = p.mod69TopBarAtBottom,
-                    onClick = { player { it.copy(mod69TopBarAtBottom = !it.mod69TopBarAtBottom) } },
-                )
+                if (p.mod69ButtonBgCustom) {
+                    androidx.compose.material3.TextButton(onClick = {
+                        player { it.copy(mod69ButtonBgCustom = false, mod69ButtonBackgroundColor = 0x00000000L) }
+                    }) { Text("Default button look") }
+                }
                 PreferenceSwitch(
                     title = stringResource(R.string.mod69_seek_preview),
                     description = stringResource(R.string.mod69_seek_preview_description),
@@ -401,6 +399,62 @@ private fun Mod69PreferencesContent(
                     icon = NextIcons.ArrowDownward,
                     isChecked = a.mod69ScrollToLast,
                     onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69ScrollToLast = !it.mod69ScrollToLast) }) },
+                )
+                PreferenceSwitch(
+                    title = "Title bar at the bottom",
+                    description = "The folder / video list bar (title, search, menu) moves to the bottom of the screen",
+                    icon = NextIcons.ArrowDownward,
+                    isChecked = a.mod69ListBarAtBottom,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69ListBarAtBottom = !it.mod69ListBarAtBottom) }) },
+                )
+                PreferenceSwitch(
+                    title = "Folders always A–Z",
+                    description = "Folders are sorted by name; the sort choice only changes videos (like MX)",
+                    icon = NextIcons.Folder,
+                    isChecked = a.mod69FoldersByName,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69FoldersByName = !it.mod69FoldersByName) }) },
+                )
+                PreferenceSwitch(
+                    title = "Video names on the left",
+                    description = "Names under grid thumbnails start at the left (like MX) instead of centred",
+                    icon = NextIcons.Title,
+                    isChecked = a.mod69TitleLeft,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69TitleLeft = !it.mod69TitleLeft) }) },
+                )
+                PreferenceSwitch(
+                    title = "Hide words on the long-press bar",
+                    description = "Only icons in the bottom bar while marking, so all buttons fit",
+                    icon = NextIcons.SelectAll,
+                    isChecked = a.mod69HideActionLabels,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69HideActionLabels = !it.mod69HideActionLabels) }) },
+                )
+                ColorCard(
+                    title = "Play button while marking – not marked",
+                    description = "Icon colour",
+                    color = a.mod69PlayIconUnmarked,
+                    showAlpha = false,
+                    onChange = { c -> onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69PlayIconUnmarked = c) }) },
+                )
+                ColorCard(
+                    title = "Play button while marking – not marked",
+                    description = "Background colour and transparency",
+                    color = a.mod69PlayBgUnmarked,
+                    showAlpha = true,
+                    onChange = { c -> onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69PlayBgUnmarked = c) }) },
+                )
+                ColorCard(
+                    title = "Play button while marking – marked",
+                    description = "Icon colour",
+                    color = a.mod69PlayIconMarked,
+                    showAlpha = false,
+                    onChange = { c -> onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69PlayIconMarked = c) }) },
+                )
+                ColorCard(
+                    title = "Play button while marking – marked",
+                    description = "Background colour and transparency",
+                    color = a.mod69PlayBgMarked,
+                    showAlpha = true,
+                    onChange = { c -> onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69PlayBgMarked = c) }) },
                 )
                 PreferenceSwitch(
                     title = "Folder path bar",

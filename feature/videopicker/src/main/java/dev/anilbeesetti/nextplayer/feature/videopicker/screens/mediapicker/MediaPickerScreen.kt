@@ -1,5 +1,9 @@
 package dev.anilbeesetti.nextplayer.feature.videopicker.screens.mediapicker
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.statusBars
+import dev.anilbeesetti.nextplayer.feature.videopicker.composables.mod69HideActionLabels
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -230,8 +234,35 @@ internal fun MediaPickerScreenContent(
     val totalItemsSize =
         (state.mediaDataState as? DataState.Success)?.value?.run { folders.size + videos.size } ?: 0
 
-    Scaffold(
-        topBar = {
+    mod69HideActionLabels = state.preferences.mod69HideActionLabels
+    // 69 mod: in-app destination picker for Copy (false) / Move (true)
+    var mod69PickFor by remember { mutableStateOf<Boolean?>(null) }
+    mod69PickFor?.let { move ->
+        val items = selectionManager.selectionItems
+        fun done() {
+            mod69PickFor = null
+            selectionManager.exitSelectionMode()
+        }
+        dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69FolderPickerDialog(
+            move = move,
+            count = items.size,
+            onPasteLocal = { path ->
+                onAction(MediaPickerAction.TransferSelectedTo(items, move, localPath = path, cloudFolderUri = null))
+                done()
+            },
+            onPasteCloud = { uri ->
+                onAction(MediaPickerAction.TransferSelectedTo(items, move, localPath = null, cloudFolderUri = uri))
+                done()
+            },
+            onUseSystemPicker = {
+                onAction(if (move) MediaPickerAction.MoveSelectedItems(items) else MediaPickerAction.CopySelectedItems(items))
+                done()
+            },
+            onDismiss = { mod69PickFor = null },
+        )
+    }
+    val mod69BarBottom = state.preferences.mod69ListBarAtBottom
+    val mod69TopBar: @Composable () -> Unit = {
             NextTopAppBar(
                 title = {
                     val titleText = (state.folderName ?: stringResource(R.string.app_name))
@@ -346,8 +377,44 @@ internal fun MediaPickerScreenContent(
                     }
                 },
             )
-        },
+        
+    }
+    Scaffold(
+        topBar = { if (!mod69BarBottom || selectionManager.isInSelectionMode) mod69TopBar() },
         bottomBar = {
+          androidx.compose.foundation.layout.Column {
+            val mod69CloudScan by dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.scanState
+                .collectAsState()
+            mod69CloudScan?.let { scan ->
+                androidx.compose.foundation.layout.Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                ) {
+                    Text(
+                        text = "☁ Scanning cloud folder – $scan",
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                    )
+                    val pct = Regex("\\((\\d+)%\\)").find(scan)?.groupValues?.get(1)?.toFloatOrNull()
+                    if (pct != null) {
+                        androidx.compose.material3.LinearProgressIndicator(
+                            progress = { pct / 100f },
+                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                        )
+                    } else {
+                        androidx.compose.material3.LinearProgressIndicator(modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+                    }
+                }
+            }
+            if (mod69BarBottom && !selectionManager.isInSelectionMode) {
+                Box(
+                    modifier = Modifier.consumeWindowInsets(
+                        androidx.compose.foundation.layout.WindowInsets.statusBars,
+                    ),
+                ) { mod69TopBar() }
+            }
             // 69 mod: MX-style folder path bar
             if (state.preferences.mod69PathBar && state.folderPath != null && !selectionManager.isInSelectionMode) {
                 androidx.compose.foundation.layout.Row(
@@ -408,14 +475,8 @@ internal fun MediaPickerScreenContent(
                 onShareAction = {
                     onAction(MediaPickerAction.ShareSelectedItems(selectionManager.selectionItems))
                 },
-                onCopyAction = {
-                    onAction(MediaPickerAction.CopySelectedItems(selectionManager.selectionItems))
-                    selectionManager.exitSelectionMode()
-                },
-                onMoveAction = {
-                    onAction(MediaPickerAction.MoveSelectedItems(selectionManager.selectionItems))
-                    selectionManager.exitSelectionMode()
-                },
+                onCopyAction = { mod69PickFor = false },
+                onMoveAction = { mod69PickFor = true },
                 onHideAction = {
                     onAction(
                         MediaPickerAction.RequestHideSelectedItems(selectionManager.selectionItems),
@@ -424,6 +485,7 @@ internal fun MediaPickerScreenContent(
                 },
                 onDeleteAction = { showDeleteVideosConfirmation = true },
             )
+          }
         },
         floatingActionButton = {
             if (state.folderName != null && !selectionManager.isInSelectionMode) {

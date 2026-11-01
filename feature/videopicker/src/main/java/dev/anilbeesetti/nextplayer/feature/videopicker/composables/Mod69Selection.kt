@@ -33,16 +33,21 @@ import dev.anilbeesetti.nextplayer.feature.videopicker.state.remove
 
 /** 69 mod: the small play button shown on each video while marking. */
 @Composable
-internal fun Mod69SelectionPlayButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun Mod69SelectionPlayButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    marked: Boolean = false,
+    preferences: dev.anilbeesetti.nextplayer.core.model.ApplicationPreferences? = null,
+) {
+    val bg = preferences?.let { if (marked) it.mod69PlayBgMarked else it.mod69PlayBgUnmarked }
+    val fg = preferences?.let { if (marked) it.mod69PlayIconMarked else it.mod69PlayIconUnmarked }
     FilledIconButton(
         onClick = onClick,
-        modifier = modifier
-            .padding(start = 4.dp)
-            .size(36.dp),
+        modifier = modifier.size(32.dp),
         shape = CircleShape,
         colors = IconButtonDefaults.filledIconButtonColors(
-            containerColor = Color.Black.copy(alpha = 0.55f),
-            contentColor = Color.White,
+            containerColor = bg?.let { Color(it.toInt()) } ?: Color.Black.copy(alpha = 0.55f),
+            contentColor = fg?.let { Color(it.toInt()) } ?: Color.White,
         ),
     ) {
         Icon(

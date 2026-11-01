@@ -51,6 +51,7 @@ class GetSortedFoldersUseCase(
         val sort = Sort(
             by = preferences.sortBy,
             order = preferences.sortOrder,
+            foldersByName = preferences.mod69FoldersByName,
         )
         folders.sortedWith(sort.folderComparator())
     }.flowOn(context = defaultDispatcher)

@@ -156,6 +156,10 @@ internal fun MediaPlayerControls(
         LocalControlsVisibilityState provides controlsVisibilityState,
         LocalUseMaterialYouControls provides playerPreferences.useMaterialYouControls,
         LocalMod69ButtonBackground provides playerPreferences.mod69ButtonBackgroundColor.toArgbColor(),
+        dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonBgOverride provides
+            (if (playerPreferences.mod69ButtonBgCustom) playerPreferences.mod69ButtonBackgroundColor.toArgbColor() else null),
+        dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonSize provides
+            (if (playerPreferences.mod69BottomPlayControls) 46.dp else null),
     ) {
         Box(
             modifier = modifier
@@ -256,6 +260,7 @@ internal fun MediaPlayerControls(
             OverlayShowView(
                 player = player,
                 overlayView = overlayView,
+                onOpenOverlay = { overlayView = it },
                 chapters = chaptersState.chapters,
                 currentChapterIndex = chaptersState.currentChapterIndex,
                 onChapterSelected = { chapter ->

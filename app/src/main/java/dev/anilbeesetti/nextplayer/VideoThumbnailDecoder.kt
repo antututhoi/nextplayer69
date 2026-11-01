@@ -344,13 +344,24 @@ class VideoThumbnailDecoder(
             options: Options,
             imageLoader: ImageLoader,
         ): Decoder? {
-            if (!isApplicable(result.mimeType)) return null
+            if (!isApplicable(result.mimeType) && !isCloudVideo(result)) return null
             return VideoThumbnailDecoder(
                 source = result.source,
                 options = options,
                 strategy = thumbnailStrategy(),
                 diskCache = lazy { imageLoader.diskCache },
                 maxCachePx = maxCachePx(),
+            )
+        }
+
+        /** 69 mod: rclone/RSAF often reports mkv/webm as octet-stream; trust the file name. */
+        private fun isCloudVideo(result: SourceFetchResult): Boolean {
+            val uri = (result.source.metadata as? ContentMetadata)?.uri?.toString() ?: return false
+            val name = android.net.Uri.decode(uri).substringAfterLast('/').substringAfterLast(':')
+            val ext = name.substringAfterLast('.', "").lowercase()
+            return ext in setOf(
+                "mp4", "mkv", "webm", "avi", "mov", "m4v", "3gp", "ts", "m2ts", "mts", "flv",
+                "wmv", "mpg", "mpeg", "ogv", "vob", "rmvb", "f4v",
             )
         }
 

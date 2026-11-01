@@ -83,6 +83,7 @@ object SafLibrary {
     val version: StateFlow<Int> = versionInternal.asStateFlow()
 
     private val scanStateInternal = MutableStateFlow<String?>(null)
+    private var scanLabel = ""
 
     /** Null when idle, otherwise a short progress text. */
     val scanState: StateFlow<String?> = scanStateInternal.asStateFlow()
@@ -293,7 +294,8 @@ object SafLibrary {
         val found = mutableListOf<Entry>()
         val foundSubs = mutableMapOf<String, String>()
         for (root in targets) {
-            scanStateInternal.value = root.label
+            scanStateInternal.value = "${root.label}: looking for videos…"
+            scanLabel = root.label
             val tree = Uri.parse(root.treeUri)
             val rootId = runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull() ?: continue
             walk(context, tree, rootId, root.virtualPath, old, found, depth = 0, subsOut = foundSubs)
@@ -310,7 +312,7 @@ object SafLibrary {
         // Read durations / sizes for new files (slow over network, so done after listing).
         val missing = found.filter { it.duration <= 0L }
         missing.forEachIndexed { i, e ->
-            scanStateInternal.value = "${i + 1}/${missing.size}"
+            scanStateInternal.value = "Reading video details ${i + 1} / ${missing.size}  (${(i + 1) * 100 / missing.size}%)"
             val meta = runCatching {
                 MediaMetadataRetriever().use { r ->
                     r.setDataSource(context, Uri.parse(e.uri))
@@ -399,6 +401,7 @@ object SafLibrary {
         }
         if (hasNoMedia) return
         out += files
+        scanStateInternal.value = "$scanLabel: ${out.size} videos found · folder ${virtualDir.substringAfterLast('/')}"
         for ((id, name) in dirs) {
             walk(context, tree, id, "$virtualDir/$name", old, out, depth + 1, subsOut)
         }

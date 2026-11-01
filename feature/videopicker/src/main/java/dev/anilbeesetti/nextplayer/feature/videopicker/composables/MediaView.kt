@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.padding
 import androidx.core.net.toUri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Alignment
@@ -229,7 +230,21 @@ fun MediaView(
                 val selected by remember {
                     derivedStateOf { selectionManager.isVideoSelected(video = video) }
                 }
+                val mod69PlayOverlay: (@Composable androidx.compose.foundation.layout.BoxScope.() -> Unit)? =
+                    if (selectionManager.isInSelectionMode && onVideoPlayInSelection != null) {
+                        {
+                            Mod69SelectionPlayButton(
+                                onClick = { onVideoPlayInSelection(video.uriString.toUri()) },
+                                marked = selected,
+                                preferences = preferences,
+                                modifier = Modifier.align(Alignment.BottomStart).padding(5.dp),
+                            )
+                        }
+                    } else {
+                        null
+                    }
                 Box {
+                androidx.compose.runtime.CompositionLocalProvider(LocalMod69ThumbOverlay provides mod69PlayOverlay) {
                 VideoItem(
                     video = video,
                     preferences = preferences,
@@ -255,12 +270,6 @@ fun MediaView(
                         selectionManager.toggleVideoSelection(video = video)
                     },
                 )
-                // 69 mod: while marking, a small play button on the left edge watches the video
-                if (selectionManager.isInSelectionMode && onVideoPlayInSelection != null) {
-                    Mod69SelectionPlayButton(
-                        onClick = { onVideoPlayInSelection(video.uriString.toUri()) },
-                        modifier = Modifier.align(Alignment.CenterStart),
-                    )
                 }
                 }
             }

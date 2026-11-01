@@ -30,6 +30,7 @@ fun BoxScope.OverlayShowView(
     onSelectAudioClick: () -> Unit = {},
     onSubtitleOptionEvent: (SubtitleOptionsEvent) -> Unit = {},
     onVideoContentScaleChanged: (VideoContentScale) -> Unit = {},
+    onOpenOverlay: (OverlayView) -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -88,6 +89,7 @@ fun BoxScope.OverlayShowView(
         player = player,
         videoDecoderMode = videoDecoderMode,
         onDismiss = onDismiss,
+        onOpenOverlay = onOpenOverlay,
     )
 
     ChaptersView(

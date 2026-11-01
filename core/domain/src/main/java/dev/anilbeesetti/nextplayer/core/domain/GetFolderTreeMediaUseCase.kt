@@ -40,6 +40,7 @@ class GetFolderTreeMediaUseCase(
         val sort = Sort(
             by = preferences.sortBy,
             order = preferences.sortOrder,
+            foldersByName = preferences.mod69FoldersByName,
         )
         val thresholdDays = preferences.newVideoThresholdDays
 

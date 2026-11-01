@@ -28,11 +28,12 @@ internal fun SelectionAction(
     modifier: Modifier = Modifier,
     isTv: Boolean = false,
 ) {
+    val showLabel = !mod69HideActionLabels
     Column(
         modifier = modifier
             .defaultMinSize(
-                minWidth = 75.dp,
-                minHeight = 64.dp,
+                minWidth = if (showLabel) 75.dp else 44.dp,
+                minHeight = if (showLabel) 64.dp else 44.dp,
             )
             .tvFocusRing(
                 isTv = isTv,
@@ -41,7 +42,7 @@ internal fun SelectionAction(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(
-                horizontal = 16.dp,
+                horizontal = if (showLabel) 16.dp else 10.dp,
                 vertical = 8.dp,
             ),
         verticalArrangement = Arrangement.Center,
@@ -53,6 +54,7 @@ internal fun SelectionAction(
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        if (!showLabel) return@Column
         Spacer(modifier = Modifier.size(4.dp))
         Text(
             text = title,
@@ -62,3 +64,6 @@ internal fun SelectionAction(
         )
     }
 }
+
+/** 69 mod: set from the list screen; hides the words under the selection bar icons. */
+internal var mod69HideActionLabels: Boolean = false

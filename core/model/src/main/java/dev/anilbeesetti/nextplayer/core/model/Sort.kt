@@ -2,7 +2,7 @@ package dev.anilbeesetti.nextplayer.core.model
 
 import kotlin.comparisons.reversed as kotlinReversed
 
-data class Sort(val by: By, val order: Order) {
+data class Sort(val by: By, val order: Order, val foldersByName: Boolean = false) {
     enum class By {
         TITLE,
         LENGTH,
@@ -110,6 +110,8 @@ data class Sort(val by: By, val order: Order) {
                 folder2.name.lowercase(),
             )
         }
+        // 69 mod: folders always A-Z, like MX
+        if (foldersByName) return folderNameComparator
 
         val folderPathComparator: Comparator<Folder> = Comparator { folder1, folder2 ->
             return@Comparator stringComparator.compare(

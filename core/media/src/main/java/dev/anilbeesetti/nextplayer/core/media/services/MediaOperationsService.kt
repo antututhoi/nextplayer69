@@ -17,6 +17,10 @@ interface MediaOperationsService {
 
     fun transferMedia(uris: List<Uri>, folderUri: Uri, mode: TransferMode): Flow<TransferEvent>
 
+    /** 69 mod: copy / move into a folder path picked inside the app (needs "All files access"). */
+    fun transferMediaToPath(uris: List<Uri>, dirPath: String, mode: TransferMode): Flow<TransferEvent> =
+        kotlinx.coroutines.flow.emptyFlow()
+
     companion object {
         @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.R)
         fun willSystemAsksForDeleteConfirmation(): Boolean =
