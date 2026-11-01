@@ -38,6 +38,17 @@ object Mod69Session {
     var aMs by mutableLongStateOf(-1L)
     var bMs by mutableLongStateOf(-1L)
 
+    var volumeBeforeMute = 1f
+
+    // Aspect kept for all videos (saved in settings)
+    var aspectAll by mutableStateOf(false)
+
+    // Tools page to open next time the tools panel shows (ToolsPage name)
+    var toolsStart by mutableStateOf<String?>(null)
+
+    // Saves player settings from inside the player (set by the controls)
+    var savePrefs: ((dev.anilbeesetti.nextplayer.core.model.PlayerPreferences) -> dev.anilbeesetti.nextplayer.core.model.PlayerPreferences) -> Unit = {}
+
     // Bookmarks of the current video
     var bookmarkKey by mutableStateOf<String?>(null)
     val bookmarks = mutableStateListOf<Long>()

@@ -38,6 +38,7 @@ fun PlayerGestures(
     seekGestureState: SeekGestureState,
     videoZoomAndContentScaleState: VideoZoomAndContentScaleState,
     volumeAndBrightnessGestureState: VolumeAndBrightnessGestureState,
+    onTapPlayPause: (() -> Unit)? = null,
 ) {
     // Keep the system's swipe-to-reveal areas reserved even while the bars are hidden.
     val gestureInsets = WindowInsets.systemGestures.union(WindowInsets.systemBarsIgnoringVisibility)
@@ -53,7 +54,11 @@ fun PlayerGestures(
                     detectTapGestures(
                         onTap = {
                             if (tapGestureState.seekMillis != 0L) return@detectTapGestures
-                            controlsVisibilityState.toggleControlsVisibility()
+                            if (onTapPlayPause != null && !controlsVisibilityState.controlsLocked) {
+                                onTapPlayPause()
+                            } else {
+                                controlsVisibilityState.toggleControlsVisibility()
+                            }
                         },
                         onDoubleTap = {
                             if (controlsVisibilityState.controlsLocked) return@detectTapGestures

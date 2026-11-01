@@ -587,4 +587,6 @@
     <string name="mod69_thumb_size_description">Thumbnails are kept (not re-made) in the app\'s files, as small WebP. Smaller = less space. Clear thumbnails in General after changing.</string>
     <string name="mod69_seek_preview">Picture preview while seeking</string>
     <string name="mod69_seek_preview_description">Small picture above the seekbar while you drag it</string>
+    <string name="mod69_played_time">Played time</string>
+    <string name="mod69_type">Type</string>
 </resources>

@@ -63,7 +63,8 @@ fun PlayerControls(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Column {
+        @androidx.compose.runtime.Composable
+        fun TopBlock() {
             AnimatedVisibility(
                 visible = controlsVisibilityState.controlsVisible,
                 enter = fadeIn(),
@@ -94,7 +95,12 @@ fun PlayerControls(
                     }
                 }
             }
+        }
+        Column {
+            if (!playerPreferences.mod69TopBarAtBottom) TopBlock()
             Spacer(modifier = Modifier.weight(weight = 1f))
+            // 69 mod: optional - title bar and quick icons just above the bottom controls
+            if (playerPreferences.mod69TopBarAtBottom) TopBlock()
             AnimatedVisibility(
                 visible =
                     mod69Layout && controlsVisibilityState.controlsVisible &&

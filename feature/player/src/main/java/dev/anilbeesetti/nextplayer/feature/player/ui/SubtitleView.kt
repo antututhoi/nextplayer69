@@ -62,13 +62,13 @@ fun SubtitleView(
             }
             subtitleView.setApplyEmbeddedStyles(configuration.applyEmbeddedStyles)
             subtitleView.setBottomPaddingFraction(mod69.bottomPercent / 100f)
-            subtitleView.setCues(cuesState.currentCues?.cues)
+            subtitleView.setCues(dev.anilbeesetti.nextplayer.feature.player.mod69.mod69Cues(cuesState.currentCues?.cues, mod69))
             if (isInPictureInPictureMode) {
                 subtitleView.setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION)
             } else if (!configuration.useSystemCaptionStyle) {
                 subtitleView.setFixedTextSize(
                     TypedValue.COMPLEX_UNIT_SP,
-                    configuration.textSize.toFloat(),
+                    configuration.textSize.toFloat() * mod69.scalePercent / 100f,
                 )
             }
         },

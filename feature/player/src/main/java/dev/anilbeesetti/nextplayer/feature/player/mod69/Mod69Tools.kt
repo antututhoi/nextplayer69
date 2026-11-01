@@ -3,6 +3,8 @@ package dev.anilbeesetti.nextplayer.feature.player.mod69
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.TouchApp
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -76,7 +78,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private enum class ToolsPage { MAIN, SLEEP, AB, BOOKMARKS, PICTURE, ASPECT, NIGHT, INFO, AUDIO, SUBTITLE, CUT }
+private enum class ToolsPage { MAIN, SLEEP, AB, BOOKMARKS, PICTURE, ASPECT, NIGHT, INFO, AUDIO, SUBTITLE, CUT, HELP }
 
 /** The key bookmarks are stored under: the media uri (or id). */
 internal fun Player.mod69Key(): String? =
@@ -91,8 +93,18 @@ internal fun BoxScope.Mod69ToolsView(
     onDismiss: () -> Unit,
 ) {
     var page by remember { mutableStateOf(ToolsPage.MAIN) }
-    LaunchedEffect(show) { if (!show) page = ToolsPage.MAIN }
+    LaunchedEffect(show) {
+        if (!show) {
+            page = ToolsPage.MAIN
+        } else {
+            Mod69Session.toolsStart?.let { start ->
+                page = runCatching { ToolsPage.valueOf(start) }.getOrDefault(ToolsPage.MAIN)
+                Mod69Session.toolsStart = null
+            }
+        }
+    }
     val title = when (page) {
+        ToolsPage.HELP -> "Gesture help"
         ToolsPage.MAIN -> "Tools"
         ToolsPage.SLEEP -> "Sleep timer"
         ToolsPage.AB -> "A-B repeat"
@@ -121,6 +133,7 @@ internal fun BoxScope.Mod69ToolsView(
             }
             when (page) {
                 ToolsPage.MAIN -> MainPage(player = player, onOpen = { page = it }, onDismiss = onDismiss)
+                ToolsPage.HELP -> HelpPage()
                 ToolsPage.SLEEP -> SleepPage(player)
                 ToolsPage.AB -> AbPage(player)
                 ToolsPage.BOOKMARKS -> BookmarksPage(player)
@@ -158,6 +171,19 @@ private fun MainPage(player: Player, onOpen: (ToolsPage) -> Unit, onDismiss: () 
         ToolButton(Icons.Rounded.GraphicEq, "Audio / EQ") { onOpen(ToolsPage.AUDIO) }
         ToolButton(Icons.Rounded.ClosedCaption, "Subtitle look") { onOpen(ToolsPage.SUBTITLE) }
         ToolButton(Icons.Rounded.ContentCut, "Cut / MP3") { onOpen(ToolsPage.CUT) }
+        ToolButton(Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) }
+        ToolButton(Icons.Rounded.Share, "Share") {
+            player.currentMediaItem?.localConfiguration?.uri?.let { uri ->
+                val send = Intent(Intent.ACTION_SEND).apply {
+                    type = "video/*"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                runCatching {
+                    context.startActivity(Intent.createChooser(send, "Share").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+        }
     }
     HorizontalDivider(Modifier.padding(vertical = 12.dp))
     Text("Frame step (pauses the video)", style = MaterialTheme.typography.labelLarge)
@@ -415,11 +441,59 @@ private fun AspectPage() {
             )
         }
     }
+    var w by remember { mutableStateOf("") }
+    var h by remember { mutableStateOf("") }
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+        Text("Custom ")
+        androidx.compose.material3.OutlinedTextField(
+            value = w, onValueChange = { w = it.filter { c -> c.isDigit() || c == '.' } },
+            modifier = Modifier.width(70.dp), singleLine = true, label = { Text("W") },
+        )
+        Text(" : ")
+        androidx.compose.material3.OutlinedTextField(
+            value = h, onValueChange = { h = it.filter { c -> c.isDigit() || c == '.' } },
+            modifier = Modifier.width(70.dp), singleLine = true, label = { Text("H") },
+        )
+        TextButton(onClick = {
+            val r = (w.toFloatOrNull() ?: 0f) / (h.toFloatOrNull() ?: 0f)
+            if (r.isFinite() && r > 0f) Mod69Session.aspect = r
+        }) { Text("Set") }
+    }
+    SwitchRow("Apply to all videos", Mod69Session.aspectAll) { on ->
+        Mod69Session.aspectAll = on
+        val keep = if (on) Mod69Session.aspect ?: 0f else 0f
+        Mod69Session.savePrefs { it.copy(mod69AspectAll = keep) }
+    }
+    LaunchedEffect(Mod69Session.aspect) {
+        if (Mod69Session.aspectAll) {
+            val keep = Mod69Session.aspect ?: 0f
+            Mod69Session.savePrefs { it.copy(mod69AspectAll = keep) }
+        }
+    }
     Text(
         "Stretches the picture to this shape. Use the aspect button for fit / fill / zoom.",
         style = MaterialTheme.typography.bodySmall,
         modifier = Modifier.padding(top = 8.dp),
     )
+}
+
+@Composable
+private fun HelpPage() {
+    listOf(
+        "Double-tap left / right" to "Rewind / fast forward",
+        "Double-tap middle" to "Play / pause (when double-tap is set to both)",
+        "Swipe up/down on the left half" to "Brightness",
+        "Swipe up/down on the right half" to "Volume (sides can be swapped in 69 settings)",
+        "Swipe left / right" to "Seek",
+        "Pinch" to "Zoom, then drag to move the picture",
+        "Long press" to "Fast forward at the long-press speed",
+        "Tap" to "Show / hide controls (or play/pause, see 69 settings)",
+        "Lock button" to "Locks the screen. With kids lock, long-press the lock to unlock",
+        "Back twice" to "Close (when double back is on)",
+    ).forEach { (g, a) ->
+        Text(g, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 6.dp))
+        Text(a, style = MaterialTheme.typography.bodySmall)
+    }
 }
 
 @Composable

@@ -348,6 +348,31 @@ internal fun MediaPickerScreenContent(
             )
         },
         bottomBar = {
+            // 69 mod: MX-style folder path bar
+            if (state.preferences.mod69PathBar && state.folderPath != null && !selectionManager.isInSelectionMode) {
+                androidx.compose.foundation.layout.Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                        .navigationBarsPadding()
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                ) {
+                    Icon(
+                        imageVector = NextIcons.Folder,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = "  " + state.folderPath,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.StartEllipsis,
+                    )
+                }
+            }
             SelectionActionsSheet(
                 show =
                     selectionManager.isInSelectionMode &&

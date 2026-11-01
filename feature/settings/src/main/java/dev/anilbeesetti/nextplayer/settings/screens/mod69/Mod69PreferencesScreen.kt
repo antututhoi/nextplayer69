@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -57,10 +58,13 @@ import dev.anilbeesetti.nextplayer.core.ui.designsystem.NextIcons
 private val SWATCHES = listOf(
     0xFF000000L, 0xFF424242L, 0xFFFFFFFFL, 0xFF2196F3L, 0xFF03A9F4L, 0xFF009688L,
     0xFF4CAF50L, 0xFFFFC107L, 0xFFFF9800L, 0xFFF44336L, 0xFFE91E63L, 0xFF9C27B0L,
+    0xFF3F51B5L, 0xFF673AB7L, 0xFF00BCD4L, 0xFF8BC34AL, 0xFFCDDC39L, 0xFFFFEB3BL,
+    0xFFFF5722L, 0xFF795548L, 0xFF607D8BL, 0xFFFF4081L, 0xFF7C4DFFL, 0xFF00E676L,
 )
 
 private val QUICK_IDS = listOf(
     "tools", "speed", "screenshot", "bookmark", "night", "background", "rotate", "loop", "shuffle", "pip",
+    "mute", "equalizer", "sleep", "ab", "help",
 )
 
 @Composable
@@ -75,6 +79,11 @@ private fun quickLabel(id: String): String = when (id) {
     "screenshot" -> "Screenshot"
     "bookmark" -> "Add bookmark"
     "night" -> "Night mode"
+    "mute" -> "Mute"
+    "equalizer" -> "Equalizer"
+    "sleep" -> "Sleep timer"
+    "ab" -> "A-B repeat"
+    "help" -> "Gesture help"
     else -> id
 }
 
@@ -159,6 +168,13 @@ private fun Mod69PreferencesContent(
                     onChange = { c -> player { it.copy(mod69ButtonBackgroundColor = c) } },
                 )
                 PreferenceSwitch(
+                    title = "Title bar at the bottom",
+                    description = "Move the title and quick icons from the top to just above the bottom controls",
+                    icon = NextIcons.ArrowDownward,
+                    isChecked = p.mod69TopBarAtBottom,
+                    onClick = { player { it.copy(mod69TopBarAtBottom = !it.mod69TopBarAtBottom) } },
+                )
+                PreferenceSwitch(
                     title = stringResource(R.string.mod69_seek_preview),
                     description = stringResource(R.string.mod69_seek_preview_description),
                     icon = NextIcons.Image,
@@ -236,6 +252,122 @@ private fun Mod69PreferencesContent(
                 )
             }
 
+            ListSectionTitle(text = "Player behaviour")
+            Column(verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)) {
+                SectionSurface {
+                    Text("Single tap on the video", style = MaterialTheme.typography.titleMedium)
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                        listOf("Show/hide controls", "Play/pause", "Play/pause + show").forEachIndexed { i, name ->
+                            androidx.compose.material3.FilterChip(
+                                selected = p.mod69TapAction == i,
+                                onClick = { player { it.copy(mod69TapAction = i) } },
+                                label = { Text(name) },
+                            )
+                        }
+                    }
+                }
+                PreferenceSwitch(
+                    title = "Kids lock",
+                    description = "While locked, back does nothing and the lock needs a long press to open",
+                    icon = NextIcons.Lock,
+                    isChecked = p.mod69KidsLock,
+                    onClick = { player { it.copy(mod69KidsLock = !it.mod69KidsLock) } },
+                    isFirstItem = true,
+                )
+                PreferenceSwitch(
+                    title = "Show controls when a video starts",
+                    icon = NextIcons.Player,
+                    isChecked = p.mod69ShowUiAtStart,
+                    onClick = { player { it.copy(mod69ShowUiAtStart = !it.mod69ShowUiAtStart) } },
+                )
+                PreferenceSwitch(
+                    title = "\"Continue / Start over\" bar",
+                    description = "Shows when a video resumes, tap START OVER to play from the beginning",
+                    icon = NextIcons.Resume,
+                    isChecked = p.mod69ResumeBar,
+                    onClick = { player { it.copy(mod69ResumeBar = !it.mod69ResumeBar) } },
+                )
+                PreferenceSwitch(
+                    title = "Fast seeking",
+                    description = "Jump to the nearest key frame. Faster, but less exact",
+                    icon = NextIcons.FastForward,
+                    isChecked = p.mod69FastSeek,
+                    onClick = { player { it.copy(mod69FastSeek = !it.mod69FastSeek) } },
+                )
+                PreferenceSwitch(
+                    title = "Loading circle",
+                    description = "Spinner while the video buffers",
+                    icon = NextIcons.Timer,
+                    isChecked = p.mod69LoadingCircle,
+                    onClick = { player { it.copy(mod69LoadingCircle = !it.mod69LoadingCircle) } },
+                )
+                PreferenceSwitch(
+                    title = "Suppress error messages",
+                    description = "Skip to the next video instead of showing an error",
+                    icon = NextIcons.BugReport,
+                    isChecked = p.mod69SuppressErrors,
+                    onClick = { player { it.copy(mod69SuppressErrors = !it.mod69SuppressErrors) } },
+                )
+                PreferenceSwitch(
+                    title = "Media buttons",
+                    description = "React to headset / Bluetooth buttons",
+                    icon = NextIcons.Headset,
+                    isChecked = p.mod69MediaButtons,
+                    onClick = { player { it.copy(mod69MediaButtons = !it.mod69MediaButtons) } },
+                )
+                PreferenceSwitch(
+                    title = "Next / previous buttons seek",
+                    description = "Headset next/previous jump forward/back by the seek step instead of changing video",
+                    icon = NextIcons.SwipeHorizontal,
+                    isChecked = p.mod69NextPrevAsSeek,
+                    onClick = { player { it.copy(mod69NextPrevAsSeek = !it.mod69NextPrevAsSeek) } },
+                    isLastItem = true,
+                )
+                SectionSurface {
+                    Text("HTTP User-Agent", style = MaterialTheme.typography.titleMedium)
+                    Text("For network links. Leave empty for the default", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    var ua by remember(p.mod69UserAgent) { mutableStateOf(p.mod69UserAgent) }
+                    androidx.compose.material3.OutlinedTextField(
+                        value = ua,
+                        onValueChange = { ua = it },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        trailingIcon = {
+                            androidx.compose.material3.TextButton(onClick = { player { it.copy(mod69UserAgent = ua.trim()) } }) { Text("Save") }
+                        },
+                    )
+                }
+            }
+
+            ListSectionTitle(text = "Colours")
+            Column(verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)) {
+                ColorCard(
+                    title = "App accent colour",
+                    description = if (a.mod69AccentColor == 0L) "Using the theme colour" else "Tap Default to go back to the theme colour",
+                    color = a.mod69AccentColor,
+                    showAlpha = false,
+                    onChange = { c -> onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69AccentColor = c) }) },
+                )
+                if (a.mod69AccentColor != 0L) {
+                    androidx.compose.material3.TextButton(onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69AccentColor = 0L) }) }) { Text("Default app colour") }
+                }
+                ColorCard(
+                    title = "Player accent colour",
+                    description = "Seek bar and highlights in the player",
+                    color = p.mod69PlayerAccent,
+                    showAlpha = false,
+                    onChange = { c -> player { it.copy(mod69PlayerAccent = c) } },
+                )
+                if (p.mod69PlayerAccent != 0L) {
+                    androidx.compose.material3.TextButton(onClick = { player { it.copy(mod69PlayerAccent = 0L) } }) { Text("Default player colour") }
+                }
+                Text(
+                    "Pure black (AMOLED): Settings → Appearance → high contrast dark theme.",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
+
             ListSectionTitle(text = stringResource(R.string.mod69_quick_items))
             QuickItemsCard(
                 selected = p.mod69QuickItems,
@@ -269,6 +401,13 @@ private fun Mod69PreferencesContent(
                     icon = NextIcons.ArrowDownward,
                     isChecked = a.mod69ScrollToLast,
                     onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69ScrollToLast = !it.mod69ScrollToLast) }) },
+                )
+                PreferenceSwitch(
+                    title = "Folder path bar",
+                    description = "Shows the folder path at the bottom of the list",
+                    icon = NextIcons.Folder,
+                    isChecked = a.mod69PathBar,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69PathBar = !it.mod69PathBar) }) },
                     isLastItem = true,
                 )
             }

@@ -45,6 +45,11 @@ data class ApplicationPreferences(
     val mod69ThumbnailMaxPx: Int = 384,
     val mod69MarkLastInFolder: Boolean = true,
     val mod69ScrollToLast: Boolean = true,
+    /** Folder path bar at the bottom of the video list. */
+    val mod69PathBar: Boolean = true,
+    /** App accent colour (ARGB). 0 = theme default / dynamic. */
+    val mod69AccentColor: Long = 0L,
+
 ) {
 
     companion object {

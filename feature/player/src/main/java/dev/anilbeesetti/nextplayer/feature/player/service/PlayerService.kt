@@ -235,7 +235,10 @@ class PlayerService : MediaSessionService() {
             mediaItem?.mediaMetadata?.let { metadata ->
                 mediaSession?.player?.run {
                     playerSpecificSubtitleDelayMilliseconds =
-                        metadata.subtitleDelayMilliseconds ?: 0L
+                        metadata.subtitleDelayMilliseconds ?: run {
+                            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69SubStore.init(this@PlayerService)
+                            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69SubStore.state.value.defaultDelayMs
+                        }
                     playerSpecificSubtitleSpeed = metadata.subtitleSpeed ?: 1f
                 }
 
@@ -516,6 +519,30 @@ class PlayerService : MediaSessionService() {
     }
 
     private val mediaSessionCallback = object : MediaSession.Callback {
+        // 69 mod: headset / Bluetooth media buttons options
+        override fun onMediaButtonEvent(
+            session: MediaSession,
+            controllerInfo: MediaSession.ControllerInfo,
+            intent: Intent,
+        ): Boolean {
+            if (!playerPreferences.mod69MediaButtons) return true
+            if (!playerPreferences.mod69NextPrevAsSeek) return false
+            @Suppress("DEPRECATION")
+            val event = intent.getParcelableExtra<android.view.KeyEvent>(Intent.EXTRA_KEY_EVENT) ?: return false
+            val step = playerPreferences.seekIncrement * 1000L
+            val forward = when (event.keyCode) {
+                android.view.KeyEvent.KEYCODE_MEDIA_NEXT, android.view.KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> true
+                android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS, android.view.KeyEvent.KEYCODE_MEDIA_REWIND -> false
+                else -> return false
+            }
+            if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                val p = session.player
+                val target = p.currentPosition + if (forward) step else -step
+                p.seekTo(target.coerceIn(0L, if (p.duration > 0) p.duration else Long.MAX_VALUE))
+            }
+            return true
+        }
+
         override fun onConnectAsync(
             session: MediaSession,
             controller: MediaSession.ControllerInfo,
@@ -961,6 +988,8 @@ class PlayerService : MediaSessionService() {
             )
         }
 
+        dev.anilbeesetti.nextplayer.core.media.network.datasource.NextDataSourceFactory.userAgent =
+            playerPreferences.mod69UserAgent
         val player = ExoPlayer.Builder(applicationContext)
             .setRenderersFactory(renderersFactory)
             .setTrackSelector(trackSelector)
@@ -983,6 +1012,9 @@ class PlayerService : MediaSessionService() {
             .build()
             .also {
                 it.setPlaybackSpeed(playerPreferences.defaultPlaybackSpeed)
+                if (playerPreferences.mod69FastSeek) {
+                    it.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC)
+                }
                 it.addListener(playbackStateListener)
                 it.pauseAtEndOfMediaItems = !playerPreferences.autoplay
                 it.repeatMode = when (playerPreferences.loopMode) {

@@ -20,9 +20,26 @@ class NextDataSourceFactory(private val context: Context, private val sessions: 
     DataSource.Factory {
 
     override fun createDataSource(): DataSource = SchemeDispatchingDataSource(
-        default = DefaultDataSource.Factory(context).createDataSource(),
+        default = userAgent.trim().let { ua ->
+            if (ua.isEmpty()) {
+                DefaultDataSource.Factory(context)
+            } else {
+                DefaultDataSource.Factory(
+                    context,
+                    androidx.media3.datasource.DefaultHttpDataSource.Factory()
+                        .setUserAgent(ua)
+                        .setAllowCrossProtocolRedirects(true),
+                )
+            }
+        }.createDataSource(),
         network = NetworkDataSource(sessions = sessions),
     )
+
+    companion object {
+        /** 69 mod: custom HTTP User-Agent, empty = Media3 default. Set by the player service. */
+        @Volatile
+        var userAgent: String = ""
+    }
 
     /** Disconnects the network client held for playback. Call when the player is released. */
     suspend fun release() = sessions.release()

@@ -179,6 +179,16 @@ internal fun MediaPlayerContent(
                     seekGestureState = seekGestureState,
                     videoZoomAndContentScaleState = videoZoomAndContentScaleState,
                     volumeAndBrightnessGestureState = volumeAndBrightnessGestureState,
+                    onTapPlayPause = when (playerPreferences.mod69TapAction) {
+                        1 -> { { if (player.isPlaying) player.pause() else player.play() } }
+                        2 -> {
+                            {
+                                if (player.isPlaying) player.pause() else player.play()
+                                controlsVisibilityState.showControls()
+                            }
+                        }
+                        else -> null
+                    },
                 )
             }
         }
@@ -219,7 +229,7 @@ internal fun MediaPlayerContent(
         }
     }
 
-    if (api?.suppressErrorMessage != true) {
+    if (api?.suppressErrorMessage != true && !state.playerPreferences.mod69SuppressErrors) {
         PlayerErrorDialogs(
             decoderRecoveryState = state.decoderServiceState.recoveryState,
             playbackError = errorState.playbackError,

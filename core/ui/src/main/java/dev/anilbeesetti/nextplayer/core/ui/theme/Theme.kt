@@ -1,5 +1,7 @@
 package dev.anilbeesetti.nextplayer.core.ui.theme
 
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.compositeOver
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -245,9 +247,10 @@ fun NextPlayerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     highContrastDarkTheme: Boolean = false,
     dynamicColor: Boolean = true,
+    accent: Long = 0L,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
+    val baseScheme = when {
         dynamicColor && supportsDynamicTheming() -> {
             val context = LocalContext.current
             when {
@@ -288,6 +291,29 @@ fun NextPlayerTheme(
         else -> lightScheme
     }
 
+    // 69 mod: user accent colour on top of the chosen theme
+    val colorScheme = if (accent == 0L) {
+        baseScheme
+    } else {
+        val a = androidx.compose.ui.graphics.Color(accent.toInt())
+        val on = if (a.luminance() > 0.5f) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.White
+        val container = a.copy(alpha = if (darkTheme) 0.35f else 0.22f).compositeOver(baseScheme.surface)
+        val onContainer = if (container.luminance() > 0.5f) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.White
+        baseScheme.copy(
+            primary = a,
+            onPrimary = on,
+            primaryContainer = container,
+            onPrimaryContainer = onContainer,
+            secondary = a,
+            onSecondary = on,
+            secondaryContainer = container,
+            onSecondaryContainer = onContainer,
+            tertiary = a,
+            onTertiary = on,
+            inversePrimary = a,
+            surfaceTint = a,
+        )
+    }
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,

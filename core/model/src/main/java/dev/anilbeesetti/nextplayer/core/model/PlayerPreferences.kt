@@ -65,6 +65,7 @@ data class PlayerPreferences(
     /** MX-style: play/pause, previous and next sit in the bottom row instead of the middle of the video. */
     val mod69BottomPlayControls: Boolean = true,
     val mod69SeekPreview: Boolean = true,
+    val mod69TopBarAtBottom: Boolean = false,
     val mod69SwapGestureSides: Boolean = false,
     val mod69GestureEdgePercent: Int = 0,
     val mod69DoubleBackToExit: Boolean = false,
@@ -82,6 +83,26 @@ data class PlayerPreferences(
     val mod69CornerTextColor: Long = 0xCCFFFFFFL,
     /** Which quick icons show in the row under the title, in order. */
     val mod69QuickItems: List<String> = DEFAULT_QUICK_ITEMS,
+    /** Single tap: 0 show/hide controls, 1 play/pause, 2 play/pause + show controls. */
+    val mod69TapAction: Int = 0,
+    /** Kids lock: while locked the back button does nothing and unlocking needs a long press. */
+    val mod69KidsLock: Boolean = false,
+    val mod69ShowRemaining: Boolean = false,
+    val mod69ShowUiAtStart: Boolean = true,
+    val mod69LoadingCircle: Boolean = true,
+    val mod69SuppressErrors: Boolean = false,
+    /** Seek to the nearest key frame (faster, less exact). */
+    val mod69FastSeek: Boolean = false,
+    /** Show the "Continue from where you stopped / Start over" bar when a video resumes. */
+    val mod69ResumeBar: Boolean = true,
+    val mod69MediaButtons: Boolean = true,
+    /** Headset next/previous buttons jump forward/back instead of changing video. */
+    val mod69NextPrevAsSeek: Boolean = false,
+    /** Aspect ratio kept for all videos (width / height), 0 = each video's own. */
+    val mod69AspectAll: Float = 0f,
+    val mod69UserAgent: String = "",
+    /** Accent colour for the player (seek bar, highlights). 0 = app colour. */
+    val mod69PlayerAccent: Long = 0L,
 ) {
 
     companion object {

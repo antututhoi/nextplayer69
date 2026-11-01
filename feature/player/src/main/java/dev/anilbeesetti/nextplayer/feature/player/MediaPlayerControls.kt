@@ -1,5 +1,6 @@
 package dev.anilbeesetti.nextplayer.feature.player
 
+import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69ResumeBar
 import androidx.activity.compose.BackHandler
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
@@ -87,6 +88,34 @@ internal fun MediaPlayerControls(
         dpadUpDown = dpadUpDown,
     )
     var overlayView by remember { mutableStateOf<OverlayView?>(value = null) }
+    LaunchedEffect(Unit) {
+        if (!playerPreferences.mod69ShowUiAtStart) controlsVisibilityState.hideControls()
+    }
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.savePrefs = { t -> onAction(PlayerAction.Mod69Update(t)) }
+    LaunchedEffect(Unit) {
+        val keep = playerPreferences.mod69AspectAll
+        if (keep > 0f) {
+            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.aspectAll = true
+            if (dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.aspect == null) {
+                dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.aspect = keep
+            }
+        }
+    }
+    var mod69ResumeBar by remember { mutableStateOf(false) }
+    LaunchedEffect(metadataState.mediaId) {
+        mod69ResumeBar = false
+        if (!playerPreferences.mod69ResumeBar ||
+            playerPreferences.resume != dev.anilbeesetti.nextplayer.core.model.Resume.YES
+        ) {
+            return@LaunchedEffect
+        }
+        kotlinx.coroutines.delay(1500)
+        if (player.currentPosition > 4000) {
+            mod69ResumeBar = true
+            kotlinx.coroutines.delay(7000)
+            mod69ResumeBar = false
+        }
+    }
     LaunchedEffect(metadataState.mediaId) {
         if (overlayView == OverlayView.CHAPTERS) overlayView = null
     }
@@ -161,7 +190,7 @@ internal fun MediaPlayerControls(
                         .background(Color.Black.copy(alpha = 0.3f)),
                 )
             }
-            if (mediaPresentationState.isBuffering) {
+            if (mediaPresentationState.isBuffering && playerPreferences.mod69LoadingCircle) {
                 CircularProgressIndicator(
                     Modifier
                         .align(Alignment.Center)
@@ -176,6 +205,15 @@ internal fun MediaPlayerControls(
                 Mod69CornerInfo(progressState = progressState, preferences = playerPreferences)
             }
             PlayerGestureIndicators(tapGestureState = tapGestureState)
+            if (mod69ResumeBar) {
+                Mod69ResumeBar(
+                    onStartOver = {
+                        player.seekTo(0)
+                        mod69ResumeBar = false
+                    },
+                    onClose = { mod69ResumeBar = false },
+                )
+            }
             DpadSeekIndicator(
                 visible = keyInputState.isSeeking && keyInputState.seekOffsetMs != 0L,
                 offsetMs = keyInputState.seekOffsetMs,
@@ -185,6 +223,7 @@ internal fun MediaPlayerControls(
             if (controlsVisibilityState.controlsVisible && controlsVisibilityState.controlsLocked) {
                 PlayerLockedControls(
                     onUnlockControls = controlsVisibilityState::unlockControls,
+                    kidsLock = playerPreferences.mod69KidsLock,
                     unlockButtonModifier = Modifier.thenIf(condition = isTv) {
                         focusRequester(focusRequester = unlockFocusRequester)
                             .onFocusChanged { isUnlockFocused = it.hasFocus }
@@ -249,6 +288,9 @@ internal fun MediaPlayerControls(
 
     BackHandler {
         when {
+            playerPreferences.mod69KidsLock && controlsVisibilityState.controlsLocked ->
+                controlsVisibilityState.showControls()
+
             overlayView != null -> overlayView = null
 
             isTv && controlsVisibilityState.controlsVisible ->

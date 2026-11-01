@@ -86,6 +86,9 @@ fun MediaLayoutAndSortSettings(
             Sort.By.DATE,
             Sort.By.SIZE,
             Sort.By.PATH,
+            Sort.By.RESOLUTION,
+            Sort.By.PLAYED,
+            Sort.By.TYPE,
         ),
     dateLabel: Int = R.string.date,
 ) {
@@ -129,6 +132,9 @@ fun MediaLayoutAndSortSettings(
                 Sort.By.DATE -> dateLabel to NextIcons.Calendar
                 Sort.By.SIZE -> R.string.size to NextIcons.Size
                 Sort.By.PATH -> R.string.location to NextIcons.Location
+                Sort.By.RESOLUTION -> R.string.resolution to NextIcons.Video
+                Sort.By.PLAYED -> R.string.mod69_played_time to NextIcons.History
+                Sort.By.TYPE -> R.string.mod69_type to NextIcons.FileOpen
             }
             TextIconToggleButton(
                 text = stringResource(id = label),
@@ -165,7 +171,9 @@ fun MediaLayoutAndSortSettings(
             ) {
                 val ascending = order == Sort.Order.ASCENDING
                 val label = when (sort.by) {
-                    Sort.By.TITLE, Sort.By.PATH -> if (ascending) R.string.a_z else R.string.z_a
+                    Sort.By.TITLE, Sort.By.PATH, Sort.By.TYPE -> if (ascending) R.string.a_z else R.string.z_a
+                    Sort.By.RESOLUTION -> if (ascending) R.string.smallest else R.string.largest
+                    Sort.By.PLAYED -> if (ascending) R.string.oldest else R.string.newest
                     Sort.By.LENGTH -> if (ascending) R.string.shortest else R.string.longest
                     Sort.By.SIZE -> if (ascending) R.string.smallest else R.string.largest
                     Sort.By.DATE -> if (ascending) R.string.oldest else R.string.newest

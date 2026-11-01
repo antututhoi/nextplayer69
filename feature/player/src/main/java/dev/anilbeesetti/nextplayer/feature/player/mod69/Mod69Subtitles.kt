@@ -56,6 +56,16 @@ data class Mod69SubStyle(
     val fontPath: String = "",
     /** Extra folder (real path) searched for subtitles with the same name. */
     val subtitleFolder: String = "",
+    /** Extra size in % (100 = as set in Settings → Subtitle). */
+    val scalePercent: Int = 100,
+    /** 0 centre, 1 left, 2 right. */
+    val align: Int = 0,
+    /** Lines starting with "/" show in italics (MicroDVD style). */
+    val italicSlash: Boolean = true,
+    /** Force left-to-right for right-to-left subtitles. */
+    val forceLtr: Boolean = false,
+    /** Default subtitle delay for every video, in ms. */
+    val defaultDelayMs: Long = 0L,
 )
 
 object Mod69SubStore {
@@ -76,6 +86,11 @@ object Mod69SubStore {
             bgColor = o.optInt("bgColor", d.bgColor),
             bottomPercent = o.optInt("bottomPercent", d.bottomPercent),
             fontPath = o.optString("fontPath", ""),
+            scalePercent = o.optInt("scalePercent", d.scalePercent),
+            align = o.optInt("align", d.align),
+            italicSlash = o.optBoolean("italicSlash", d.italicSlash),
+            forceLtr = o.optBoolean("forceLtr", d.forceLtr),
+            defaultDelayMs = o.optLong("defaultDelayMs", d.defaultDelayMs),
             subtitleFolder = p.getString("folder", "") ?: "",
         )
     }
@@ -86,6 +101,9 @@ object Mod69SubStore {
         val o = JSONObject().put("textColor", s.textColor).put("edgeType", s.edgeType)
             .put("edgeColor", s.edgeColor).put("bgColor", s.bgColor)
             .put("bottomPercent", s.bottomPercent).put("fontPath", s.fontPath)
+            .put("scalePercent", s.scalePercent).put("align", s.align)
+            .put("italicSlash", s.italicSlash).put("forceLtr", s.forceLtr)
+            .put("defaultDelayMs", s.defaultDelayMs)
         // "folder" is kept as its own key so core code can read it without this class.
         prefs?.edit()?.putString("cfg", o.toString())?.putString("folder", s.subtitleFolder)?.apply()
     }
@@ -169,7 +187,41 @@ internal fun Mod69SubtitlePage() {
         onValueChangeFinished = { Mod69SubStore.update { it.copy(bottomPercent = pos.toInt()) } },
         valueRange = 0f..45f,
     )
-    Text("Size and bold: Settings → Subtitle. Sync: subtitle menu (±0.1 s).", style = MaterialTheme.typography.bodySmall)
+    var scale by remember(s.scalePercent) { mutableFloatStateOf(s.scalePercent.toFloat()) }
+    Text("Scale: ${scale.toInt()}%", style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 8.dp))
+    Slider(
+        value = scale,
+        onValueChange = { scale = it },
+        onValueChangeFinished = { Mod69SubStore.update { it.copy(scalePercent = scale.toInt()) } },
+        valueRange = 50f..250f,
+    )
+    Text("Alignment", style = MaterialTheme.typography.labelLarge)
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        listOf("Centre", "Left", "Right").forEachIndexed { i, name ->
+            FilterChip(selected = s.align == i, onClick = { Mod69SubStore.update { it.copy(align = i) } }, label = { Text(name) })
+        }
+    }
+    var delay by remember(s.defaultDelayMs) { mutableFloatStateOf(s.defaultDelayMs / 1000f) }
+    Text(
+        "Default sync for every video: " + String.format(java.util.Locale.US, "%+.1f s", delay),
+        style = MaterialTheme.typography.labelLarge,
+        modifier = Modifier.padding(top = 8.dp),
+    )
+    Slider(
+        value = delay,
+        onValueChange = { delay = (it * 10).toInt() / 10f },
+        onValueChangeFinished = { Mod69SubStore.update { it.copy(defaultDelayMs = (delay * 1000).toLong()) } },
+        valueRange = -10f..10f,
+    )
+    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+        androidx.compose.material3.Checkbox(checked = s.italicSlash, onCheckedChange = { v -> Mod69SubStore.update { it.copy(italicSlash = v) } })
+        Text("Italic for lines starting with \"/\"")
+    }
+    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+        androidx.compose.material3.Checkbox(checked = s.forceLtr, onCheckedChange = { v -> Mod69SubStore.update { it.copy(forceLtr = v) } })
+        Text("Force left-to-right (RTL subtitles)")
+    }
+    Text("Size and bold: Settings → Subtitle. Sync for this video: subtitle menu (±0.1 s).", style = MaterialTheme.typography.bodySmall)
 
     Text("Font file", style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 8.dp))
     Text(if (s.fontPath.isEmpty()) "Using the font from settings" else "Custom font in use", style = MaterialTheme.typography.bodySmall)
@@ -216,5 +268,42 @@ private fun ColorRow(colors: List<Int>, selected: Int, onPick: (Int) -> Unit) {
                     .clickable { onPick(c) },
             )
         }
+    }
+}
+
+/** 69 mod: applies italic "/" lines, force LTR and alignment to text cues. */
+internal fun mod69Cues(cues: List<androidx.media3.common.text.Cue>?, style: Mod69SubStyle): List<androidx.media3.common.text.Cue>? {
+    if (cues == null) return null
+    if (!style.italicSlash && !style.forceLtr && style.align == 0) return cues
+    return cues.map { cue ->
+        val text = cue.text ?: return@map cue
+        val b = cue.buildUpon()
+        if (style.italicSlash || style.forceLtr) {
+            val out = android.text.SpannableStringBuilder(text)
+            var lineStart = 0
+            while (lineStart <= out.length) {
+                var lineEnd = out.indexOf('\n', lineStart).let { if (it < 0) out.length else it }
+                if (style.italicSlash && lineStart < lineEnd && out[lineStart] == '/') {
+                    out.delete(lineStart, lineStart + 1)
+                    lineEnd--
+                    if (lineEnd > lineStart) {
+                        out.setSpan(android.text.style.StyleSpan(Typeface.ITALIC), lineStart, lineEnd, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+                }
+                if (style.forceLtr) {
+                    out.insert(lineStart, "\u200E")
+                    lineEnd++
+                }
+                lineStart = lineEnd + 1
+            }
+            b.setText(out)
+        }
+        when (style.align) {
+            1 -> b.setTextAlignment(android.text.Layout.Alignment.ALIGN_NORMAL)
+                .setPosition(0.05f).setPositionAnchor(androidx.media3.common.text.Cue.ANCHOR_TYPE_START)
+            2 -> b.setTextAlignment(android.text.Layout.Alignment.ALIGN_OPPOSITE)
+                .setPosition(0.95f).setPositionAnchor(androidx.media3.common.text.Cue.ANCHOR_TYPE_END)
+        }
+        b.build()
     }
 }

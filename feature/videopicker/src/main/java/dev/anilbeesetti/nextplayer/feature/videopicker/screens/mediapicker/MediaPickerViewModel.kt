@@ -83,6 +83,7 @@ class MediaPickerViewModel(
     private val stateInternal = MutableStateFlow(
         value = MediaPickerUiState(
             folderName = folderPath?.let { File(folderPath).prettyName },
+            folderPath = folderPath,
             preferences = preferencesRepository.applicationPreferences.value,
         ),
     )
@@ -575,6 +576,7 @@ class MediaPickerViewModel(
 @Stable
 data class MediaPickerUiState(
     val folderName: String?,
+    val folderPath: String? = null,
     val refreshing: Boolean = false,
     val recentlyPlayedVideo: Video? = null,
     val mediaDataState: DataState<MediaHolder?> = DataState.Loading,

@@ -66,6 +66,10 @@ class PlayerViewModel(
 
             is PlayerAction.PlayInBackground -> output.playInBackground()
 
+            is PlayerAction.Mod69Update -> viewModelScope.launch {
+                preferencesRepository.updatePlayerPreferences(action.transform)
+            }
+
             is PlayerAction.SetVideoDecoderMode -> output.setVideoDecoderMode(action.mode)
 
             is PlayerAction.SetAudioDecoderMode -> output.setAudioDecoderMode(action.mode)
@@ -203,6 +207,7 @@ sealed interface PlayerAction {
     data class UpdatePlayerBrightness(val value: Float) : PlayerAction
     data class SetLoopMode(val loopMode: LoopMode) : PlayerAction
     data object ToggleTimeDisplay : PlayerAction
+    data class Mod69Update(val transform: (PlayerPreferences) -> PlayerPreferences) : PlayerAction
     data class OnVideoZoomEvent(val event: VideoZoomEvent) : PlayerAction
     data class OnSubtitleOptionEvent(val event: SubtitleOptionsEvent) : PlayerAction
 }

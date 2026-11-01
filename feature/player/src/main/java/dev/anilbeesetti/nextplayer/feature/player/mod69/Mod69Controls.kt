@@ -23,6 +23,17 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.rounded.VolumeOff
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.GraphicEq
+import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.TouchApp
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.rounded.Apps
 import androidx.compose.material.icons.rounded.BookmarkAdd
 import androidx.compose.material.icons.rounded.CameraAlt
@@ -93,7 +104,31 @@ enum class QuickItem(val id: String) {
     SCREENSHOT("screenshot"),
     BOOKMARK("bookmark"),
     NIGHT("night"),
+    MUTE("mute"),
+    EQUALIZER("equalizer"),
+    SLEEP("sleep"),
+    AB("ab"),
+    HELP("help"),
     ;
+
+    val label: String
+        get() = when (this) {
+            SPEED -> "Speed"
+            BACKGROUND -> "Background"
+            ROTATE -> "Rotation"
+            LOOP -> "Loop"
+            SHUFFLE -> "Shuffle"
+            PIP -> "Picture-in-picture"
+            TOOLS -> "Tools"
+            SCREENSHOT -> "Screenshot"
+            BOOKMARK -> "Bookmark"
+            NIGHT -> "Night mode"
+            MUTE -> "Mute"
+            EQUALIZER -> "Equalizer"
+            SLEEP -> "Sleep timer"
+            AB -> "A-B repeat"
+            HELP -> "Gesture help"
+        }
 
     companion object {
         fun fromIds(ids: List<String>): List<QuickItem> = ids.mapNotNull { id -> entries.find { it.id == id } }
@@ -117,68 +152,177 @@ internal fun Mod69QuickRow(
     val items = QuickItem.fromIds(preferences.mod69QuickItems)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    if (items.isEmpty()) return
+    var expanded by remember { mutableStateOf(false) }
+    var customise by remember { mutableStateOf(false) }
     val systemBarsPadding = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(systemBarsPadding.copy(top = 0.dp, bottom = 0.dp))
-            .padding(horizontal = 12.dp)
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        items.forEach { item ->
-            when (item) {
-                QuickItem.SPEED -> PlaybackSpeedButton(player = player, onClick = onPlaybackSpeedClick)
 
-                QuickItem.BACKGROUND -> PlayerButton(onClick = onPlayInBackgroundClick) {
-                    Icon(painter = painterResource(R.drawable.ic_headset), contentDescription = null)
+    @Composable
+    fun ItemButton(item: QuickItem) {
+        when (item) {
+            QuickItem.SPEED -> PlaybackSpeedButton(player = player, onClick = onPlaybackSpeedClick)
+
+            QuickItem.BACKGROUND -> PlayerButton(onClick = onPlayInBackgroundClick) {
+                Icon(painter = painterResource(R.drawable.ic_headset), contentDescription = null)
+            }
+
+            QuickItem.ROTATE -> if (!isTv) RotateButton()
+
+            QuickItem.LOOP -> LoopButton(player = player)
+
+            QuickItem.SHUFFLE -> ShuffleButton(player = player)
+
+            QuickItem.PIP -> if (isPipSupported) {
+                PlayerButton(onClick = onPictureInPictureClick) {
+                    Icon(painter = painterResource(R.drawable.ic_pip), contentDescription = null)
                 }
+            }
 
-                QuickItem.ROTATE -> if (!isTv) RotateButton()
+            QuickItem.TOOLS -> PlayerButton(onClick = onToolsClick) {
+                Icon(imageVector = Icons.Rounded.Apps, contentDescription = null)
+            }
 
-                QuickItem.LOOP -> LoopButton(player = player)
+            QuickItem.SCREENSHOT -> PlayerButton(onClick = {
+                player?.let { p -> scope.launch { takeScreenshot(context, p) } }
+            }) {
+                Icon(imageVector = Icons.Rounded.CameraAlt, contentDescription = null)
+            }
 
-                QuickItem.SHUFFLE -> ShuffleButton(player = player)
-
-                QuickItem.PIP -> if (isPipSupported) {
-                    PlayerButton(onClick = onPictureInPictureClick) {
-                        Icon(painter = painterResource(R.drawable.ic_pip), contentDescription = null)
-                    }
+            QuickItem.BOOKMARK -> PlayerButton(onClick = {
+                player?.let { p ->
+                    Mod69Session.loadBookmarks(context, p.mod69Key())
+                    Mod69Session.addBookmark(context, p.currentPosition)
+                    android.widget.Toast.makeText(context, "Bookmark added", android.widget.Toast.LENGTH_SHORT).show()
                 }
+            }) {
+                Icon(imageVector = Icons.Rounded.BookmarkAdd, contentDescription = null)
+            }
 
-                QuickItem.TOOLS -> PlayerButton(onClick = onToolsClick) {
-                    Icon(imageVector = Icons.Rounded.Apps, contentDescription = null)
-                }
+            QuickItem.NIGHT -> PlayerButton(onClick = {
+                Mod69Session.nightDim = if (Mod69Session.nightDim > 0f) 0f else 0.4f
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.NightsStay,
+                    contentDescription = null,
+                    tint = if (Mod69Session.nightDim > 0f) MaterialTheme.colorScheme.primary else Color.White,
+                )
+            }
 
-                QuickItem.SCREENSHOT -> PlayerButton(onClick = {
-                    player?.let { p -> scope.launch { takeScreenshot(context, p) } }
-                }) {
-                    Icon(imageVector = Icons.Rounded.CameraAlt, contentDescription = null)
-                }
-
-                QuickItem.BOOKMARK -> PlayerButton(onClick = {
+            QuickItem.MUTE -> {
+                var muted by remember { mutableStateOf(player?.volume == 0f) }
+                PlayerButton(onClick = {
                     player?.let { p ->
-                        Mod69Session.loadBookmarks(context, p.mod69Key())
-                        Mod69Session.addBookmark(context, p.currentPosition)
-                        android.widget.Toast.makeText(context, "Bookmark added", android.widget.Toast.LENGTH_SHORT).show()
+                        if (p.volume > 0f) {
+                            Mod69Session.volumeBeforeMute = p.volume
+                            p.volume = 0f
+                        } else {
+                            p.volume = Mod69Session.volumeBeforeMute.takeIf { it > 0f } ?: 1f
+                        }
+                        muted = p.volume == 0f
                     }
-                }) {
-                    Icon(imageVector = Icons.Rounded.BookmarkAdd, contentDescription = null)
-                }
-
-                QuickItem.NIGHT -> PlayerButton(onClick = {
-                    Mod69Session.nightDim = if (Mod69Session.nightDim > 0f) 0f else 0.4f
                 }) {
                     Icon(
-                        imageVector = Icons.Rounded.NightsStay,
+                        imageVector = if (muted) Icons.AutoMirrored.Rounded.VolumeOff else Icons.AutoMirrored.Rounded.VolumeUp,
                         contentDescription = null,
-                        tint = if (Mod69Session.nightDim > 0f) MaterialTheme.colorScheme.primary else Color.White,
+                        tint = if (muted) MaterialTheme.colorScheme.primary else Color.White,
                     )
                 }
             }
+
+            QuickItem.EQUALIZER -> PlayerButton(onClick = {
+                Mod69Session.toolsStart = "AUDIO"
+                onToolsClick()
+            }) { Icon(imageVector = Icons.Rounded.GraphicEq, contentDescription = null) }
+
+            QuickItem.SLEEP -> PlayerButton(onClick = {
+                Mod69Session.toolsStart = "SLEEP"
+                onToolsClick()
+            }) { Icon(imageVector = Icons.Rounded.Bedtime, contentDescription = null) }
+
+            QuickItem.AB -> PlayerButton(onClick = {
+                Mod69Session.toolsStart = "AB"
+                onToolsClick()
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.Repeat,
+                    contentDescription = null,
+                    tint = if (Mod69Session.aMs >= 0) MaterialTheme.colorScheme.primary else Color.White,
+                )
+            }
+
+            QuickItem.HELP -> PlayerButton(onClick = {
+                Mod69Session.toolsStart = "HELP"
+                onToolsClick()
+            }) { Icon(imageVector = Icons.Rounded.TouchApp, contentDescription = null) }
         }
+    }
+
+    val rest = QuickItem.entries.filter { it !in items }
+    androidx.compose.foundation.layout.Column(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(systemBarsPadding.copy(top = 0.dp, bottom = 0.dp))
+                .padding(horizontal = 12.dp)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            items.forEach { ItemButton(it) }
+            PlayerButton(onClick = { expanded = !expanded }) {
+                Icon(
+                    imageVector = if (expanded) Icons.AutoMirrored.Rounded.KeyboardArrowLeft else Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                    contentDescription = null,
+                )
+            }
+            if (expanded) {
+                rest.forEach { ItemButton(it) }
+                PlayerButton(onClick = { customise = true }) {
+                    Icon(imageVector = Icons.Rounded.Edit, contentDescription = null)
+                }
+            }
+        }
+    }
+
+    if (customise) {
+        val chosen = remember { androidx.compose.runtime.mutableStateListOf<QuickItem>().apply { addAll(items) } }
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { customise = false },
+            title = { Text("Customise items") },
+            text = {
+                androidx.compose.foundation.layout.Column(
+                    Modifier.verticalScroll(rememberScrollState()),
+                ) {
+                    Text("Ticked items show in the row, in the order you tick them. The rest are behind the arrow.", style = MaterialTheme.typography.bodySmall)
+                    QuickItem.entries.forEach { item ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { if (item in chosen) chosen.remove(item) else chosen.add(item) },
+                        ) {
+                            androidx.compose.material3.Checkbox(
+                                checked = item in chosen,
+                                onCheckedChange = { if (it) chosen.add(item) else chosen.remove(item) },
+                            )
+                            Text(item.label)
+                            if (item in chosen) {
+                                Text("  #" + (chosen.indexOf(item) + 1), color = MaterialTheme.colorScheme.primary)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = {
+                    val ids = chosen.map { it.id }
+                    Mod69Session.savePrefs { it.copy(mod69QuickItems = ids) }
+                    customise = false
+                }) { Text("Apply") }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = { customise = false }) { Text("Cancel") }
+            },
+        )
     }
 }
 

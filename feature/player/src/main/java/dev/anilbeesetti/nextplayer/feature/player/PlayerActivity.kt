@@ -117,7 +117,7 @@ class PlayerActivity : ComponentActivity() {
 
         override fun onPlayerError(error: PlaybackException) {
             playbackFailed = true
-            if (playerApi.suppressErrorMessage) {
+            if (playerApi.suppressErrorMessage || playerPreferences.mod69SuppressErrors) {
                 val controller = mediaController ?: return
                 if (controller.hasNextMediaItem()) {
                     controller.seekToNextMediaItem()
@@ -215,7 +215,7 @@ class PlayerActivity : ComponentActivity() {
             }
 
             if (!playerApi.launchInBackground) {
-                NextPlayerTheme(darkTheme = true) {
+                NextPlayerTheme(darkTheme = true, accent = playerPreferences.mod69PlayerAccent) {
                     MediaPlayerScreen(
                         viewModel = viewModel,
                         player = player,

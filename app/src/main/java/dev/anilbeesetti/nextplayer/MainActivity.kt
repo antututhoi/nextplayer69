@@ -150,6 +150,7 @@ class MainActivity : FragmentActivity() {
                 darkTheme = shouldUseDarkTheme,
                 highContrastDarkTheme = shouldUseHighContrastDarkTheme(state = state),
                 dynamicColor = shouldUseDynamicTheming(state = state),
+                accent = (state as? MainActivityUiState.Success)?.preferences?.mod69AccentColor ?: 0L,
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

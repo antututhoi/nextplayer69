@@ -9,6 +9,9 @@ data class Sort(val by: By, val order: Order) {
         PATH,
         SIZE,
         DATE,
+        RESOLUTION,
+        PLAYED,
+        TYPE,
     }
 
     enum class Order {
@@ -88,6 +91,10 @@ data class Sort(val by: By, val order: Order) {
             By.PATH -> videoPathComparator
             By.SIZE -> compareBy<Video> { it.size }.then(comparator = videoTitleComparator)
             By.DATE -> compareBy<Video> { it.dateModified }.then(comparator = videoTitleComparator)
+            By.RESOLUTION -> compareBy<Video> { it.width.toLong() * it.height }.then(comparator = videoTitleComparator)
+            By.PLAYED -> compareBy<Video> { it.lastPlayedAt?.time ?: 0L }.then(comparator = videoTitleComparator)
+            By.TYPE -> compareBy<Video> { it.nameWithExtension.substringAfterLast('.', "").lowercase() }
+                .then(comparator = videoTitleComparator)
         }
 
         return when (order) {
@@ -123,6 +130,7 @@ data class Sort(val by: By, val order: Order) {
             By.SIZE -> compareBy<Folder> { it.totalSize }.then(comparator = folderNameComparator)
 
             By.DATE -> compareBy<Folder> { it.dateModified }.then(comparator = folderNameComparator)
+            By.RESOLUTION, By.PLAYED, By.TYPE -> folderNameComparator
         }
 
         return when (order) {
@@ -139,7 +147,10 @@ data class Sort(val by: By, val order: Order) {
             )
         }
         val comparator = when (by) {
-            By.TITLE, By.LENGTH -> nameComparator
+            By.TITLE, By.LENGTH, By.RESOLUTION, By.PLAYED -> nameComparator
+
+            By.TYPE -> compareBy<NetworkFile> { it.name.substringAfterLast('.', "").lowercase() }
+                .then(comparator = nameComparator)
 
             By.PATH -> Comparator<NetworkFile> { first, second ->
                 stringComparator.compare(
