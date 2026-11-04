@@ -353,6 +353,7 @@ internal fun Mod69BottomControls(
     onVideoContentScaleLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     seekPreview: Boolean = true,
+    frameStepButtons: Boolean = true,
 ) {
     val systemBarsPadding = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     Column(
@@ -384,7 +385,17 @@ internal fun Mod69BottomControls(
             val ctx = LocalContext.current
             val key = player?.currentMediaItem?.localConfiguration?.uri?.toString()
             LaunchedEffect(key) { player?.let { Mod69Session.loadBookmarks(ctx, it.mod69Key()) } }
-            Box(modifier = Modifier.weight(1f)) {
+            // 69 mod: frame-step buttons at both ends of the seek bar (pause and move one frame)
+            if (frameStepButtons && player != null) {
+                PlayerButton(
+                    onClick = { frameStep(player, -1) },
+                    contentPadding = PaddingValues(4.dp),
+                    fixedSize = false,
+                ) {
+                    Icon(imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft, contentDescription = "Previous frame")
+                }
+            }
+            Box(modifier = Modifier.weight(1f).padding(horizontal = if (frameStepButtons) 2.dp else 0.dp)) {
             PlayerSeekbar(
                 modifier = Modifier.fillMaxWidth(),
                 position = position.toFloat(),
@@ -420,6 +431,15 @@ internal fun Mod69BottomControls(
                     }
                 }
             }
+            }
+            if (frameStepButtons && player != null) {
+                PlayerButton(
+                    onClick = { frameStep(player, 1) },
+                    contentPadding = PaddingValues(4.dp),
+                    fixedSize = false,
+                ) {
+                    Icon(imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = "Next frame")
+                }
             }
             PlayerButton(
                 onClick = onToggleTimeDisplay,
@@ -476,13 +496,13 @@ internal fun BoxScope.Mod69MiniProgressBar(progressState: ProgressStateWithTickI
         modifier = Modifier
             .align(Alignment.BottomStart)
             .fillMaxWidth()
-            .height(preferences.mod69MiniProgressHeightDp.coerceIn(1, 8).dp)
+            .height(preferences.mod69MiniBarHeight.coerceIn(1, 12).dp)
             .background(Color.White.copy(alpha = 0.15f)),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth(fraction)
-                .height(preferences.mod69MiniProgressHeightDp.coerceIn(1, 8).dp)
+                .height(preferences.mod69MiniBarHeight.coerceIn(1, 12).dp)
                 .background(preferences.mod69MiniProgressColor.toArgbColor()),
         )
     }

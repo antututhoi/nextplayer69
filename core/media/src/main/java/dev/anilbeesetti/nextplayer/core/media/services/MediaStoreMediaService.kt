@@ -157,7 +157,7 @@ class MediaStoreMediaService(
         title = name,
         parentPath = parentPath,
         displayName = name,
-        duration = duration,
+        duration = duration.coerceAtLeast(0L),
         size = size,
         width = width,
         height = height,

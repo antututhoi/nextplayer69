@@ -216,7 +216,8 @@ fun VideoGridItem(
     onLongClick: (() -> Unit)? = null,
 ) {
     NextSegmentedListItem(
-        modifier = modifier.width(IntrinsicSize.Min),
+        // 69 mod: fill the grid cell so every tile is the same size even before its thumbnail loads
+        modifier = modifier.fillMaxWidth(),
         selected = selected,
         contentPadding = PaddingValues(8.dp),
         colors = ListItemDefaults.segmentedColors(

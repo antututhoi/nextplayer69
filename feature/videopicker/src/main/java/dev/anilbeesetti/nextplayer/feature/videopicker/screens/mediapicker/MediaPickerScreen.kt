@@ -58,6 +58,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -235,31 +237,48 @@ internal fun MediaPickerScreenContent(
         (state.mediaDataState as? DataState.Success)?.value?.run { folders.size + videos.size } ?: 0
 
     mod69HideActionLabels = state.preferences.mod69HideActionLabels
-    // 69 mod: in-app destination picker for Copy (false) / Move (true)
-    var mod69PickFor by remember { mutableStateOf<Boolean?>(null) }
-    mod69PickFor?.let { move ->
-        val items = selectionManager.selectionItems
-        fun done() {
-            mod69PickFor = null
-            selectionManager.exitSelectionMode()
-        }
+    // 69 mod: Copy / Move remember the videos; browse to the place and tap "Paste here".
+    // "Other place" opens the in-app folder picker instead.
+    var mod69ShowPicker by remember { mutableStateOf(false) }
+    val mod69Clip = dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69Clipboard.clip
+    val mod69Scope = rememberCoroutineScope()
+    if (mod69ShowPicker && mod69Clip != null) {
         dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69FolderPickerDialog(
-            move = move,
-            count = items.size,
+            move = mod69Clip.move,
+            count = mod69Clip.uris.size,
             onPasteLocal = { path ->
-                onAction(MediaPickerAction.TransferSelectedTo(items, move, localPath = path, cloudFolderUri = null))
-                done()
+                onAction(MediaPickerAction.Mod69Paste(localPath = path, cloudFolderUri = null))
+                mod69ShowPicker = false
             },
             onPasteCloud = { uri ->
-                onAction(MediaPickerAction.TransferSelectedTo(items, move, localPath = null, cloudFolderUri = uri))
-                done()
+                onAction(MediaPickerAction.Mod69Paste(localPath = null, cloudFolderUri = uri))
+                mod69ShowPicker = false
             },
             onUseSystemPicker = {
-                onAction(if (move) MediaPickerAction.MoveSelectedItems(items) else MediaPickerAction.CopySelectedItems(items))
-                done()
+                onAction(MediaPickerAction.Mod69Paste(localPath = null, cloudFolderUri = null))
+                mod69ShowPicker = false
             },
-            onDismiss = { mod69PickFor = null },
+            onDismiss = { mod69ShowPicker = false },
         )
+    }
+    val mod69PasteHere: () -> Unit = {
+        val here = state.folderPath
+        if (here != null) {
+            if (dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.isVirtualPath(here)) {
+                mod69Scope.launch {
+                    val uri = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                        dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.folderDocUri(context, here)
+                    }
+                    if (uri != null) {
+                        onAction(MediaPickerAction.Mod69Paste(localPath = null, cloudFolderUri = uri))
+                    } else {
+                        android.widget.Toast.makeText(context, "Can't paste in this cloud folder - use Other place", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                onAction(MediaPickerAction.Mod69Paste(localPath = here, cloudFolderUri = null))
+            }
+        }
     }
     val mod69BarBottom = state.preferences.mod69ListBarAtBottom
     val mod69TopBar: @Composable () -> Unit = {
@@ -382,7 +401,38 @@ internal fun MediaPickerScreenContent(
     Scaffold(
         topBar = { if (!mod69BarBottom || selectionManager.isInSelectionMode) mod69TopBar() },
         bottomBar = {
-          androidx.compose.foundation.layout.Column {
+          // 69 mod: keep the bottom bars above the app's floating nav bar and the phone's nav buttons
+          androidx.compose.foundation.layout.Column(
+              modifier = if (selectionManager.isInSelectionMode) Modifier else Modifier.padding(bottom = navigationBottomPadding),
+          ) {
+            if (mod69Clip != null && !selectionManager.isInSelectionMode) {
+                androidx.compose.foundation.layout.Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                ) {
+                    Text(
+                        text = (if (mod69Clip.move) "Move " else "Copy ") + "${mod69Clip.uris.size} video(s)" +
+                            if (state.folderPath == null) " – open a folder" else "",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = 2,
+                        modifier = Modifier.weight(1f),
+                    )
+                    androidx.compose.material3.TextButton(
+                        enabled = state.folderPath != null,
+                        onClick = mod69PasteHere,
+                    ) { Text("Paste here") }
+                    androidx.compose.material3.TextButton(onClick = { mod69ShowPicker = true }) { Text("Other place") }
+                    androidx.compose.material3.IconButton(onClick = {
+                        dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69Clipboard.clip = null
+                    }) {
+                        Icon(imageVector = NextIcons.Close, contentDescription = "Cancel")
+                    }
+                }
+            }
             val mod69CloudScan by dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.scanState
                 .collectAsState()
             mod69CloudScan?.let { scan ->
@@ -422,7 +472,6 @@ internal fun MediaPickerScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                        .navigationBarsPadding()
                         .padding(horizontal = 12.dp, vertical = 6.dp),
                 ) {
                     Icon(
@@ -475,8 +524,14 @@ internal fun MediaPickerScreenContent(
                 onShareAction = {
                     onAction(MediaPickerAction.ShareSelectedItems(selectionManager.selectionItems))
                 },
-                onCopyAction = { mod69PickFor = false },
-                onMoveAction = { mod69PickFor = true },
+                onCopyAction = {
+                    onAction(MediaPickerAction.Mod69Clip(selectionManager.selectionItems, move = false))
+                    selectionManager.exitSelectionMode()
+                },
+                onMoveAction = {
+                    onAction(MediaPickerAction.Mod69Clip(selectionManager.selectionItems, move = true))
+                    selectionManager.exitSelectionMode()
+                },
                 onHideAction = {
                     onAction(
                         MediaPickerAction.RequestHideSelectedItems(selectionManager.selectionItems),
@@ -539,8 +594,11 @@ internal fun MediaPickerScreenContent(
                         val updatedScaffoldPadding = scaffoldPadding.copy(
                             top = 0.dp,
                             start = 0.dp,
-                            bottom =
-                                scaffoldPadding.calculateBottomPadding() + navigationBottomPadding,
+                            bottom = if (selectionManager.isInSelectionMode) {
+                                scaffoldPadding.calculateBottomPadding() + navigationBottomPadding
+                            } else {
+                                scaffoldPadding.calculateBottomPadding()
+                            },
                         )
                         val mediaHolder = state.mediaDataState.value
                         if (mediaHolder == null ||

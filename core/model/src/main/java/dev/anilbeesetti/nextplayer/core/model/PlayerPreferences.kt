@@ -105,6 +105,16 @@ data class PlayerPreferences(
     val mod69PlayerAccent: Long = 0L,
     /** True once the button background was picked in 69 settings (overrides Material You buttons). */
     val mod69ButtonBgCustom: Boolean = false,
+    /** Thickness of the thin progress line shown while the controls are hidden (same as the seek bar line by default). */
+    val mod69MiniBarHeight: Int = 4,
+    /** Frame-step buttons at both ends of the seek bar. */
+    val mod69FrameStepOnBar: Boolean = true,
+    /** Tools menu layout: 0 = grid at the bottom, 1 = column on the left, 2 = column on the right. */
+    val mod69ToolsLayout: Int = 0,
+    /** How many tool buttons fit in the side column before it scrolls. */
+    val mod69ToolsVisible: Int = 6,
+    /** Decoder / playlist / audio / subtitle buttons in one ⋮ menu so the title has room. */
+    val mod69TopButtonsMenu: Boolean = true,
 ) {
 
     companion object {

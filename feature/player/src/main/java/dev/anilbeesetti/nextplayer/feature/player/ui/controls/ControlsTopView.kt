@@ -1,7 +1,11 @@
 package dev.anilbeesetti.nextplayer.feature.player.ui.controls
 
 import androidx.annotation.OptIn
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -49,7 +53,11 @@ fun ControlsTopView(
     onAudioClick: () -> Unit = {},
     onSubtitleClick: () -> Unit = {},
     onPlaylistClick: () -> Unit = {},
+    compactButtons: Boolean = false,
 ) {
+    // 69 mod: tap the title to read all of it
+    var titleExpanded by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var menuOpen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     val firstControlFocusRequester = remember { FocusRequester() }
     val systemBarsPadding = WindowInsets.systemBars.union(
         WindowInsets.displayCutout,
@@ -78,12 +86,44 @@ fun ControlsTopView(
             text = title,
             style = MaterialTheme.typography.titleMedium.copy(lineBreak = LineBreak.Heading),
             color = Color.White,
-            maxLines = 2,
+            maxLines = if (titleExpanded) 8 else 2,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(weight = 1f),
+            modifier = Modifier
+                .weight(weight = 1f)
+                .clickable { titleExpanded = !titleExpanded },
         )
 
-        Row(
+        if (compactButtons) {
+            androidx.compose.foundation.layout.Box {
+                PlayerButton(
+                    modifier = Modifier.focusRequester(focusRequester = firstControlFocusRequester),
+                    onClick = { menuOpen = true },
+                ) {
+                    Icon(imageVector = androidx.compose.material.icons.Icons.Rounded.MoreVert, contentDescription = null)
+                }
+                androidx.compose.material3.DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                    androidx.compose.material3.DropdownMenuItem(
+                        text = { Text("Decoder: " + stringResource((videoDecoderMode ?: DecoderMode.HARDWARE).labelRes)) },
+                        onClick = { menuOpen = false; onDecoderClick() },
+                    )
+                    androidx.compose.material3.DropdownMenuItem(
+                        text = { Text("Playlist") },
+                        leadingIcon = { Icon(painterResource(R.drawable.ic_playlist), contentDescription = null) },
+                        onClick = { menuOpen = false; onPlaylistClick() },
+                    )
+                    androidx.compose.material3.DropdownMenuItem(
+                        text = { Text("Audio track") },
+                        leadingIcon = { Icon(painterResource(R.drawable.ic_audio_track), contentDescription = null) },
+                        onClick = { menuOpen = false; onAudioClick() },
+                    )
+                    androidx.compose.material3.DropdownMenuItem(
+                        text = { Text("Subtitles") },
+                        leadingIcon = { Icon(painterResource(R.drawable.ic_subtitle_track), contentDescription = null) },
+                        onClick = { menuOpen = false; onSubtitleClick() },
+                    )
+                }
+            }
+        } else Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {

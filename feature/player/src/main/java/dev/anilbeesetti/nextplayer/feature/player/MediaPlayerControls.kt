@@ -11,6 +11,8 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
+import dev.anilbeesetti.nextplayer.feature.player.extensions.nameRes
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -73,6 +75,8 @@ internal fun MediaPlayerControls(
     val playerPreferences = state.playerPreferences
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.swapGestureSides = playerPreferences.mod69SwapGestureSides
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.gestureEdgePercent = playerPreferences.mod69GestureEdgePercent
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.toolsLayout = playerPreferences.mod69ToolsLayout
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.toolsVisible = playerPreferences.mod69ToolsVisible
     var lastBackPress by remember { mutableStateOf(0L) }
     val metadataState = rememberMetadataState(player = player)
     val mediaPresentationState = rememberMediaPresentationState(player = player)
@@ -209,6 +213,47 @@ internal fun MediaPlayerControls(
                 Mod69CornerInfo(progressState = progressState, preferences = playerPreferences)
             }
             PlayerGestureIndicators(tapGestureState = tapGestureState)
+            // 69 mod: always say which zoom / aspect mode was just picked
+            var mod69ModeText by remember { mutableStateOf<String?>(null) }
+            val scaleName = androidx.compose.ui.res.stringResource(
+                videoZoomAndContentScaleState.videoContentScale.nameRes(),
+            )
+            var mod69FirstScale by remember { mutableStateOf(true) }
+            LaunchedEffect(videoZoomAndContentScaleState.videoContentScale) {
+                if (mod69FirstScale) {
+                    mod69FirstScale = false
+                    return@LaunchedEffect
+                }
+                mod69ModeText = scaleName
+                kotlinx.coroutines.delay(1500)
+                mod69ModeText = null
+            }
+            var mod69FirstAspect by remember { mutableStateOf(true) }
+            val aspectNow = dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.aspect
+            LaunchedEffect(aspectNow) {
+                if (mod69FirstAspect) {
+                    mod69FirstAspect = false
+                    return@LaunchedEffect
+                }
+                mod69ModeText = aspectNow?.let { "Aspect " + String.format(java.util.Locale.US, "%.2f", it).trimEnd('0').trimEnd('.') + ":1" }
+                    ?: "Video's own aspect"
+                kotlinx.coroutines.delay(1500)
+                mod69ModeText = null
+            }
+            mod69ModeText?.let { text ->
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .background(Color.Black.copy(alpha = 0.55f), androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                ) {
+                    androidx.compose.material3.Text(
+                        text = text,
+                        style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
+                        color = Color.White,
+                    )
+                }
+            }
             if (mod69ResumeBar) {
                 Mod69ResumeBar(
                     onStartOver = {

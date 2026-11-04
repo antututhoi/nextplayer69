@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.state.ProgressStateWithTickInterval
 import dev.anilbeesetti.nextplayer.core.model.ControlButtonsPosition
 import dev.anilbeesetti.nextplayer.core.model.PlayerPreferences
 import dev.anilbeesetti.nextplayer.core.common.extensions.isTelevision
-import dev.anilbeesetti.nextplayer.feature.player.extensions.nameRes
 import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69BottomControls
 import dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69QuickRow
 import dev.anilbeesetti.nextplayer.feature.player.state.ChaptersState
@@ -79,6 +77,7 @@ fun PlayerControls(
                         onSubtitleClick = { onShowOverlay(OverlayView.SUBTITLE_SELECTOR) },
                         onPlaylistClick = { onShowOverlay(OverlayView.PLAYLIST) },
                         onBackClick = onBackClick,
+                        compactButtons = playerPreferences.mod69TopButtonsMenu,
                     )
                     if (mod69Layout && !controlsVisibilityState.controlsLocked) {
                         // 69 mod: MX-style quick icons under the title
@@ -119,6 +118,7 @@ fun PlayerControls(
                     onSeek = seekGestureState::onSeek,
                     onSeekEnd = seekGestureState::onSeekEnd,
                     seekPreview = playerPreferences.mod69SeekPreview,
+                    frameStepButtons = playerPreferences.mod69FrameStepOnBar,
                     onLockControlsClick = {
                         controlsVisibilityState.showControls()
                         controlsVisibilityState.lockControls()
@@ -178,10 +178,6 @@ fun PlayerControls(
 
             videoZoomAndContentScaleState.isZooming -> InfoView(
                 info = "${(videoZoomAndContentScaleState.zoom * 100).toInt()}%",
-            )
-
-            videoZoomAndContentScaleState.showContentScaleIndicator -> InfoView(
-                info = stringResource(videoZoomAndContentScaleState.videoContentScale.nameRes()),
             )
 
             controlsVisibilityState.controlsVisible && !mod69Layout -> ControlsMiddleView(

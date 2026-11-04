@@ -98,6 +98,42 @@ object SafLibrary {
         scope.launch { runCatching { rescan(app, only) }; scanStateInternal.value = null }
     }
 
+    /** Document uri of a folder inside a picked cloud folder, from its virtual path ("/storage/☁ x/a/b"). */
+    fun folderDocUri(context: Context, virtualDir: String): String? {
+        val root = rootForPath(context, virtualDir) ?: return null
+        val tree = Uri.parse(root.treeUri)
+        var docId = runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull() ?: return null
+        val rest = virtualDir.removePrefix(root.virtualPath).trim('/')
+        if (rest.isNotEmpty()) {
+            for (name in rest.split('/')) {
+                val children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, docId)
+                docId = runCatching {
+                    context.contentResolver.query(
+                        children,
+                        arrayOf(
+                            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+                            DocumentsContract.Document.COLUMN_MIME_TYPE,
+                        ),
+                        null,
+                        null,
+                        null,
+                    )?.use { c ->
+                        var found: String? = null
+                        while (c.moveToNext()) {
+                            if (c.getString(1) == name && c.getString(2) == DocumentsContract.Document.MIME_TYPE_DIR) {
+                                found = c.getString(0)
+                                break
+                            }
+                        }
+                        found
+                    }
+                }.getOrNull() ?: return null
+            }
+        }
+        return DocumentsContract.buildDocumentUriUsingTree(tree, docId).toString()
+    }
+
     fun rootForPath(context: Context, path: String): Root? =
         roots(context).firstOrNull { path == it.virtualPath || path.startsWith(it.virtualPath + "/") }
 
@@ -310,7 +346,7 @@ object SafLibrary {
         bump()
 
         // Read durations / sizes for new files (slow over network, so done after listing).
-        val missing = found.filter { it.duration <= 0L }
+        val missing = found.filter { it.duration == 0L } // -1 = could not be read before, not retried every scan
         missing.forEachIndexed { i, e ->
             scanStateInternal.value = "Reading video details ${i + 1} / ${missing.size}  (${(i + 1) * 100 / missing.size}%)"
             val meta = runCatching {
@@ -322,7 +358,7 @@ object SafLibrary {
                         r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull() ?: 0,
                     )
                 }
-            }.getOrNull() ?: return@forEachIndexed
+            }.getOrNull() ?: Triple(-1L, e.width, e.height)
             synchronized(this@SafLibrary) {
                 setEntries(
                     entries.map {

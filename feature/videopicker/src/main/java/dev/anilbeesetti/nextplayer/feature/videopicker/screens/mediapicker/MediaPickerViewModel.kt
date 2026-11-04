@@ -164,6 +164,28 @@ class MediaPickerViewModel(
 
             is MediaPickerAction.CancelTransfer -> cancelTransfer()
 
+            is MediaPickerAction.Mod69Clip -> viewModelScope.launch {
+                val uris = action.selectionItems.toVideoUris()
+                if (uris.isNotEmpty()) {
+                    dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69Clipboard.clip =
+                        dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69Clipboard.Clip(uris, action.move)
+                }
+            }
+
+            is MediaPickerAction.Mod69Paste -> {
+                val clip = dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69Clipboard.clip
+                if (clip != null) {
+                    dev.anilbeesetti.nextplayer.feature.videopicker.composables.Mod69Clipboard.clip = null
+                    transferSelectedItems(
+                        emptySet(),
+                        if (clip.move) TransferMode.MOVE else TransferMode.COPY,
+                        localPath = action.localPath,
+                        cloudFolderUri = action.cloudFolderUri,
+                        uris = clip.uris,
+                    )
+                }
+            }
+
             is MediaPickerAction.RequestHideSelectedItems -> requestHideSelectedItems(
                 action.selectionItems,
             )
@@ -387,6 +409,7 @@ class MediaPickerViewModel(
         mode: TransferMode,
         localPath: String? = null,
         cloudFolderUri: String? = null,
+        uris: List<Uri>? = null,
     ) {
         transferJob = viewModelScope.launch {
             val treeUri = when {
@@ -394,7 +417,7 @@ class MediaPickerViewModel(
                 cloudFolderUri != null -> android.net.Uri.parse(cloudFolderUri)
                 else -> systemService.pickFolder() ?: return@launch
             }
-            val videoUris = selectedItems.toVideoUris()
+            val videoUris = uris ?: selectedItems.toVideoUris()
             if (videoUris.isEmpty()) return@launch
 
             stateInternal.update {
@@ -661,6 +684,12 @@ sealed interface MediaPickerAction {
         val cloudFolderUri: String?,
     ) : MediaPickerAction
     data class MoveSelectedItems(val selectionItems: Set<SelectionItem>) : MediaPickerAction
+
+    /** 69 mod: remember the selected videos for "Paste here" while you browse to the destination. */
+    data class Mod69Clip(val selectionItems: Set<SelectionItem>, val move: Boolean) : MediaPickerAction
+
+    /** 69 mod: paste the remembered videos (both null = Android's folder picker). */
+    data class Mod69Paste(val localPath: String?, val cloudFolderUri: String?) : MediaPickerAction
     data object CancelTransfer : MediaPickerAction
     data class ShowMediaInfo(val video: Video) : MediaPickerAction
     data object DismissMediaInfo : MediaPickerAction

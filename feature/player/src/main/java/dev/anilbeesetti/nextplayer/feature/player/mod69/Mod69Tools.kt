@@ -27,6 +27,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -128,7 +129,39 @@ internal fun BoxScope.Mod69ToolsView(
         ToolsPage.SUBTITLE -> "Subtitle look"
         ToolsPage.CUT -> "Cut / MP3"
     }
-    OverlayView(show = show, title = title) {
+    val side = Mod69Flags.toolsLayout
+    if (side != 0) {
+        // 69 mod: slim column at the screen edge instead of a big sheet over the video
+        androidx.compose.animation.AnimatedVisibility(
+            visible = show && page == ToolsPage.MAIN,
+            modifier = Modifier.align(if (side == 1) Alignment.CenterStart else Alignment.CenterEnd),
+            enter = androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.fadeOut(),
+        ) {
+            val entries = toolEntries(player = player, onOpen = { page = it }, onOpenOverlay = onOpenOverlay)
+            androidx.compose.material3.Surface(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .width(88.dp)
+                    .toolsColumnHeight(Mod69Flags.toolsVisible),
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(vertical = 6.dp),
+                ) {
+                    IconButton(onClick = onDismiss) { Icon(Icons.Rounded.Close, contentDescription = "Close") }
+                    entries.forEach { ToolButton(it.icon, it.label, it.onClick) }
+                    ToolButton(Icons.Rounded.SkipPrevious, "Frame back") { frameStep(player, -1) }
+                    ToolButton(Icons.Rounded.SkipNext, "Frame next") { frameStep(player, 1) }
+                }
+            }
+        }
+    }
+    OverlayView(show = show && (side == 0 || page != ToolsPage.MAIN), title = title) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -168,46 +201,15 @@ private fun MainPage(
     onDismiss: () -> Unit,
     onOpenOverlay: (dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView) -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         maxItemsInEachRow = 4,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        ToolButton(Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) }
-        ToolButton(Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) }
-        ToolButton(Icons.Rounded.Speed, "Speed") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYBACK_SPEED) }
-        ToolButton(Icons.Rounded.Memory, "Decoder") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) }
-        ToolButton(Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) }
-        ToolButton(Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.VIDEO_CONTENT_SCALE) }
-        ToolButton(Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) }
-        ToolButton(Icons.Rounded.Bedtime, "Sleep timer") { onOpen(ToolsPage.SLEEP) }
-        ToolButton(Icons.Rounded.Repeat, "A-B repeat") { onOpen(ToolsPage.AB) }
-        ToolButton(Icons.Rounded.CameraAlt, "Screenshot") {
-            scope.launch { takeScreenshot(context, player) }
+        toolEntries(player = player, onOpen = onOpen, onOpenOverlay = onOpenOverlay).forEach {
+            ToolButton(it.icon, it.label, it.onClick)
         }
-        ToolButton(Icons.Rounded.Bookmark, "Bookmarks") { onOpen(ToolsPage.BOOKMARKS) }
-        ToolButton(Icons.Rounded.NightsStay, "Night mode") { onOpen(ToolsPage.NIGHT) }
-        ToolButton(Icons.Rounded.Tune, "Picture") { onOpen(ToolsPage.PICTURE) }
-        ToolButton(Icons.Rounded.GraphicEq, "Equalizer") { onOpen(ToolsPage.AUDIO) }
-        ToolButton(Icons.Rounded.ClosedCaption, "Subtitle look") { onOpen(ToolsPage.SUBTITLE) }
-        ToolButton(Icons.Rounded.Info, "Information") { onOpen(ToolsPage.INFO) }
-        ToolButton(Icons.Rounded.ContentCut, "Cut / MP3") { onOpen(ToolsPage.CUT) }
-        ToolButton(Icons.Rounded.Share, "Share") {
-            player.currentMediaItem?.localConfiguration?.uri?.let { uri ->
-                val send = Intent(Intent.ACTION_SEND).apply {
-                    type = "video/*"
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-                runCatching {
-                    context.startActivity(Intent.createChooser(send, "Share").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                }
-            }
-        }
-        ToolButton(Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) }
     }
     HorizontalDivider(Modifier.padding(vertical = 12.dp))
     Text("Frame step (pauses the video)", style = MaterialTheme.typography.labelLarge)
@@ -221,6 +223,55 @@ private fun MainPage(
             Icon(Icons.Rounded.SkipNext, contentDescription = null)
         }
     }
+}
+
+private class ToolEntry(val icon: ImageVector, val label: String, val onClick: () -> Unit)
+
+/** Height that fits [count] tool buttons (the column scrolls for the rest). */
+private fun Modifier.toolsColumnHeight(count: Int): Modifier =
+    this.then(Modifier.heightIn(max = (count.coerceIn(2, 20) * 80 + 56).dp))
+
+@Composable
+private fun toolEntries(
+    player: Player,
+    onOpen: (ToolsPage) -> Unit,
+    onOpenOverlay: (dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView) -> Unit,
+): List<ToolEntry> {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val o = dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView
+    return listOf(
+        ToolEntry(Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(o.AUDIO_SELECTOR) },
+        ToolEntry(Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(o.SUBTITLE_SELECTOR) },
+        ToolEntry(Icons.Rounded.Speed, "Speed") { onOpenOverlay(o.PLAYBACK_SPEED) },
+        ToolEntry(Icons.Rounded.Memory, "Decoder") { onOpenOverlay(o.DECODER_SELECTOR) },
+        ToolEntry(Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) },
+        ToolEntry(Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(o.VIDEO_CONTENT_SCALE) },
+        ToolEntry(Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(o.PLAYLIST) },
+        ToolEntry(Icons.Rounded.Bedtime, "Sleep timer") { onOpen(ToolsPage.SLEEP) },
+        ToolEntry(Icons.Rounded.Repeat, "A-B repeat") { onOpen(ToolsPage.AB) },
+        ToolEntry(Icons.Rounded.CameraAlt, "Screenshot") { scope.launch { takeScreenshot(context, player) } },
+        ToolEntry(Icons.Rounded.Bookmark, "Bookmarks") { onOpen(ToolsPage.BOOKMARKS) },
+        ToolEntry(Icons.Rounded.NightsStay, "Night mode") { onOpen(ToolsPage.NIGHT) },
+        ToolEntry(Icons.Rounded.Tune, "Picture") { onOpen(ToolsPage.PICTURE) },
+        ToolEntry(Icons.Rounded.GraphicEq, "Equalizer") { onOpen(ToolsPage.AUDIO) },
+        ToolEntry(Icons.Rounded.ClosedCaption, "Subtitle look") { onOpen(ToolsPage.SUBTITLE) },
+        ToolEntry(Icons.Rounded.Info, "Information") { onOpen(ToolsPage.INFO) },
+        ToolEntry(Icons.Rounded.ContentCut, "Cut / MP3") { onOpen(ToolsPage.CUT) },
+        ToolEntry(Icons.Rounded.Share, "Share") {
+            player.currentMediaItem?.localConfiguration?.uri?.let { uri ->
+                val send = Intent(Intent.ACTION_SEND).apply {
+                    type = "video/*"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                runCatching {
+                    context.startActivity(Intent.createChooser(send, "Share").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            }
+        },
+        ToolEntry(Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) },
+    )
 }
 
 @Composable
@@ -253,7 +304,7 @@ private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit) {
     }
 }
 
-private fun frameStep(player: Player, direction: Int) {
+internal fun frameStep(player: Player, direction: Int) {
     player.pause()
     val fps = player.currentTracks.groups
         .firstOrNull { it.type == C.TRACK_TYPE_VIDEO && it.isSelected }

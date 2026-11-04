@@ -259,3 +259,10 @@ private fun PickerRow(icon: Boolean, name: String, onClick: () -> Unit) {
         Text(name, modifier = Modifier.padding(start = 12.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
+
+/** 69 mod: videos waiting to be pasted after Copy / Move (survives moving between folders). */
+object Mod69Clipboard {
+    data class Clip(val uris: List<Uri>, val move: Boolean)
+
+    var clip by androidx.compose.runtime.mutableStateOf<Clip?>(null)
+}

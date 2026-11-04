@@ -4,4 +4,7 @@ package dev.anilbeesetti.nextplayer.feature.player.mod69
 object Mod69Flags {
     @Volatile var swapGestureSides: Boolean = false
     @Volatile var gestureEdgePercent: Int = 0
+    /** Tools menu: 0 = grid, 1 = left column, 2 = right column. */
+    @Volatile var toolsLayout: Int = 0
+    @Volatile var toolsVisible: Int = 6
 }

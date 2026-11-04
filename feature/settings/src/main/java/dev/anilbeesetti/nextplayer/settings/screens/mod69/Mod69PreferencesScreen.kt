@@ -194,6 +194,60 @@ private fun Mod69PreferencesContent(
                         showAlpha = false,
                         onChange = { c -> player { it.copy(mod69MiniProgressColor = c) } },
                     )
+                    var barH by remember(p.mod69MiniBarHeight) { mutableFloatStateOf(p.mod69MiniBarHeight.toFloat()) }
+                    PreferenceSlider(
+                        title = "Progress line thickness",
+                        description = "The thin line at the bottom while the buttons are hidden",
+                        icon = NextIcons.Length,
+                        value = barH,
+                        valueRange = 1f..12f,
+                        steps = 10,
+                        onValueChange = { barH = it },
+                        onValueChangeFinished = { player { it.copy(mod69MiniBarHeight = barH.toInt()) } },
+                        trailingContent = { Text("${barH.toInt()} dp") },
+                    )
+                }
+                PreferenceSwitch(
+                    title = "Frame-step buttons on the seek bar",
+                    description = "Arrows at both ends of the bar: pause and move one frame",
+                    icon = NextIcons.ButtonsPosition,
+                    isChecked = p.mod69FrameStepOnBar,
+                    onClick = { player { it.copy(mod69FrameStepOnBar = !it.mod69FrameStepOnBar) } },
+                )
+                PreferenceSwitch(
+                    title = "Title bar buttons in one ⋮ menu",
+                    description = "Decoder, playlist, audio and subtitles go in a menu so the video title has room. Tap the title to read all of it",
+                    icon = NextIcons.ButtonsPosition,
+                    isChecked = p.mod69TopButtonsMenu,
+                    onClick = { player { it.copy(mod69TopButtonsMenu = !it.mod69TopButtonsMenu) } },
+                )
+                PreferenceSwitch(
+                    title = "Tools as a side column",
+                    description = "A slim column at the screen edge instead of a big panel over the video",
+                    icon = NextIcons.ButtonsPosition,
+                    isChecked = p.mod69ToolsLayout != 0,
+                    onClick = { player { it.copy(mod69ToolsLayout = if (it.mod69ToolsLayout == 0) 2 else 0) } },
+                )
+                if (p.mod69ToolsLayout != 0) {
+                    PreferenceSwitch(
+                        title = "Put the tools column on the left",
+                        description = "Off = right side",
+                        icon = NextIcons.SwipeVertical,
+                        isChecked = p.mod69ToolsLayout == 1,
+                        onClick = { player { it.copy(mod69ToolsLayout = if (it.mod69ToolsLayout == 1) 2 else 1) } },
+                    )
+                    var toolsN by remember(p.mod69ToolsVisible) { mutableFloatStateOf(p.mod69ToolsVisible.toFloat()) }
+                    PreferenceSlider(
+                        title = "Tool buttons shown at once",
+                        description = "Scroll the column for the rest",
+                        icon = NextIcons.Length,
+                        value = toolsN,
+                        valueRange = 3f..12f,
+                        steps = 8,
+                        onValueChange = { toolsN = it },
+                        onValueChangeFinished = { player { it.copy(mod69ToolsVisible = toolsN.toInt()) } },
+                        trailingContent = { Text("${toolsN.toInt()}") },
+                    )
                 }
                 PreferenceSwitch(
                     title = stringResource(R.string.mod69_corner_time),
