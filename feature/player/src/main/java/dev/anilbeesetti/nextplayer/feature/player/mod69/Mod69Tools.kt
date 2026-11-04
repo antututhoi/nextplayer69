@@ -239,15 +239,14 @@ private fun toolEntries(
 ): List<ToolEntry> {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val o = dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView
     return listOf(
-        ToolEntry(Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(o.AUDIO_SELECTOR) },
-        ToolEntry(Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(o.SUBTITLE_SELECTOR) },
-        ToolEntry(Icons.Rounded.Speed, "Speed") { onOpenOverlay(o.PLAYBACK_SPEED) },
-        ToolEntry(Icons.Rounded.Memory, "Decoder") { onOpenOverlay(o.DECODER_SELECTOR) },
+        ToolEntry(Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) },
+        ToolEntry(Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) },
+        ToolEntry(Icons.Rounded.Speed, "Speed") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYBACK_SPEED) },
+        ToolEntry(Icons.Rounded.Memory, "Decoder") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) },
         ToolEntry(Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) },
-        ToolEntry(Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(o.VIDEO_CONTENT_SCALE) },
-        ToolEntry(Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(o.PLAYLIST) },
+        ToolEntry(Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.VIDEO_CONTENT_SCALE) },
+        ToolEntry(Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) },
         ToolEntry(Icons.Rounded.Bedtime, "Sleep timer") { onOpen(ToolsPage.SLEEP) },
         ToolEntry(Icons.Rounded.Repeat, "A-B repeat") { onOpen(ToolsPage.AB) },
         ToolEntry(Icons.Rounded.CameraAlt, "Screenshot") { scope.launch { takeScreenshot(context, player) } },
