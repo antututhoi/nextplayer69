@@ -9,6 +9,8 @@ import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -347,29 +349,42 @@ object SafLibrary {
 
         // Read durations / sizes for new files (slow over network, so done after listing).
         val missing = found.filter { it.duration == 0L } // -1 = could not be read before, not retried every scan
-        missing.forEachIndexed { i, e ->
-            scanStateInternal.value = "Reading video details ${i + 1} / ${missing.size}  (${(i + 1) * 100 / missing.size}%)"
-            val meta = runCatching {
-                MediaMetadataRetriever().use { r ->
-                    r.setDataSource(context, Uri.parse(e.uri))
-                    Triple(
-                        r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: 0L,
-                        r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull() ?: 0,
-                        r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull() ?: 0,
-                    )
+        // 69 mod: read 4 files at a time (network is slow, one by one took ages)
+        val done = java.util.concurrent.atomic.AtomicInteger(0)
+        val gate = kotlinx.coroutines.sync.Semaphore(4)
+        kotlinx.coroutines.coroutineScope {
+            missing.map { e ->
+                async {
+                    gate.acquire()
+                    try {
+                        val meta = runCatching {
+                            MediaMetadataRetriever().use { r ->
+                                r.setDataSource(context, Uri.parse(e.uri))
+                                Triple(
+                                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: -1L,
+                                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull() ?: 0,
+                                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull() ?: 0,
+                                )
+                            }
+                        }.getOrNull() ?: Triple(-1L, e.width, e.height)
+                        synchronized(this@SafLibrary) {
+                            setEntries(
+                                entries.map {
+                                    if (it.uri == e.uri) it.copy(duration = meta.first, width = meta.second, height = meta.third) else it
+                                },
+                            )
+                            val n = done.incrementAndGet()
+                            scanStateInternal.value = "Reading video details $n / ${missing.size}  (${n * 100 / missing.size}%)"
+                            if (n % 25 == 0 || n == missing.size) {
+                                saveEntries()
+                                bump()
+                            }
+                        }
+                    } finally {
+                        gate.release()
+                    }
                 }
-            }.getOrNull() ?: Triple(-1L, e.width, e.height)
-            synchronized(this@SafLibrary) {
-                setEntries(
-                    entries.map {
-                        if (it.uri == e.uri) it.copy(duration = meta.first, width = meta.second, height = meta.third) else it
-                    },
-                )
-                if (i % 20 == 19 || i == missing.lastIndex) {
-                    saveEntries()
-                    bump()
-                }
-            }
+            }.awaitAll()
         }
         scanStateInternal.value = null
     }
