@@ -754,59 +754,56 @@ private fun PlayerButtonsCard(
     hidden: List<String>,
     onChange: (List<String>, List<String>, List<String>) -> Unit,
 ) {
+    // 69 mod: one simple list per place, all buttons with their icon in 2 columns and a tick box.
+    // Ticking a button in a place moves it there (each button is in one place only).
+    // Unticking puts it back into Tools. Buttons show in the order they were ticked.
     fun place(id: String): Int = when (id) {
         in top -> 0
         in second -> 1
         in hidden -> 3
         else -> 2
     }
-    val ordered = top.filter { it in QUICK_IDS } + second.filter { it in QUICK_IDS && it !in top } +
-        QUICK_IDS.filter { it !in top && it !in second }
-    SectionSurface {
-        Text(
-            "Choose where each button goes: Row 1 (under the title), Row 2, Tools (the ⊞ panel) or Hidden. " +
-                "A button is only in one place, so nothing shows twice.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        ordered.forEach { id ->
-            val where = place(id)
-            Column(Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(quickLabel(id), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
-                    val list = when (where) { 0 -> top; 1 -> second; else -> null }
-                    if (list != null) {
-                        val i = list.indexOf(id)
-                        fun moved(by: Int): List<String> = list.toMutableList().apply { removeAt(i); add(i + by, id) }
-                        IconButton(enabled = i > 0, onClick = {
-                            if (where == 0) onChange(moved(-1), second, hidden) else onChange(top, moved(-1), hidden)
-                        }) { Icon(NextIcons.ArrowUpward, contentDescription = null) }
-                        IconButton(enabled = i < list.size - 1, onClick = {
-                            if (where == 0) onChange(moved(1), second, hidden) else onChange(top, moved(1), hidden)
-                        }) { Icon(NextIcons.ArrowDownward, contentDescription = null) }
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
-                ) {
-                    listOf("Row 1", "Row 2", "Tools", "Hidden").forEachIndexed { n, label ->
-                        androidx.compose.material3.FilterChip(
-                            selected = where == n,
-                            onClick = {
-                                val t = top - id
-                                val s2 = second - id
-                                val h = hidden - id
-                                when (n) {
-                                    0 -> onChange(t + id, s2, h)
-                                    1 -> onChange(t, s2 + id, h)
-                                    2 -> onChange(t, s2, h)
-                                    else -> onChange(t, s2, h + id)
+    val ids = QUICK_IDS.filter { it != "tools" } + "tools"
+    val titles = listOf("Row 1 (under the title)", "Row 2", "Tools panel", "Hidden")
+    titles.forEachIndexed { section, title ->
+        SectionSurface {
+            Text(title, style = MaterialTheme.typography.titleMedium)
+            ids.filter { section != 2 || it != "tools" }.chunked(2).forEach { pair ->
+                Row(Modifier.fillMaxWidth()) {
+                    pair.forEach { id ->
+                        val checked = place(id) == section
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    val t = top - id
+                                    val s2 = second - id
+                                    val h = hidden - id
+                                    val target = if (checked) 2 else section
+                                    when (target) {
+                                        0 -> onChange(t + id, s2, h)
+                                        1 -> onChange(t, s2 + id, h)
+                                        3 -> onChange(t, s2, h + id)
+                                        else -> onChange(t, s2, h)
+                                    }
                                 }
-                            },
-                            label = { Text(label) },
-                        )
+                                .padding(vertical = 2.dp),
+                        ) {
+                            androidx.compose.material3.Checkbox(checked = checked, onCheckedChange = null)
+                            Icon(
+                                dev.anilbeesetti.nextplayer.core.ui.components.Mod69ButtonIcons.icon(id),
+                                contentDescription = null,
+                                modifier = Modifier.padding(horizontal = 6.dp).size(20.dp),
+                            )
+                            Text(
+                                quickLabel(id),
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 2,
+                            )
+                        }
                     }
+                    if (pair.size == 1) androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
                 }
             }
         }

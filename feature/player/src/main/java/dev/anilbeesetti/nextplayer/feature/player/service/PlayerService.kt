@@ -224,6 +224,14 @@ class PlayerService : MediaSessionService() {
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            // 69 mod: HW+ / fast seek take effect without restarting the player
+            (mediaSession?.player as? ExoPlayer)?.setSeekParameters(
+                if (playerPreferences.mod69FastSeek || playerPreferences.mod69HwPlus) {
+                    androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC
+                } else {
+                    androidx.media3.exoplayer.SeekParameters.DEFAULT
+                },
+            )
             super.onMediaItemTransition(
                 mediaItem,
                 reason,
@@ -990,7 +998,20 @@ class PlayerService : MediaSessionService() {
 
         dev.anilbeesetti.nextplayer.core.media.network.datasource.NextDataSourceFactory.userAgent =
             playerPreferences.mod69UserAgent
+        val mod69HwPlus = playerPreferences.mod69HwPlus
         val player = ExoPlayer.Builder(applicationContext)
+            .apply {
+                // 69 mod: HW+ starts after a short buffer (0.5 s instead of 2.5 s) and refills faster after seeking
+                if (mod69HwPlus) {
+                    setLoadControl(
+                        androidx.media3.exoplayer.DefaultLoadControl.Builder()
+                            .setBufferDurationsMs(20_000, 50_000, 500, 1_000)
+                            .setPrioritizeTimeOverSizeThresholds(true)
+                            .build(),
+                    )
+                    experimentalSetDynamicSchedulingEnabled(true)
+                }
+            }
             .setRenderersFactory(renderersFactory)
             .setTrackSelector(trackSelector)
             .setMediaSourceFactory(
@@ -1012,7 +1033,7 @@ class PlayerService : MediaSessionService() {
             .build()
             .also {
                 it.setPlaybackSpeed(playerPreferences.defaultPlaybackSpeed)
-                if (playerPreferences.mod69FastSeek) {
+                if (playerPreferences.mod69FastSeek || mod69HwPlus) {
                     it.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC)
                 }
                 it.addListener(playbackStateListener)

@@ -419,14 +419,18 @@ internal fun MediaPickerScreenContent(
           androidx.compose.foundation.layout.Column(
               modifier = when {
                   selectionManager.isInSelectionMode -> Modifier
+                  // 69 mod: solid colour under the phone's nav buttons too (was see-through)
                   mod69Lift -> Modifier
+                      .background(MaterialTheme.colorScheme.surfaceContainer)
                       .navigationBarsPadding()
                       .onSizeChanged {
                           dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom =
                               with(mod69Density) { it.height.toDp() }
                       }
                   navigationBottomPadding > 0.dp -> Modifier.padding(bottom = navigationBottomPadding)
-                  else -> Modifier.navigationBarsPadding()
+                  else -> Modifier
+                      .background(MaterialTheme.colorScheme.surfaceContainer)
+                      .navigationBarsPadding()
               },
           ) {
             if (mod69Clip != null && !selectionManager.isInSelectionMode) {

@@ -84,6 +84,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.media3.common.C
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -303,6 +304,24 @@ private fun toolEntries(
 @Composable
 private fun ToolButton(icon: ImageVector, label: String, floating: Boolean = false, onClick: () -> Unit) {
     val context = LocalContext.current
+    if (floating) {
+        // 69 mod: side bar buttons look exactly like the player buttons (same button, colour and label)
+        androidx.compose.foundation.layout.Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = 2.dp),
+        ) {
+            dev.anilbeesetti.nextplayer.feature.player.buttons.PlayerButton(
+                onClick = onClick,
+                onLongClick = { android.widget.Toast.makeText(context, label, android.widget.Toast.LENGTH_SHORT).show() },
+            ) {
+                Icon(icon, contentDescription = label, tint = Color.White)
+            }
+            if (Mod69Session.buttonLabels) {
+                Text(label, color = Color.White, fontSize = 9.sp, maxLines = 1)
+            }
+        }
+        return
+    }
     // MX-style tile: round icon with the name under it; long-press always tells the name
     androidx.compose.foundation.layout.Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -335,9 +354,7 @@ private fun ToolButton(icon: ImageVector, label: String, floating: Boolean = fal
             Text(
                 label,
                 color = Color.White,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    shadow = androidx.compose.ui.graphics.Shadow(Color.Black, blurRadius = 4f),
-                ),
+                style = MaterialTheme.typography.labelSmall,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 maxLines = 2,
                 modifier = Modifier.padding(top = 4.dp),

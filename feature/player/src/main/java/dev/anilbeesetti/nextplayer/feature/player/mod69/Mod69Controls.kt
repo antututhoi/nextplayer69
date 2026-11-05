@@ -320,9 +320,7 @@ internal fun Mod69QuickRow(
                 color = Color.White,
                 fontSize = 9.sp,
                 maxLines = 1,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    shadow = androidx.compose.ui.graphics.Shadow(Color.Black, blurRadius = 4f),
-                ),
+                style = MaterialTheme.typography.labelSmall,
             )
         }
     }

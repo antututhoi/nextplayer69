@@ -9,4 +9,5 @@ object Mod69Flags {
     @Volatile var toolsVisible: Int = 6
     @Volatile var chapterGaps: Boolean = false
     @Volatile var chapterSnap: Boolean = false
+    @Volatile var hwPlus: Boolean = false
 }

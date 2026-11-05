@@ -93,6 +93,8 @@ data class PlayerPreferences(
     val mod69SuppressErrors: Boolean = false,
     /** Seek to the nearest key frame (faster, less exact). */
     val mod69FastSeek: Boolean = false,
+    /** 69 mod: HW+ = hardware decoder tuned for quick start and seeking (like MX Player HW+). */
+    val mod69HwPlus: Boolean = false,
     /** Show the "Continue from where you stopped / Start over" bar when a video resumes. */
     val mod69ResumeBar: Boolean = true,
     val mod69MediaButtons: Boolean = true,

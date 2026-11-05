@@ -97,7 +97,7 @@ fun PlayerControls(
                             itemIds = playerPreferences.mod69TopRowItems,
                             expandable = false,
                             onOverlay = onShowOverlay,
-                            decoderLabel = androidx.compose.ui.res.stringResource((videoDecoderMode ?: io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE).labelRes),
+                            decoderLabel = if (playerPreferences.mod69HwPlus && (videoDecoderMode == null || videoDecoderMode == io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE)) "HW+" else androidx.compose.ui.res.stringResource((videoDecoderMode ?: io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE).labelRes),
                             modifier = Modifier.padding(bottom = 6.dp),
                         )
                     }
@@ -113,7 +113,7 @@ fun PlayerControls(
                             onPictureInPictureClick = onPictureInPictureClick,
                             onToolsClick = { onShowOverlay(OverlayView.MOD69_TOOLS) },
                             onOverlay = onShowOverlay,
-                            decoderLabel = androidx.compose.ui.res.stringResource((videoDecoderMode ?: io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE).labelRes),
+                            decoderLabel = if (playerPreferences.mod69HwPlus && (videoDecoderMode == null || videoDecoderMode == io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE)) "HW+" else androidx.compose.ui.res.stringResource((videoDecoderMode ?: io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE).labelRes),
                         )
                     }
                 }
