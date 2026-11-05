@@ -217,7 +217,7 @@ private fun MainPage(
         modifier = Modifier.fillMaxWidth(),
     ) {
         toolEntries(player = player, onOpen = onOpen, onOpenOverlay = onOpenOverlay).forEach {
-            ToolButton(it.icon, it.label, it.onClick)
+            ToolButton(it.icon, it.label, onClick = it.onClick)
         }
     }
     HorizontalDivider(Modifier.padding(vertical = 12.dp))
