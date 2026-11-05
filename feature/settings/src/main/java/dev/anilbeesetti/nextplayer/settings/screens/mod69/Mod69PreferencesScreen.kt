@@ -291,6 +291,13 @@ private fun Mod69PreferencesContent(
                     trailingContent = { Text("${edge.toInt()}%") },
                 )
                 PreferenceSwitch(
+                    title = "Chapter gaps on the seek bar",
+                    description = "Off: one smooth bar (chapters are still in the chapter menu)",
+                    icon = NextIcons.Length,
+                    isChecked = p.mod69ChapterGaps,
+                    onClick = { player { it.copy(mod69ChapterGaps = !it.mod69ChapterGaps) } },
+                )
+                PreferenceSwitch(
                     title = "Hold to fast forward",
                     description = "Press and hold the video to play faster, let go to go back",
                     icon = NextIcons.FastForward,

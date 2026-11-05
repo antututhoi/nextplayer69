@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -402,8 +403,27 @@ internal fun MediaPickerScreenContent(
         topBar = { if (!mod69BarBottom || selectionManager.isInSelectionMode) mod69TopBar() },
         bottomBar = {
           // 69 mod: keep the bottom bars above the app's floating nav bar and the phone's nav buttons
+          // Home with the title bar at the bottom: the bar stays at the very bottom and the
+          // home-screen buttons are lifted onto it. Elsewhere: above the app / phone nav bars.
+          val mod69Lift = mod69BarBottom && state.folderPath == null && !selectionManager.isInSelectionMode &&
+              navigationBottomPadding > 0.dp
+          val mod69Density = androidx.compose.ui.platform.LocalDensity.current
+          androidx.compose.runtime.DisposableEffect(mod69Lift) {
+              if (!mod69Lift) dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom = 0.dp
+              onDispose { dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom = 0.dp }
+          }
           androidx.compose.foundation.layout.Column(
-              modifier = if (selectionManager.isInSelectionMode) Modifier else Modifier.padding(bottom = navigationBottomPadding),
+              modifier = when {
+                  selectionManager.isInSelectionMode -> Modifier
+                  mod69Lift -> Modifier
+                      .navigationBarsPadding()
+                      .onSizeChanged {
+                          dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom =
+                              with(mod69Density) { it.height.toDp() }
+                      }
+                  navigationBottomPadding > 0.dp -> Modifier.padding(bottom = navigationBottomPadding)
+                  else -> Modifier.navigationBarsPadding()
+              },
           ) {
             if (mod69Clip != null && !selectionManager.isInSelectionMode) {
                 androidx.compose.foundation.layout.Row(

@@ -161,7 +161,7 @@ private fun MaterialYouSlider(
                     .fillMaxWidth()
                     .height(height = trackHeight)
                     .chapterGaps(
-                        chapters = chapters,
+                        chapters = if (dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.chapterGaps) chapters else emptyList(),
                         valueRange.endInclusive,
                     ),
             ) {
@@ -349,7 +349,7 @@ private fun SimpleSlider(
                     .fillMaxWidth()
                     .height(4.dp)
                     .chapterGaps(
-                        chapters = chapters,
+                        chapters = if (dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.chapterGaps) chapters else emptyList(),
                         valueRange.endInclusive,
                     )
                     .clip(MaterialTheme.shapes.extraSmall)

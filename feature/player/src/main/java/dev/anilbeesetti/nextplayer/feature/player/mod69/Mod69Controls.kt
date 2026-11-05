@@ -415,12 +415,21 @@ internal fun Mod69BottomControls(
                 val marks = Mod69Session.bookmarks.toList()
                 val a = Mod69Session.aMs
                 val b = Mod69Session.bMs
+                val bookmarkColor = MaterialTheme.colorScheme.tertiary
                 Canvas(modifier = Modifier.matchParentSize()) {
                     val pad = 10.dp.toPx()
                     val w = size.width - 2 * pad
                     val y = size.height / 2 - 7.dp.toPx()
                     marks.forEach { ms ->
-                        drawCircle(Color(0xFFFFC107), radius = 2.5.dp.toPx(), center = Offset(pad + w * ms / duration, y))
+                        // 69 mod: a clear tick in the app colour (was a tiny yellow dot)
+                        val x = pad + w * ms / duration
+                        drawRoundRect(
+                            color = bookmarkColor,
+                            topLeft = Offset(x - 2.dp.toPx(), y - 7.dp.toPx()),
+                            size = androidx.compose.ui.geometry.Size(4.dp.toPx(), 14.dp.toPx()),
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(2.dp.toPx()),
+                        )
+                        drawCircle(Color.White, radius = 1.5.dp.toPx(), center = Offset(x, y))
                     }
                     if (a >= 0) {
                         val xa = pad + w * a / duration

@@ -310,7 +310,7 @@ fun NextNavigationBar(
             }
             .navigationBarsPadding()
             .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-            .padding(bottom = 12.dp)
+            .padding(bottom = 12.dp + dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom)
             .padding(horizontal = 16.dp)
             .thenIf(condition = !showFabOnly) { pointerInput(key1 = Unit) {} },
         contentAlignment = Alignment.BottomCenter,
@@ -428,7 +428,8 @@ fun NavigationView(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                // 69 mod: a bit more room so the buttons don't run together
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 destinations.forEach { destination ->
                     val isSelected = isSelected(destination)

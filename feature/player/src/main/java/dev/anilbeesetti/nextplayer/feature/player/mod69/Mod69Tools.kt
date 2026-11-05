@@ -26,6 +26,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.BookmarkAdd
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.draw.clip
@@ -402,47 +405,147 @@ private fun AbPage(player: Player) {
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun BookmarksPage(player: Player) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { Mod69Session.loadBookmarks(context, player.mod69Key()) }
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    val title = player.mediaMetadata.title?.toString() ?: player.mod69Key().orEmpty()
+    var editing by remember { mutableStateOf<Long?>(null) }
+    var askClear by remember { mutableStateOf(false) }
+    val exportLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/plain"),
+    ) { uri ->
+        if (uri != null) {
+            runCatching {
+                context.contentResolver.openOutputStream(uri)!!.use { it.write(Mod69Session.bookmarksText(title).toByteArray()) }
+                android.widget.Toast.makeText(context, "Bookmarks exported", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    val importLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            val text = runCatching { context.contentResolver.openInputStream(uri)!!.bufferedReader().readText() }.getOrNull()
+            val n = if (text == null) 0 else Mod69Session.importBookmarks(context, text)
+            android.widget.Toast.makeText(context, "$n bookmark(s) added", android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         FilledTonalButton(onClick = { Mod69Session.addBookmark(context, player.currentPosition) }) {
-            Icon(Icons.Rounded.Bookmark, contentDescription = null)
+            Icon(Icons.Rounded.BookmarkAdd, contentDescription = null)
             Text("  Add here")
         }
-        OutlinedButton(
-            enabled = Mod69Session.bookmarks.isNotEmpty(),
-            onClick = { exportBookmarks(context, player) },
-        ) { Text("Export") }
+        OutlinedButton(enabled = Mod69Session.bookmarks.isNotEmpty(), onClick = {
+            runCatching { exportLauncher.launch("$title bookmarks.txt") }
+        }) { Text("Export") }
+        OutlinedButton(onClick = { runCatching { importLauncher.launch(arrayOf("text/*", "*/*")) } }) { Text("Import") }
+        OutlinedButton(enabled = Mod69Session.bookmarks.isNotEmpty(), onClick = { exportBookmarks(context, player) }) { Text("Share") }
+        if (Mod69Session.bookmarks.isNotEmpty()) {
+            TextButton(onClick = { askClear = true }) { Text("Delete all") }
+        }
     }
     if (Mod69Session.bookmarks.isEmpty()) {
-        Text("No bookmarks yet. They show as dots on the seekbar.", modifier = Modifier.padding(top = 12.dp))
+        Text(
+            "No bookmarks yet. Tap \"Add here\" or the bookmark button. They show as marks on the seek bar.",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(top = 12.dp),
+        )
     }
-    Mod69Session.bookmarks.toList().forEach { ms ->
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-            TextButton(onClick = { player.seekTo(ms) }, modifier = Modifier.weight(1f)) {
-                Text(getStringForTime(ms), modifier = Modifier.fillMaxWidth())
-            }
-            IconButton(onClick = { Mod69Session.removeBookmark(context, ms) }) {
-                Icon(Icons.Rounded.Close, contentDescription = null)
+    val now = player.currentPosition
+    Mod69Session.bookmarks.toList().forEachIndexed { index, ms ->
+        val name = Mod69Session.bookmarkNames[ms]
+        val isNear = kotlin.math.abs(now - ms) < 1500
+        androidx.compose.material3.Surface(
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+            color = if (isNear) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+            modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+        ) {
+            Column(Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "${index + 1}",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(end = 10.dp),
+                    )
+                    Column(
+                        Modifier
+                            .weight(1f)
+                            .clickable { player.seekTo(ms) },
+                    ) {
+                        Text(getStringForTime(ms), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            name ?: "Tap to jump · ✎ to name",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                        )
+                    }
+                    IconButton(onClick = { editing = ms }) { Icon(Icons.Rounded.Edit, contentDescription = "Rename") }
+                    IconButton(onClick = { Mod69Session.removeBookmark(context, ms) }) {
+                        Icon(Icons.Rounded.Delete, contentDescription = "Delete")
+                    }
+                }
+                // Move: nudge the time, or set it to where the video is now
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Move", style = MaterialTheme.typography.labelSmall)
+                    listOf(-5000L to "−5s", -1000L to "−1s", 1000L to "+1s", 5000L to "+5s").forEach { (d, label) ->
+                        TextButton(
+                            onClick = { Mod69Session.moveBookmark(context, ms, ms + d) },
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp),
+                        ) { Text(label) }
+                    }
+                    TextButton(
+                        onClick = { Mod69Session.moveBookmark(context, ms, player.currentPosition) },
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp),
+                    ) { Text("To now") }
+                }
             }
         }
+    }
+    editing?.let { ms ->
+        var text by remember(ms) { mutableStateOf(Mod69Session.bookmarkNames[ms].orEmpty()) }
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { editing = null },
+            title = { Text("Name for " + getStringForTime(ms)) },
+            text = {
+                androidx.compose.material3.OutlinedTextField(value = text, onValueChange = { text = it }, singleLine = true)
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    Mod69Session.renameBookmark(context, ms, text)
+                    editing = null
+                }) { Text("Save") }
+            },
+            dismissButton = { TextButton(onClick = { editing = null }) { Text("Cancel") } },
+        )
+    }
+    if (askClear) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { askClear = false },
+            title = { Text("Delete all bookmarks of this video?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    Mod69Session.clearBookmarks(context)
+                    askClear = false
+                }) { Text("Delete") }
+            },
+            dismissButton = { TextButton(onClick = { askClear = false }) { Text("Cancel") } },
+        )
     }
 }
 
 private fun exportBookmarks(context: Context, player: Player) {
     val name = player.mediaMetadata.title?.toString() ?: player.mod69Key().orEmpty()
-    val text = buildString {
-        appendLine(name)
-        Mod69Session.bookmarks.forEach { appendLine(getStringForTime(it)) }
-    }
     val send = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_SUBJECT, "Bookmarks – $name")
-        putExtra(Intent.EXTRA_TEXT, text)
+        putExtra(Intent.EXTRA_TEXT, Mod69Session.bookmarksText(name))
     }
-    context.startActivity(Intent.createChooser(send, "Export bookmarks").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    context.startActivity(Intent.createChooser(send, "Share bookmarks").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 }
 
 @Composable

@@ -7,4 +7,5 @@ object Mod69Flags {
     /** Tools menu: 0 = grid, 1 = left column, 2 = right column. */
     @Volatile var toolsLayout: Int = 0
     @Volatile var toolsVisible: Int = 6
+    @Volatile var chapterGaps: Boolean = false
 }

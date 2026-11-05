@@ -76,6 +76,7 @@ internal fun MediaPlayerControls(
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.swapGestureSides = playerPreferences.mod69SwapGestureSides
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.gestureEdgePercent = playerPreferences.mod69GestureEdgePercent
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.toolsLayout = playerPreferences.mod69ToolsLayout
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.chapterGaps = playerPreferences.mod69ChapterGaps
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.toolsVisible = playerPreferences.mod69ToolsVisible
     var lastBackPress by remember { mutableStateOf(0L) }
     val metadataState = rememberMetadataState(player = player)

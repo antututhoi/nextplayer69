@@ -105,6 +105,8 @@ data class PlayerPreferences(
     val mod69PlayerAccent: Long = 0L,
     /** True once the button background was picked in 69 settings (overrides Material You buttons). */
     val mod69ButtonBgCustom: Boolean = false,
+    /** Cut the seek bar into pieces at chapters (off = one smooth bar, chapters still in the menu). */
+    val mod69ChapterGaps: Boolean = false,
     /** Thickness of the thin progress line shown while the controls are hidden (same as the seek bar line by default). */
     val mod69MiniBarHeight: Int = 4,
     /** Frame-step buttons at both ends of the seek bar. */
