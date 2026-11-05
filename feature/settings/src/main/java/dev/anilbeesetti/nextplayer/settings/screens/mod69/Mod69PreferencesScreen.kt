@@ -547,12 +547,13 @@ private fun Mod69PreferencesContent(
                 )
             }
             ListSectionTitle(text = "Debug log")
+            val mod69Ctx = androidx.compose.ui.platform.LocalContext.current
             ClickablePreferenceItem(
                 title = "Share debug log",
                 description = "Saves this app's recent log to Download/69-Next Player log.txt and opens Share. " +
                     "Play the problem video first, then tap this.",
                 icon = NextIcons.BugReport,
-                onClick = { mod69ShareLog(context) },
+                onClick = { mod69ShareLog(mod69Ctx) },
                 isFirstItem = true,
                 isLastItem = true,
             )
