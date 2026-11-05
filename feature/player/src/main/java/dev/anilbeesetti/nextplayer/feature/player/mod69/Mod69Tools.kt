@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.material.icons.automirrored.rounded.VolumeOff
@@ -247,6 +248,7 @@ private fun toolEntries(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     return listOf(
+        ToolEntry("chapters", Icons.AutoMirrored.Rounded.List, "Chapters") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.CHAPTERS) },
         ToolEntry("audio_track", Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) },
         ToolEntry("subtitle_track", Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) },
         ToolEntry("speed", Icons.Rounded.Speed, "Speed") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYBACK_SPEED) },

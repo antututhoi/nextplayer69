@@ -77,6 +77,7 @@ internal fun MediaPlayerControls(
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.gestureEdgePercent = playerPreferences.mod69GestureEdgePercent
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.toolsLayout = playerPreferences.mod69ToolsLayout
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.chapterGaps = playerPreferences.mod69ChapterGaps
+    dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.chapterSnap = playerPreferences.mod69ChapterSnap
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.placedItems =
         (playerPreferences.mod69TopRowItems + playerPreferences.mod69QuickItems).toSet()
     dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.hiddenItems = playerPreferences.mod69HiddenItems.toSet()

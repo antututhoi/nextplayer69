@@ -16,16 +16,23 @@ import dev.anilbeesetti.nextplayer.feature.player.LocalControlsVisibilityState
 
 @OptIn(UnstableApi::class)
 @Composable
-internal fun PreviousButton(modifier: Modifier = Modifier, player: Player?) {
+internal fun PreviousButton(modifier: Modifier = Modifier, player: Player?, onLongClick: (() -> Unit)? = null) {
     val state = rememberPreviousButtonState(player = player)
     val controlsVisibilityState = LocalControlsVisibilityState.current
 
     PlayerButton(
         modifier = modifier.size(dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69ButtonSize.current ?: 48.dp),
-        enabled = state.isEnabled,
+        enabled = state.isEnabled || onLongClick != null,
         onClick = {
-            state.onClick()
+            if (state.isEnabled) state.onClick()
             controlsVisibilityState?.showControls()
+        },
+        // 69 mod: long press jumps between chapters
+        onLongClick = onLongClick?.let { lc ->
+            {
+                lc()
+                controlsVisibilityState?.showControls()
+            }
         },
     ) {
         Icon(

@@ -65,7 +65,7 @@ private val SWATCHES = listOf(
 )
 
 private val QUICK_IDS = listOf(
-    "decoder", "playlist", "audio_track", "subtitle_track",
+    "decoder", "playlist", "chapters", "audio_track", "subtitle_track",
     "tools", "speed", "screenshot", "bookmark", "night", "background", "rotate", "loop", "shuffle", "pip",
     "mute", "equalizer", "sleep", "ab", "aspect", "zoom", "picture", "info", "sub_look", "cut", "share", "help",
 )
@@ -89,6 +89,7 @@ private fun quickLabel(id: String): String = when (id) {
     "help" -> "Gesture help"
     "decoder" -> "Decoder (HW / SW)"
     "playlist" -> "Playlist"
+    "chapters" -> "Chapters list"
     "audio_track" -> "Audio track"
     "subtitle_track" -> "Subtitle track"
     "aspect" -> "Aspect ratio"
@@ -308,6 +309,13 @@ private fun Mod69PreferencesContent(
                     icon = NextIcons.Length,
                     isChecked = p.mod69ChapterGaps,
                     onClick = { player { it.copy(mod69ChapterGaps = !it.mod69ChapterGaps) } },
+                )
+                PreferenceSwitch(
+                    title = "Snap to chapters while dragging",
+                    description = "The seek bar sticks to a chapter start when you get close to it",
+                    icon = NextIcons.Length,
+                    isChecked = p.mod69ChapterSnap,
+                    onClick = { player { it.copy(mod69ChapterSnap = !it.mod69ChapterSnap) } },
                 )
                 PreferenceSwitch(
                     title = "Hold to fast forward",

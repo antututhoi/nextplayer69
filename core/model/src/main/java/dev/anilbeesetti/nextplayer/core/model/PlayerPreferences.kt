@@ -107,6 +107,7 @@ data class PlayerPreferences(
     val mod69ButtonBgCustom: Boolean = false,
     /** Cut the seek bar into pieces at chapters (off = one smooth bar, chapters still in the menu). */
     val mod69ChapterGaps: Boolean = false,
+    val mod69ChapterSnap: Boolean = false,
     /** Buttons in the row under the title (same catalog as the quick row and the tools). */
     val mod69TopRowItems: List<String> = listOf("decoder", "playlist", "audio_track", "subtitle_track"),
     /** Buttons not shown anywhere. Everything not in a row and not hidden is in Tools. */

@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.ContentCut
 import androidx.compose.material.icons.rounded.ClosedCaption
@@ -133,6 +135,7 @@ enum class QuickItem(val id: String) {
     SUB_LOOK("sub_look"),
     CUT("cut"),
     SHARE("share"),
+    CHAPTERS("chapters"),
     ;
 
     val label: String
@@ -163,6 +166,7 @@ enum class QuickItem(val id: String) {
             SUB_LOOK -> "Sub look"
             CUT -> "Cut"
             SHARE -> "Share"
+            CHAPTERS -> "Chapters"
         }
 
     /** Short name under the button. */
@@ -278,6 +282,9 @@ internal fun Mod69QuickRow(
             QuickItem.HELP -> B(item, { openTools("HELP") }) { Ic(Icons.Rounded.TouchApp) }
             QuickItem.DECODER -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) }) {
                 Text(decoderLabel, style = MaterialTheme.typography.labelLarge, maxLines = 1)
+            }
+            QuickItem.CHAPTERS -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.CHAPTERS) }) {
+                Ic(Icons.AutoMirrored.Rounded.List)
             }
             QuickItem.PLAYLIST -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) }) {
                 Icon(painter = painterResource(R.drawable.ic_playlist), contentDescription = null)
@@ -442,6 +449,27 @@ internal fun Mod69BottomControls(
                 fraction = ((previewPos ?: 0L).toFloat() / previewDuration.coerceAtLeast(1L)).coerceIn(0f, 1f),
             )
         }
+        // 69 mod: chapter name above the finger while dragging the seek bar
+        val dragChapters = chaptersState.chapters
+        val dragPos = previewPos
+        if (dragPos != null && dragChapters.isNotEmpty() && previewDuration > 0) {
+            val idx = dragChapters.indexOfLast { it.startTimeMs <= dragPos }.coerceAtLeast(0)
+            val frac = (dragPos.toFloat() / previewDuration).coerceIn(0f, 1f)
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "${idx + 1}/${dragChapters.size}  " + with(dev.anilbeesetti.nextplayer.feature.player.ui.ChapterTitles) { dragChapters[idx].mod69Title(idx) },
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .align(androidx.compose.ui.BiasAlignment(frac * 2f - 1f, 0f))
+                        .widthIn(max = 260.dp)
+                        .background(Color.Black.copy(alpha = 0.7f), androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                )
+            }
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             val position = progressState.currentPositionMs
             val duration = progressState.durationMs
@@ -471,8 +499,15 @@ internal fun Mod69BottomControls(
                 duration = duration.toFloat(),
                 chapters = chaptersState.chapters,
                 onSeek = {
-                    previewPos = it.toLong()
-                    onSeek(it.toLong())
+                    // 69 mod: optional snap to the nearest chapter start
+                    var target = it.toLong()
+                    val chs = chaptersState.chapters
+                    if (Mod69Flags.chapterSnap && chs.isNotEmpty() && duration > 0) {
+                        val near = chs.minByOrNull { c -> kotlin.math.abs(c.startTimeMs - target) }
+                        if (near != null && kotlin.math.abs(near.startTimeMs - target) <= duration / 60) target = near.startTimeMs
+                    }
+                    previewPos = target
+                    onSeek(target)
                 },
                 onSeekFinished = {
                     previewPos = null
@@ -545,9 +580,17 @@ internal fun Mod69BottomControls(
             PlayerButton(onClick = { player?.let { it.seekTo((it.currentPosition - seekIncrementMs).coerceAtLeast(0)) } }) {
                 Icon(imageVector = Icons.Rounded.Replay10, contentDescription = null)
             }
-            PreviousButton(player = player)
+            val chapterCtx = LocalContext.current
+            val chs = chaptersState.chapters
+            PreviousButton(
+                player = player,
+                onLongClick = if (chs.isNotEmpty() && player != null) { { mod69JumpChapter(chapterCtx, player, chs, -1) } } else null,
+            )
             PlayPauseButton(player = player)
-            NextButton(player = player)
+            NextButton(
+                player = player,
+                onLongClick = if (chs.isNotEmpty() && player != null) { { mod69JumpChapter(chapterCtx, player, chs, 1) } } else null,
+            )
             PlayerButton(onClick = {
                 player?.let {
                     val target = it.currentPosition + seekIncrementMs
@@ -649,4 +692,32 @@ internal fun mod69Share(context: android.content.Context, player: Player) {
             android.content.Intent.createChooser(send, "Share").addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
         )
     }
+}
+
+
+/** 69 mod: jump to the next / previous chapter (previous = start of this one unless within its first 3 s). */
+internal fun mod69JumpChapter(
+    context: android.content.Context,
+    player: Player,
+    chapters: List<androidx.media3.extractor.metadata.Chapter>,
+    direction: Int,
+) {
+    if (chapters.isEmpty()) return
+    val pos = player.currentPosition
+    val cur = chapters.indexOfLast { it.startTimeMs <= pos }
+    val target = if (direction > 0) {
+        (cur + 1).takeIf { it <= chapters.lastIndex }
+    } else {
+        when {
+            cur < 0 -> 0
+            pos - chapters[cur].startTimeMs < 3000 -> (cur - 1).coerceAtLeast(0)
+            else -> cur
+        }
+    } ?: run {
+        android.widget.Toast.makeText(context, "Last chapter", android.widget.Toast.LENGTH_SHORT).show()
+        return
+    }
+    player.seekTo(chapters[target].startTimeMs)
+    val name = chapters[target].title?.value?.takeIf { it.isNotBlank() } ?: "Chapter ${target + 1}"
+    android.widget.Toast.makeText(context, "${target + 1}/${chapters.size}  $name", android.widget.Toast.LENGTH_SHORT).show()
 }
