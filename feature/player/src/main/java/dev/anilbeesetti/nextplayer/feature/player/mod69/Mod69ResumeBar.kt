@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 
 /** MX-style "Continue from where you stopped · START OVER" bar. */
 @Composable
-internal fun BoxScope.Mod69ResumeBar(onStartOver: () -> Unit, onClose: () -> Unit) {
+internal fun BoxScope.Mod69ResumeBar(onStartOver: () -> Unit, onClose: () -> Unit, positionMs: Long = -1L) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -36,14 +36,21 @@ internal fun BoxScope.Mod69ResumeBar(onStartOver: () -> Unit, onClose: () -> Uni
         IconButton(onClick = onClose) {
             Icon(Icons.Rounded.Close, contentDescription = null, tint = Color.White)
         }
+        // 69 mod: short text so it never runs into the button ("Resumed at 12:34")
+        val at = if (positionMs > 0) {
+            val s = positionMs / 1000
+            if (s >= 3600) "%d:%02d:%02d".format(s / 3600, s / 60 % 60, s % 60) else "%d:%02d".format(s / 60, s % 60)
+        } else {
+            null
+        }
         Text(
-            "Continued from where you stopped",
+            if (at != null) "Resumed at $at" else "Resumed",
             color = Color.White,
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
-            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f, fill = false),
+            softWrap = false,
+            modifier = Modifier.padding(end = 4.dp),
         )
-        TextButton(onClick = onStartOver) { Text("START OVER") }
+        TextButton(onClick = onStartOver) { Text("START OVER", maxLines = 1, softWrap = false) }
     }
 }

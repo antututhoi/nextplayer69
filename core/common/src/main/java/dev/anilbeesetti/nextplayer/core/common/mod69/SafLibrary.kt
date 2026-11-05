@@ -189,6 +189,39 @@ object SafLibrary {
         runCatching { File(dir, "mod69_saf_subs.json").writeText(o.toString()) }
     }
 
+    private val retried: MutableSet<String> = java.util.Collections.synchronizedSet(HashSet())
+
+    /** Duration / size of one file: Android's reader first, FFmpeg (nextlib) when that fails. */
+    private fun readMeta(context: Context, e: Entry): Triple<Long, Int, Int> {
+        val native = runCatching {
+            MediaMetadataRetriever().use { r ->
+                r.setDataSource(context, Uri.parse(e.uri))
+                Triple(
+                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: -1L,
+                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull() ?: 0,
+                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull() ?: 0,
+                )
+            }
+        }.getOrNull()
+        if (native != null && native.first > 0) return native
+        return Triple(-1L, native?.second ?: e.width, native?.third ?: e.height)
+    }
+
+    /** 69 mod: the player tells the duration of a cloud video it opened (fills in the ones the scan could not read). */
+    fun rememberDuration(context: Context, uri: String, durationMs: Long) {
+        if (durationMs <= 0) return
+        ensureLoaded(context)
+        val e = byUri[uri] ?: return
+        if (e.duration > 0) return
+        scope.launch {
+            synchronized(this@SafLibrary) {
+                setEntries(entries.map { if (it.uri == uri) it.copy(duration = durationMs) else it })
+                saveEntries()
+            }
+            bump()
+        }
+    }
+
     private fun setEntries(list: List<Entry>) {
         entries = list
         byUri = list.associateBy { it.uri }
@@ -348,44 +381,45 @@ object SafLibrary {
         bump()
 
         // Read durations / sizes for new files (slow over network, so done after listing).
-        val missing = found.filter { it.duration == 0L } // -1 = could not be read before, not retried every scan
-        // 69 mod: read 4 files at a time (network is slow, one by one took ages)
+        // 69 mod: failed ones (-1) are tried again once per app start (rclone can be slow the first time)
+        val missing = found.filter { it.duration == 0L || (it.duration < 0L && retried.add(it.uri)) }
+        // read 4 files at a time; results are applied in batches (copying the whole list for every file
+        // made the app allocate hundreds of MB per second and stutter while a video played)
         val done = java.util.concurrent.atomic.AtomicInteger(0)
         val gate = kotlinx.coroutines.sync.Semaphore(4)
+        val results = java.util.concurrent.ConcurrentHashMap<String, Triple<Long, Int, Int>>()
+        fun flush() {
+            synchronized(this@SafLibrary) {
+                if (results.isEmpty()) return
+                val batch = HashMap(results)
+                results.keys.removeAll(batch.keys)
+                setEntries(
+                    entries.map { en ->
+                        batch[en.uri]?.let { m -> en.copy(duration = m.first, width = m.second, height = m.third) } ?: en
+                    },
+                )
+                saveEntries()
+                bump()
+            }
+        }
         kotlinx.coroutines.coroutineScope {
             missing.map { e ->
                 async {
                     gate.acquire()
                     try {
-                        val meta = runCatching {
-                            MediaMetadataRetriever().use { r ->
-                                r.setDataSource(context, Uri.parse(e.uri))
-                                Triple(
-                                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: -1L,
-                                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toIntOrNull() ?: 0,
-                                    r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toIntOrNull() ?: 0,
-                                )
-                            }
-                        }.getOrNull() ?: Triple(-1L, e.width, e.height)
-                        synchronized(this@SafLibrary) {
-                            setEntries(
-                                entries.map {
-                                    if (it.uri == e.uri) it.copy(duration = meta.first, width = meta.second, height = meta.third) else it
-                                },
-                            )
-                            val n = done.incrementAndGet()
-                            scanStateInternal.value = "Reading video details $n / ${missing.size}  (${n * 100 / missing.size}%)"
-                            if (n % 25 == 0 || n == missing.size) {
-                                saveEntries()
-                                bump()
-                            }
-                        }
+                        Mod69Busy.waitWhilePlaying()
+                        val meta = readMeta(context, e)
+                        results[e.uri] = meta
+                        val n = done.incrementAndGet()
+                        scanStateInternal.value = "Reading video details $n / ${missing.size}  (${n * 100 / missing.size}%)"
+                        if (n % 25 == 0 || n == missing.size) flush()
                     } finally {
                         gate.release()
                     }
                 }
             }.awaitAll()
         }
+        flush()
         scanStateInternal.value = null
     }
 

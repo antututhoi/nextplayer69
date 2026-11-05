@@ -105,6 +105,9 @@ class VideoThumbnailDecoder(
         }
 
         // Cache miss OR cache insufficient: decode fresh thumbnail
+        // 69 mod: wait while a video plays (reading other videos over rclone slowed playback down)
+        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69Busy.waitWhilePlaying()
+        val mod69Target = maxOf(maxCachePx, options.size.width.pxOrElse { 0 }, 384).coerceAtMost(1024)
         val rawBitmap = MediaMetadataRetriever().use { nativeRetriever ->
             MediaThumbnailRetriever().use { ffmpegRetriever ->
                 nativeRetriever.setDataSource(source = source)
@@ -136,21 +139,21 @@ class VideoThumbnailDecoder(
 
                 return@use when (strategy) {
                     is ThumbnailStrategy.FirstFrame -> {
-                        nativeRetriever.getFrameAtTime(0)
+                        nativeRetriever.mod69Frame(0, mod69Target)
                             ?: fallbackRetriever?.getFrameAtTime(timeUs = 0)
                     }
 
                     is ThumbnailStrategy.FrameAtPercentage -> {
                         val timeUs = (videoDuration * strategy.percentage * 1000).toLong()
-                        nativeRetriever.getFrameAtTime(timeUs)
+                        nativeRetriever.mod69Frame(timeUs, mod69Target)
                             ?: fallbackRetriever?.getFrameAtTime(timeUs = timeUs)
                     }
 
                     is ThumbnailStrategy.Hybrid -> {
-                        val firstFrame = nativeRetriever.getFrameAtTime(0)
+                        val firstFrame = nativeRetriever.mod69Frame(0, mod69Target)
                         if (firstFrame == null || isSolidColor(bitmap = firstFrame)) {
                             val timeUs = (videoDuration * strategy.percentage * 1000).toLong()
-                            nativeRetriever.getFrameAtTime(timeUs)
+                            nativeRetriever.mod69Frame(timeUs, mod69Target)
                                 ?: fallbackRetriever?.getFrameAtTime(timeUs = timeUs)
                         } else {
                             firstFrame
@@ -187,6 +190,15 @@ class VideoThumbnailDecoder(
             ) < 1.0,
         )
     }
+
+    /** 69 mod: a small frame instead of a full-size one (full 4K frames made the app use a lot of memory). */
+    private fun MediaMetadataRetriever.mod69Frame(timeUs: Long, target: Int): Bitmap? =
+        if (SDK_INT >= 27) {
+            runCatching { getScaledFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC, target, target) }.getOrNull()
+                ?: getFrameAtTime(timeUs)
+        } else {
+            getFrameAtTime(timeUs)
+        }
 
     private fun MediaMetadataRetriever.setDataSource(source: ImageSource) {
         val metadata = source.metadata

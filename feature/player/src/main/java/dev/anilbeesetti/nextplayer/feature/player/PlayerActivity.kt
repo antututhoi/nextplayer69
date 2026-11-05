@@ -107,6 +107,7 @@ class PlayerActivity : ComponentActivity() {
     private val playbackStateListener = object : Player.Listener {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             intent.data = mediaItem?.localConfiguration?.uri
+            dev.anilbeesetti.nextplayer.core.common.mod69.Mod69LastOpened.set(this@PlayerActivity, intent.data)
             isPlaybackFinished = false
             playbackFailed = false
         }
@@ -156,6 +157,8 @@ class PlayerActivity : ComponentActivity() {
         val request = PlayerApi(intent)
         if (request.launchInBackground) setTheme(R.style.NextPlayer_Background)
         super.onCreate(savedInstanceState)
+        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69Busy.playerOpen = true
+        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69LastOpened.set(this, intent.data)
         activityCreated = true
         playerApi = request
         if (request.launchInBackground && intent.data == null) {
@@ -251,6 +254,7 @@ class PlayerActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69Busy.playerOpen = false
         backgroundControllerFuture?.let {
             MediaController.releaseFuture(it)
             mediaController = null

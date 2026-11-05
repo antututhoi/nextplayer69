@@ -149,7 +149,8 @@ internal fun BoxScope.Mod69ToolsView(
             val entries = toolEntries(player = player, onOpen = { page = it }, onOpenOverlay = onOpenOverlay)
             androidx.compose.material3.Surface(
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                // 69 mod: no panel behind the side buttons, they float over the video like the player buttons
+                color = Color.Transparent,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .width(88.dp)
@@ -161,10 +162,10 @@ internal fun BoxScope.Mod69ToolsView(
                         .verticalScroll(rememberScrollState())
                         .padding(vertical = 6.dp),
                 ) {
-                    IconButton(onClick = onDismiss) { Icon(Icons.Rounded.Close, contentDescription = "Close") }
-                    entries.forEach { ToolButton(it.icon, it.label, it.onClick) }
-                    ToolButton(Icons.Rounded.SkipPrevious, "Frame back") { frameStep(player, -1) }
-                    ToolButton(Icons.Rounded.SkipNext, "Frame next") { frameStep(player, 1) }
+                    IconButton(onClick = onDismiss) { Icon(Icons.Rounded.Close, contentDescription = "Close", tint = Color.White) }
+                    entries.forEach { ToolButton(it.icon, it.label, floating = true, onClick = it.onClick) }
+                    ToolButton(Icons.Rounded.SkipPrevious, "Frame back", floating = true) { frameStep(player, -1) }
+                    ToolButton(Icons.Rounded.SkipNext, "Frame next", floating = true) { frameStep(player, 1) }
                 }
             }
         }
@@ -300,7 +301,7 @@ private fun toolEntries(
 
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit) {
+private fun ToolButton(icon: ImageVector, label: String, floating: Boolean = false, onClick: () -> Unit) {
     val context = LocalContext.current
     // MX-style tile: round icon with the name under it; long-press always tells the name
     androidx.compose.foundation.layout.Column(
@@ -319,15 +320,24 @@ private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit) {
             modifier = Modifier
                 .size(44.dp)
                 .clip(androidx.compose.foundation.shape.CircleShape)
-                .background(MaterialTheme.colorScheme.secondaryContainer),
+                // 69 mod: on the side bar the circle uses the player button background setting (can be see-through)
+                .background(
+                    if (floating) LocalMod69ButtonBackground.current else MaterialTheme.colorScheme.secondaryContainer,
+                ),
         ) {
-            Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+            Icon(
+                icon,
+                contentDescription = label,
+                tint = if (floating) Color.White else MaterialTheme.colorScheme.onSecondaryContainer,
+            )
         }
         if (Mod69Session.buttonLabels) {
             Text(
                 label,
-                style = MaterialTheme.typography.labelSmall,
                 color = Color.White,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    shadow = androidx.compose.ui.graphics.Shadow(Color.Black, blurRadius = 4f),
+                ),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 maxLines = 2,
                 modifier = Modifier.padding(top = 4.dp),

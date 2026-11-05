@@ -262,6 +262,7 @@ internal fun MediaPlayerControls(
             }
             if (mod69ResumeBar) {
                 Mod69ResumeBar(
+                    positionMs = remember { player.currentPosition },
                     onStartOver = {
                         player.seekTo(0)
                         mod69ResumeBar = false

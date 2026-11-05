@@ -202,8 +202,12 @@ internal fun MediaPickerScreenContent(
     var showDeleteVideosConfirmation by rememberSaveable { mutableStateOf(value = false) }
 
     val mediaHolder = (state.mediaDataState as? DataState.Success)?.value
+    val mod69FabCtx = androidx.compose.ui.platform.LocalContext.current
     val onFabClick = {
-        val selectedItem = (state.mod69LastPlayedAnywhere ?: state.recentlyPlayedVideo)?.toSelectedVideo()
+        // 69 mod: the video you opened last, even when it did not get to play yet
+        val mod69Last = dev.anilbeesetti.nextplayer.core.common.mod69.Mod69LastOpened.get(mod69FabCtx)
+        val selectedItem = mod69Last?.let { SelectionItem.Video(name = "", uriString = it, path = "") }
+            ?: (state.mod69LastPlayedAnywhere ?: state.recentlyPlayedVideo)?.toSelectedVideo()
             ?: mediaHolder?.folders?.firstOrNull()?.toSelectedFolder()
             ?: mediaHolder?.videos?.firstOrNull()?.toSelectedVideo()
 

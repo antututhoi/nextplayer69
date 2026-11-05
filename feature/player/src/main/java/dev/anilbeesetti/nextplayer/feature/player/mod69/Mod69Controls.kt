@@ -330,11 +330,16 @@ internal fun Mod69QuickRow(
     val placed = (preferences.mod69TopRowItems + preferences.mod69QuickItems).toSet()
     val rest = QuickItem.entries.filter { it.id !in placed && it.id !in preferences.mod69HiddenItems && it != QuickItem.TOOLS }
     androidx.compose.foundation.layout.Column(modifier = modifier) {
-        Row(
+        // 69 mod: Row 1 (under the title) is centred; Row 2 starts at the left
+        androidx.compose.foundation.layout.Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(systemBarsPadding.copy(top = 0.dp, bottom = 0.dp))
-                .padding(horizontal = 12.dp)
+                .padding(horizontal = 12.dp),
+            contentAlignment = if (expandable) Alignment.TopStart else Alignment.TopCenter,
+        ) {
+        Row(
+            modifier = Modifier
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.Top,
@@ -356,6 +361,7 @@ internal fun Mod69QuickRow(
                     Icon(imageVector = Icons.Rounded.Edit, contentDescription = null)
                 }
             }
+        }
         }
     }
 
@@ -482,6 +488,12 @@ internal fun Mod69BottomControls(
             val ctx = LocalContext.current
             val key = player?.currentMediaItem?.localConfiguration?.uri?.toString()
             LaunchedEffect(key) { player?.let { Mod69Session.loadBookmarks(ctx, it.mod69Key()) } }
+            // 69 mod: give cloud folders the duration the player found (so the list shows length + progress)
+            LaunchedEffect(key, duration > 0) {
+                if (key != null && duration > 0 && key.startsWith("content://")) {
+                    dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.rememberDuration(ctx, key, duration)
+                }
+            }
             // 69 mod: frame-step buttons at both ends of the seek bar (pause and move one frame)
             if (frameStepButtons && player != null) {
                 PlayerButton(
