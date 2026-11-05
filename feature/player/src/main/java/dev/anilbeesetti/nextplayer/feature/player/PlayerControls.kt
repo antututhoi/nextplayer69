@@ -1,5 +1,7 @@
 package dev.anilbeesetti.nextplayer.feature.player
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import dev.anilbeesetti.nextplayer.feature.player.model.labelRes
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
