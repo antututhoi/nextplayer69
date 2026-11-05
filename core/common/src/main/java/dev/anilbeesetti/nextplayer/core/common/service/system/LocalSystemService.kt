@@ -20,7 +20,7 @@ class LocalSystemService(private val context: Context) : SystemService {
 
     override fun initialize(activity: ComponentActivity) {
         val launcher = activity.registerForSuspendActivityResult(
-            ActivityResultContracts.OpenDocumentTree(),
+            dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Tree(),
         )
         activity.lifecycle.addObserver(
             object : DefaultLifecycleObserver {

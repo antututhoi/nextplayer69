@@ -141,7 +141,7 @@ internal fun Mod69SubtitlePage() {
     LaunchedEffect(Unit) { Mod69SubStore.init(context) }
     val s by Mod69SubStore.state.collectAsState()
 
-    val fontPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    val fontPicker = rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Open()) { uri ->
         if (uri != null) {
             runCatching {
                 val name = "mod69_font_" + System.currentTimeMillis() + ".ttf"
@@ -154,7 +154,7 @@ internal fun Mod69SubtitlePage() {
             }
         }
     }
-    val folderPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+    val folderPicker = rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Tree()) { uri ->
         uri?.let { treeToPath(it) }?.let { path -> Mod69SubStore.update { it.copy(subtitleFolder = path) } }
     }
 

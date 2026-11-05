@@ -98,7 +98,7 @@ internal fun AddConnectionScreenContent(
     val saveState = state.saveState
     val selectedPrivateKey = state.selectedPrivateKey
     val keyPicker =
-        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Open()) { uri ->
             uri?.let { onAction(AddConnectionAction.StagePrivateKey(uri = it)) }
         }
 

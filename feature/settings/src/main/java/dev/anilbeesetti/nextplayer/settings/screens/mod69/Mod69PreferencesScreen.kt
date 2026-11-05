@@ -106,7 +106,7 @@ private fun quickLabel(id: String): String = when (id) {
 fun Mod69PreferencesScreen(viewModel: Mod69PreferencesViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+    val exporter = rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Create("application/json")) { uri ->
         if (uri != null) {
             val ok = runCatching {
                 context.contentResolver.openOutputStream(uri, "wt")!!.use { it.write(viewModel.exportSettings(context).toByteArray()) }
@@ -114,7 +114,7 @@ fun Mod69PreferencesScreen(viewModel: Mod69PreferencesViewModel) {
             android.widget.Toast.makeText(context, if (ok) "Settings exported" else "Export failed", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
-    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+    val importer = rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Open()) { uri ->
         if (uri != null) {
             val text = runCatching { context.contentResolver.openInputStream(uri)!!.use { it.readBytes().decodeToString() } }.getOrNull()
             val ok = text != null && viewModel.importSettings(context, text)
@@ -606,6 +606,23 @@ private fun Mod69PreferencesContent(
                     trailingContent = { Text("${px.toInt()} px") },
                 )
             }
+            ListSectionTitle(text = "Folder / file picker")
+            val mod69PickCtx = androidx.compose.ui.platform.LocalContext.current
+            var mod69PickName by remember {
+                mutableStateOf(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69Picker.choiceName(mod69PickCtx))
+            }
+            ClickablePreferenceItem(
+                title = "Folder / file picker",
+                description = mod69PickName,
+                icon = NextIcons.Folder,
+                onClick = {
+                    dev.anilbeesetti.nextplayer.core.common.mod69.Mod69Picker.showSettingDialog(mod69PickCtx) {
+                        mod69PickName = dev.anilbeesetti.nextplayer.core.common.mod69.Mod69Picker.choiceName(mod69PickCtx)
+                    }
+                },
+                isFirstItem = true,
+                isLastItem = true,
+            )
             ListSectionTitle(text = "Debug log")
             val mod69Ctx = androidx.compose.ui.platform.LocalContext.current
             ClickablePreferenceItem(
@@ -806,7 +823,7 @@ private fun CloudFoldersCard() {
         val all = SafLibrary.entries(context)
         roots.associate { r -> r.treeUri to all.count { it.path.startsWith(r.virtualPath + "/") } }
     }
-    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+    val picker = rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Tree()) { uri ->
         if (uri != null) {
             val root = SafLibrary.addRoot(context, uri)
             SafLibrary.rescanInBackground(context, root)

@@ -82,7 +82,7 @@ internal fun PlaylistListScreenContent(
     onAddToHomeScreen: ((PlaylistSummary) -> Unit)? = null,
 ) {
     val openM3UFileLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        rememberLauncherForActivityResult(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Open()) { uri ->
             uri?.let { onAction(PlaylistUiAction.CreateM3UFile(uri = it)) }
         }
     BindTopLevelFab(

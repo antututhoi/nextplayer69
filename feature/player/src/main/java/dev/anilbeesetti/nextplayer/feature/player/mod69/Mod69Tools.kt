@@ -444,7 +444,7 @@ private fun BookmarksPage(player: Player) {
     var editing by remember { mutableStateOf<Long?>(null) }
     var askClear by remember { mutableStateOf(false) }
     val exportLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/plain"),
+        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Create("text/plain"),
     ) { uri ->
         if (uri != null) {
             runCatching {
@@ -454,7 +454,7 @@ private fun BookmarksPage(player: Player) {
         }
     }
     val importLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.OpenDocument(),
+        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69PickerContracts.Open(),
     ) { uri ->
         if (uri != null) {
             val text = runCatching { context.contentResolver.openInputStream(uri)!!.bufferedReader().readText() }.getOrNull()
