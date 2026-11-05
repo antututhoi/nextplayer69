@@ -20,7 +20,7 @@ class NextDataSourceFactory(private val context: Context, private val sessions: 
     DataSource.Factory {
 
     override fun createDataSource(): DataSource = SchemeDispatchingDataSource(
-        default = userAgent.trim().let { ua ->
+        default = Mod69SafeDataSource(userAgent.trim().let { ua ->
             if (ua.isEmpty()) {
                 DefaultDataSource.Factory(context)
             } else {
@@ -31,7 +31,7 @@ class NextDataSourceFactory(private val context: Context, private val sessions: 
                         .setAllowCrossProtocolRedirects(true),
                 )
             }
-        }.createDataSource(),
+        }.createDataSource()),
         network = NetworkDataSource(sessions = sessions),
     )
 
@@ -84,4 +84,58 @@ private class SchemeDispatchingDataSource(
 
     override fun getResponseHeaders(): Map<String, List<String>> =
         delegate?.responseHeaders ?: emptyMap()
+}
+
+
+/**
+ * 69 mod: rclone / RSAF files sometimes report a wrong length, and the content reader then fails
+ * with "ArrayIndexOutOfBounds … regionLength=-1" ("Source error"), mostly after a seek.
+ * On such a failure this re-opens the file at the current position with an unknown length and
+ * carries on; if that fails too it reports an IOException, which the player retries.
+ */
+@UnstableApi
+private class Mod69SafeDataSource(private val inner: DataSource) : DataSource {
+    private var spec: DataSpec? = null
+    private var position = 0L
+    private var reopened = 0
+
+    override fun addTransferListener(transferListener: androidx.media3.datasource.TransferListener) =
+        inner.addTransferListener(transferListener)
+
+    override fun open(dataSpec: DataSpec): Long {
+        spec = dataSpec
+        position = dataSpec.position
+        reopened = 0
+        return try {
+            inner.open(dataSpec)
+        } catch (e: RuntimeException) {
+            throw java.io.IOException(e)
+        }
+    }
+
+    override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
+        if (length <= 0) return 0
+        while (true) {
+            try {
+                val n = inner.read(buffer, offset, length)
+                if (n > 0) position += n
+                return n
+            } catch (e: RuntimeException) {
+                val s = spec
+                if (s == null || s.uri.scheme != "content" || reopened >= 3) throw java.io.IOException(e)
+                reopened++
+                runCatching { inner.close() }
+                inner.open(s.buildUpon().setPosition(position).setLength(androidx.media3.common.C.LENGTH_UNSET.toLong()).build())
+            }
+        }
+    }
+
+    override fun getUri(): android.net.Uri? = inner.uri
+
+    override fun getResponseHeaders(): Map<String, List<String>> = inner.responseHeaders
+
+    override fun close() {
+        spec = null
+        inner.close()
+    }
 }

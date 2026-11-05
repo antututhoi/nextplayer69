@@ -373,7 +373,7 @@ private fun GesturePreferencesScreenContent(
                                     longPressControlsSpeed =
                                         it.round(decimalPlaces = 1)
                                 },
-                                valueRange = 0.2f..4.0f,
+                                valueRange = 0.2f..8.0f,
                             )
                         },
                     )

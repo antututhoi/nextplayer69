@@ -202,7 +202,7 @@ internal fun MediaPickerScreenContent(
 
     val mediaHolder = (state.mediaDataState as? DataState.Success)?.value
     val onFabClick = {
-        val selectedItem = state.recentlyPlayedVideo?.toSelectedVideo()
+        val selectedItem = (state.mod69LastPlayedAnywhere ?: state.recentlyPlayedVideo)?.toSelectedVideo()
             ?: mediaHolder?.folders?.firstOrNull()?.toSelectedFolder()
             ?: mediaHolder?.videos?.firstOrNull()?.toSelectedVideo()
 

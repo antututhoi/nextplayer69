@@ -291,6 +291,26 @@ private fun Mod69PreferencesContent(
                     trailingContent = { Text("${edge.toInt()}%") },
                 )
                 PreferenceSwitch(
+                    title = "Hold to fast forward",
+                    description = "Press and hold the video to play faster, let go to go back",
+                    icon = NextIcons.FastForward,
+                    isChecked = p.useLongPressControls,
+                    onClick = { player { it.copy(useLongPressControls = !it.useLongPressControls) } },
+                )
+                if (p.useLongPressControls) {
+                    var holdSpeed by remember(p.longPressControlsSpeed) { mutableFloatStateOf(p.longPressControlsSpeed.coerceIn(2f, 8f)) }
+                    PreferenceSlider(
+                        title = "Hold speed",
+                        icon = NextIcons.Speed,
+                        value = holdSpeed,
+                        valueRange = 2f..8f,
+                        steps = 11,
+                        onValueChange = { holdSpeed = (it * 2).toInt() / 2f },
+                        onValueChangeFinished = { player { it.copy(longPressControlsSpeed = holdSpeed) } },
+                        trailingContent = { Text("${holdSpeed}x") },
+                    )
+                }
+                PreferenceSwitch(
                     title = "Press back twice to close the player",
                     icon = NextIcons.ArrowBack,
                     isChecked = p.mod69DoubleBackToExit,

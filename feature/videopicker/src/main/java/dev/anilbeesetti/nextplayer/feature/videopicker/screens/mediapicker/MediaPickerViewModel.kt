@@ -235,6 +235,12 @@ class MediaPickerViewModel(
                     stateInternal.update { it.copy(recentlyPlayedVideo = recentlyPlayed) }
                 }
             }
+            // 69 mod: the play button resumes the last video played anywhere (also from search), like MX
+            launch {
+                getRecentlyPlayedVideoUseCase(null).collect { last ->
+                    stateInternal.update { it.copy(mod69LastPlayedAnywhere = last) }
+                }
+            }
         }
     }
 
@@ -620,6 +626,7 @@ data class MediaPickerUiState(
     val folderPath: String? = null,
     val refreshing: Boolean = false,
     val recentlyPlayedVideo: Video? = null,
+    val mod69LastPlayedAnywhere: Video? = null,
     val mediaDataState: DataState<MediaHolder?> = DataState.Loading,
     val preferences: ApplicationPreferences = ApplicationPreferences(),
     val mediaInfo: dev.anilbeesetti.nextplayer.core.model.MediaInfo? = null,
