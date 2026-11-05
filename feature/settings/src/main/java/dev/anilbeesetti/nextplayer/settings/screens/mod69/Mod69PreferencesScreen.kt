@@ -1,5 +1,7 @@
 package dev.anilbeesetti.nextplayer.settings.screens.mod69
 
+import kotlinx.coroutines.launch
+import dev.anilbeesetti.nextplayer.core.ui.components.ClickablePreferenceItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -544,6 +546,16 @@ private fun Mod69PreferencesContent(
                     trailingContent = { Text("${px.toInt()} px") },
                 )
             }
+            ListSectionTitle(text = "Debug log")
+            ClickablePreferenceItem(
+                title = "Share debug log",
+                description = "Saves this app's recent log to Download/69-Next Player log.txt and opens Share. " +
+                    "Play the problem video first, then tap this.",
+                icon = NextIcons.BugReport,
+                onClick = { mod69ShareLog(context) },
+                isFirstItem = true,
+                isLastItem = true,
+            )
             ListSectionTitle(text = "Backup")
             SectionSurface {
                 Text(
@@ -741,6 +753,50 @@ private fun CloudFoldersCard() {
                 OutlinedButton(enabled = scanning == null, onClick = { SafLibrary.rescanInBackground(context) }) {
                     Text(stringResource(R.string.mod69_cloud_rescan))
                 }
+            }
+        }
+    }
+}
+
+/** 69 mod: an app may read its own log without adb; save it and share it. */
+private fun mod69ShareLog(context: android.content.Context) {
+    val scope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO)
+    scope.launch {
+        val text = runCatching {
+            val p = Runtime.getRuntime().exec(arrayOf("logcat", "-d", "-v", "threadtime", "-t", "6000"))
+            p.inputStream.bufferedReader().use { it.readText() }
+        }.getOrElse { "Could not read the log: ${it.message}" }
+        val header = "69-Next Player log\n" +
+            "Device: ${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}, Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})\n" +
+            "Time: ${java.util.Date()}\n\n"
+        val uri = runCatching {
+            val values = android.content.ContentValues().apply {
+                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, "69-Next Player log.txt")
+                put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "text/plain")
+                if (android.os.Build.VERSION.SDK_INT >= 29) {
+                    put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
+                }
+            }
+            val cr = context.contentResolver
+            val u = cr.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)!!
+            cr.openOutputStream(u)!!.use { it.write((header + text).toByteArray()) }
+            u
+        }.getOrNull()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+            if (uri == null) {
+                android.widget.Toast.makeText(context, "Could not save the log", android.widget.Toast.LENGTH_LONG).show()
+                return@withContext
+            }
+            android.widget.Toast.makeText(context, "Saved to Download/69-Next Player log.txt", android.widget.Toast.LENGTH_LONG).show()
+            val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            runCatching {
+                context.startActivity(
+                    android.content.Intent.createChooser(send, "Share log").addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+                )
             }
         }
     }
