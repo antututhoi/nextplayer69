@@ -26,16 +26,24 @@ internal fun BoxScope.Mod69ResumeBar(onStartOver: () -> Unit, onClose: () -> Uni
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .align(Alignment.BottomStart)
+            .align(Alignment.BottomCenter)
             .navigationBarsPadding()
-            .padding(start = 12.dp, bottom = 120.dp)
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 150.dp)
             .background(Color(0xE6202020), RoundedCornerShape(8.dp))
             .padding(horizontal = 4.dp),
     ) {
         IconButton(onClick = onClose) {
             Icon(Icons.Rounded.Close, contentDescription = null, tint = Color.White)
         }
-        Text("Continue from where you\nstopped.", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+        Text(
+            "Continued from where you stopped",
+            color = Color.White,
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 1,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f, fill = false),
+        )
         TextButton(onClick = onStartOver) { Text("START OVER") }
     }
 }

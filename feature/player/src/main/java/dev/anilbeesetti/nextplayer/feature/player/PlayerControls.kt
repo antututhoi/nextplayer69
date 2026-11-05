@@ -1,5 +1,6 @@
 package dev.anilbeesetti.nextplayer.feature.player
 
+import dev.anilbeesetti.nextplayer.feature.player.model.labelRes
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -78,7 +79,26 @@ fun PlayerControls(
                         onPlaylistClick = { onShowOverlay(OverlayView.PLAYLIST) },
                         onBackClick = onBackClick,
                         compactButtons = playerPreferences.mod69TopButtonsMenu,
+                        hideButtons = mod69Layout,
                     )
+                    if (mod69Layout && !controlsVisibilityState.controlsLocked && playerPreferences.mod69TopRowItems.isNotEmpty()) {
+                        // 69 mod: Row 1 – the buttons chosen for under the title
+                        Mod69QuickRow(
+                            player = player,
+                            preferences = playerPreferences,
+                            isPipSupported = isPipSupported,
+                            isTv = isTv,
+                            onPlaybackSpeedClick = { onShowOverlay(OverlayView.PLAYBACK_SPEED) },
+                            onPlayInBackgroundClick = onPlayInBackgroundClick,
+                            onPictureInPictureClick = onPictureInPictureClick,
+                            onToolsClick = { onShowOverlay(OverlayView.MOD69_TOOLS) },
+                            itemIds = playerPreferences.mod69TopRowItems,
+                            expandable = false,
+                            onOverlay = onShowOverlay,
+                            decoderLabel = androidx.compose.ui.res.stringResource((videoDecoderMode ?: io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE).labelRes),
+                            modifier = Modifier.padding(bottom = 6.dp),
+                        )
+                    }
                     if (mod69Layout && !controlsVisibilityState.controlsLocked) {
                         // 69 mod: MX-style quick icons under the title
                         Mod69QuickRow(
@@ -90,6 +110,8 @@ fun PlayerControls(
                             onPlayInBackgroundClick = onPlayInBackgroundClick,
                             onPictureInPictureClick = onPictureInPictureClick,
                             onToolsClick = { onShowOverlay(OverlayView.MOD69_TOOLS) },
+                            onOverlay = onShowOverlay,
+                            decoderLabel = androidx.compose.ui.res.stringResource((videoDecoderMode ?: io.github.anilbeesetti.nextlib.media3ext.ffdecoder.DecoderMode.HARDWARE).labelRes),
                         )
                     }
                 }

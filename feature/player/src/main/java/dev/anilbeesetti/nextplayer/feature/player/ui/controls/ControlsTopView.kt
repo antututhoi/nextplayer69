@@ -53,6 +53,8 @@ fun ControlsTopView(
     onAudioClick: () -> Unit = {},
     onSubtitleClick: () -> Unit = {},
     onPlaylistClick: () -> Unit = {},
+    /** 69 mod: only back + title; the buttons are in the rows below. */
+    hideButtons: Boolean = false,
     compactButtons: Boolean = false,
 ) {
     // 69 mod: tap the title to read all of it
@@ -93,7 +95,9 @@ fun ControlsTopView(
                 .clickable { titleExpanded = !titleExpanded },
         )
 
-        if (compactButtons) {
+        if (hideButtons) {
+            // 69 mod: buttons live in Row 1 / Row 2 / Tools
+        } else if (compactButtons) {
             androidx.compose.foundation.layout.Box {
                 PlayerButton(
                     modifier = Modifier.focusRequester(focusRequester = firstControlFocusRequester),

@@ -23,6 +23,13 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.ContentCut
+import androidx.compose.material.icons.rounded.ClosedCaption
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material.icons.rounded.AspectRatio
+import androidx.compose.material.icons.rounded.ZoomOutMap
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.VolumeOff
@@ -115,6 +122,17 @@ enum class QuickItem(val id: String) {
     SLEEP("sleep"),
     AB("ab"),
     HELP("help"),
+    DECODER("decoder"),
+    PLAYLIST("playlist"),
+    AUDIO_TRACK("audio_track"),
+    SUBTITLE_TRACK("subtitle_track"),
+    ASPECT("aspect"),
+    ZOOM("zoom"),
+    PICTURE("picture"),
+    INFO("info"),
+    SUB_LOOK("sub_look"),
+    CUT("cut"),
+    SHARE("share"),
     ;
 
     val label: String
@@ -134,6 +152,31 @@ enum class QuickItem(val id: String) {
             SLEEP -> "Sleep timer"
             AB -> "A-B repeat"
             HELP -> "Gesture help"
+            DECODER -> "Decoder"
+            PLAYLIST -> "Playlist"
+            AUDIO_TRACK -> "Audio"
+            SUBTITLE_TRACK -> "Subtitles"
+            ASPECT -> "Aspect"
+            ZOOM -> "Zoom"
+            PICTURE -> "Picture"
+            INFO -> "Info"
+            SUB_LOOK -> "Sub look"
+            CUT -> "Cut"
+            SHARE -> "Share"
+        }
+
+    /** Short name under the button. */
+    val shortLabel: String
+        get() = when (this) {
+            BACKGROUND -> "Background"
+            PIP -> "PiP"
+            SCREENSHOT -> "Shot"
+            NIGHT -> "Night"
+            EQUALIZER -> "EQ"
+            SLEEP -> "Sleep"
+            AB -> "A-B"
+            HELP -> "Help"
+            else -> label
         }
 
     companion object {
@@ -154,68 +197,70 @@ internal fun Mod69QuickRow(
     onPictureInPictureClick: () -> Unit,
     modifier: Modifier = Modifier,
     onToolsClick: () -> Unit = {},
+    /** 69 mod: which buttons this row shows; null = the quick row (Row 2). */
+    itemIds: List<String>? = null,
+    /** Row 2 has the "›" arrow with the buttons that are in no row. */
+    expandable: Boolean = true,
+    onOverlay: (dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView) -> Unit = {},
+    decoderLabel: String = "HW",
 ) {
-    val items = QuickItem.fromIds(preferences.mod69QuickItems)
+    val items = QuickItem.fromIds(itemIds ?: preferences.mod69QuickItems)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
     var customise by remember { mutableStateOf(false) }
     val systemBarsPadding = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
+    val labels = preferences.mod69ButtonLabels
+
+    fun toast(item: QuickItem) {
+        android.widget.Toast.makeText(context, item.label, android.widget.Toast.LENGTH_SHORT).show()
+    }
+
+    fun openTools(page: String) {
+        Mod69Session.toolsStart = page
+        onToolsClick()
+    }
+
+    @Composable
+    fun B(item: QuickItem, onClick: () -> Unit, content: @Composable () -> Unit) {
+        PlayerButton(onClick = onClick, onLongClick = { toast(item) }) { content() }
+    }
+
+    @Composable
+    fun Ic(v: androidx.compose.ui.graphics.vector.ImageVector, on: Boolean = false) {
+        Icon(imageVector = v, contentDescription = null, tint = if (on) MaterialTheme.colorScheme.primary else Color.White)
+    }
 
     @Composable
     fun ItemButton(item: QuickItem) {
         when (item) {
             QuickItem.SPEED -> PlaybackSpeedButton(player = player, onClick = onPlaybackSpeedClick)
-
-            QuickItem.BACKGROUND -> PlayerButton(onClick = onPlayInBackgroundClick) {
+            QuickItem.BACKGROUND -> B(item, onPlayInBackgroundClick) {
                 Icon(painter = painterResource(R.drawable.ic_headset), contentDescription = null)
             }
-
             QuickItem.ROTATE -> if (!isTv) RotateButton()
-
             QuickItem.LOOP -> LoopButton(player = player)
-
             QuickItem.SHUFFLE -> ShuffleButton(player = player)
-
             QuickItem.PIP -> if (isPipSupported) {
-                PlayerButton(onClick = onPictureInPictureClick) {
-                    Icon(painter = painterResource(R.drawable.ic_pip), contentDescription = null)
-                }
+                B(item, onPictureInPictureClick) { Icon(painter = painterResource(R.drawable.ic_pip), contentDescription = null) }
             }
-
-            QuickItem.TOOLS -> PlayerButton(onClick = onToolsClick) {
-                Icon(imageVector = Icons.Rounded.Apps, contentDescription = null)
+            QuickItem.TOOLS -> B(item, onToolsClick) { Ic(Icons.Rounded.Apps) }
+            QuickItem.SCREENSHOT -> B(item, { player?.let { p -> scope.launch { takeScreenshot(context, p) } } }) {
+                Ic(Icons.Rounded.CameraAlt)
             }
-
-            QuickItem.SCREENSHOT -> PlayerButton(onClick = {
-                player?.let { p -> scope.launch { takeScreenshot(context, p) } }
-            }) {
-                Icon(imageVector = Icons.Rounded.CameraAlt, contentDescription = null)
-            }
-
-            QuickItem.BOOKMARK -> PlayerButton(onClick = {
+            QuickItem.BOOKMARK -> B(item, {
                 player?.let { p ->
                     Mod69Session.loadBookmarks(context, p.mod69Key())
                     Mod69Session.addBookmark(context, p.currentPosition)
                     android.widget.Toast.makeText(context, "Bookmark added", android.widget.Toast.LENGTH_SHORT).show()
                 }
-            }) {
-                Icon(imageVector = Icons.Rounded.BookmarkAdd, contentDescription = null)
+            }) { Ic(Icons.Rounded.BookmarkAdd) }
+            QuickItem.NIGHT -> B(item, { Mod69Session.nightDim = if (Mod69Session.nightDim > 0f) 0f else 0.4f }) {
+                Ic(Icons.Rounded.NightsStay, Mod69Session.nightDim > 0f)
             }
-
-            QuickItem.NIGHT -> PlayerButton(onClick = {
-                Mod69Session.nightDim = if (Mod69Session.nightDim > 0f) 0f else 0.4f
-            }) {
-                Icon(
-                    imageVector = Icons.Rounded.NightsStay,
-                    contentDescription = null,
-                    tint = if (Mod69Session.nightDim > 0f) MaterialTheme.colorScheme.primary else Color.White,
-                )
-            }
-
             QuickItem.MUTE -> {
                 var muted by remember { mutableStateOf(player?.volume == 0f) }
-                PlayerButton(onClick = {
+                B(item, {
                     player?.let { p ->
                         if (p.volume > 0f) {
                             Mod69Session.volumeBeforeMute = p.volume
@@ -225,44 +270,58 @@ internal fun Mod69QuickRow(
                         }
                         muted = p.volume == 0f
                     }
-                }) {
-                    Icon(
-                        imageVector = if (muted) Icons.AutoMirrored.Rounded.VolumeOff else Icons.AutoMirrored.Rounded.VolumeUp,
-                        contentDescription = null,
-                        tint = if (muted) MaterialTheme.colorScheme.primary else Color.White,
-                    )
-                }
+                }) { Ic(if (muted) Icons.AutoMirrored.Rounded.VolumeOff else Icons.AutoMirrored.Rounded.VolumeUp, muted) }
             }
-
-            QuickItem.EQUALIZER -> PlayerButton(onClick = {
-                Mod69Session.toolsStart = "AUDIO"
-                onToolsClick()
-            }) { Icon(imageVector = Icons.Rounded.GraphicEq, contentDescription = null) }
-
-            QuickItem.SLEEP -> PlayerButton(onClick = {
-                Mod69Session.toolsStart = "SLEEP"
-                onToolsClick()
-            }) { Icon(imageVector = Icons.Rounded.Bedtime, contentDescription = null) }
-
-            QuickItem.AB -> PlayerButton(onClick = {
-                Mod69Session.toolsStart = "AB"
-                onToolsClick()
-            }) {
-                Icon(
-                    imageVector = Icons.Rounded.Repeat,
-                    contentDescription = null,
-                    tint = if (Mod69Session.aMs >= 0) MaterialTheme.colorScheme.primary else Color.White,
-                )
+            QuickItem.EQUALIZER -> B(item, { openTools("AUDIO") }) { Ic(Icons.Rounded.GraphicEq) }
+            QuickItem.SLEEP -> B(item, { openTools("SLEEP") }) { Ic(Icons.Rounded.Bedtime) }
+            QuickItem.AB -> B(item, { openTools("AB") }) { Ic(Icons.Rounded.Repeat, Mod69Session.aMs >= 0) }
+            QuickItem.HELP -> B(item, { openTools("HELP") }) { Ic(Icons.Rounded.TouchApp) }
+            QuickItem.DECODER -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) }) {
+                Text(decoderLabel, style = MaterialTheme.typography.labelLarge, maxLines = 1)
             }
-
-            QuickItem.HELP -> PlayerButton(onClick = {
-                Mod69Session.toolsStart = "HELP"
-                onToolsClick()
-            }) { Icon(imageVector = Icons.Rounded.TouchApp, contentDescription = null) }
+            QuickItem.PLAYLIST -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) }) {
+                Icon(painter = painterResource(R.drawable.ic_playlist), contentDescription = null)
+            }
+            QuickItem.AUDIO_TRACK -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) }) {
+                Icon(painter = painterResource(R.drawable.ic_audio_track), contentDescription = null)
+            }
+            QuickItem.SUBTITLE_TRACK -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) }) {
+                Icon(painter = painterResource(R.drawable.ic_subtitle_track), contentDescription = null)
+            }
+            QuickItem.ZOOM -> B(item, { onOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.VIDEO_CONTENT_SCALE) }) {
+                Ic(Icons.Rounded.ZoomOutMap)
+            }
+            QuickItem.ASPECT -> B(item, { openTools("ASPECT") }) { Ic(Icons.Rounded.AspectRatio) }
+            QuickItem.PICTURE -> B(item, { openTools("PICTURE") }) { Ic(Icons.Rounded.Tune) }
+            QuickItem.INFO -> B(item, { openTools("INFO") }) { Ic(Icons.Rounded.Info) }
+            QuickItem.SUB_LOOK -> B(item, { openTools("SUBTITLE") }) { Ic(Icons.Rounded.ClosedCaption) }
+            QuickItem.CUT -> B(item, { openTools("CUT") }) { Ic(Icons.Rounded.ContentCut) }
+            QuickItem.SHARE -> B(item, { player?.let { mod69Share(context, it) } }) { Ic(Icons.Rounded.Share) }
         }
     }
 
-    val rest = QuickItem.entries.filter { it !in items }
+    @Composable
+    fun Labelled(item: QuickItem) {
+        if (!labels) {
+            ItemButton(item)
+            return
+        }
+        androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            ItemButton(item)
+            Text(
+                item.shortLabel,
+                color = Color.White,
+                fontSize = 9.sp,
+                maxLines = 1,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    shadow = androidx.compose.ui.graphics.Shadow(Color.Black, blurRadius = 4f),
+                ),
+            )
+        }
+    }
+
+    val placed = (preferences.mod69TopRowItems + preferences.mod69QuickItems).toSet()
+    val rest = QuickItem.entries.filter { it.id !in placed && it.id !in preferences.mod69HiddenItems && it != QuickItem.TOOLS }
     androidx.compose.foundation.layout.Column(modifier = modifier) {
         Row(
             modifier = Modifier
@@ -270,18 +329,22 @@ internal fun Mod69QuickRow(
                 .padding(systemBarsPadding.copy(top = 0.dp, bottom = 0.dp))
                 .padding(horizontal = 12.dp)
                 .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.Top,
         ) {
-            items.forEach { ItemButton(it) }
-            PlayerButton(onClick = { expanded = !expanded }) {
-                Icon(
-                    imageVector = if (expanded) Icons.AutoMirrored.Rounded.KeyboardArrowLeft else Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = null,
-                )
+            items.forEach { Labelled(it) }
+            if (expandable && rest.isNotEmpty()) {
+                PlayerButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = if (expanded) Icons.AutoMirrored.Rounded.KeyboardArrowLeft else Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                        contentDescription = null,
+                    )
+                }
+                if (expanded) {
+                    rest.forEach { Labelled(it) }
+                }
             }
-            if (expanded) {
-                rest.forEach { ItemButton(it) }
+            if (expandable && expanded) {
                 PlayerButton(onClick = { customise = true }) {
                     Icon(imageVector = Icons.Rounded.Edit, contentDescription = null)
                 }
@@ -321,7 +384,13 @@ internal fun Mod69QuickRow(
             confirmButton = {
                 androidx.compose.material3.TextButton(onClick = {
                     val ids = chosen.map { it.id }
-                    Mod69Session.savePrefs { it.copy(mod69QuickItems = ids) }
+                    Mod69Session.savePrefs {
+                        it.copy(
+                            mod69QuickItems = ids,
+                            mod69TopRowItems = it.mod69TopRowItems - ids.toSet(),
+                            mod69HiddenItems = it.mod69HiddenItems - ids.toSet(),
+                        )
+                    }
                     customise = false
                 }) { Text("Apply") }
             },
@@ -566,3 +635,18 @@ private fun batteryAndClock(context: Context): String {
     return percent + SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 }
 
+
+/** 69 mod: share the playing video. */
+internal fun mod69Share(context: android.content.Context, player: Player) {
+    val uri = player.currentMediaItem?.localConfiguration?.uri ?: return
+    val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+        type = "video/*"
+        putExtra(android.content.Intent.EXTRA_STREAM, uri)
+        addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    runCatching {
+        context.startActivity(
+            android.content.Intent.createChooser(send, "Share").addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+        )
+    }
+}

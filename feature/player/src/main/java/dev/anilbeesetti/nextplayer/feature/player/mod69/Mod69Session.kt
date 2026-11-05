@@ -40,6 +40,11 @@ object Mod69Session {
 
     var volumeBeforeMute = 1f
 
+    // Player buttons placement (from the settings): ids in Row 1/Row 2, hidden ids, labels on/off
+    var placedItems: Set<String> = emptySet()
+    var hiddenItems: Set<String> = emptySet()
+    var buttonLabels by mutableStateOf(true)
+
     // Aspect kept for all videos (saved in settings)
     var aspectAll by mutableStateOf(false)
 

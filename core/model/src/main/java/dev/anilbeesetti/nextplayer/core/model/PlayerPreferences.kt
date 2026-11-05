@@ -107,6 +107,12 @@ data class PlayerPreferences(
     val mod69ButtonBgCustom: Boolean = false,
     /** Cut the seek bar into pieces at chapters (off = one smooth bar, chapters still in the menu). */
     val mod69ChapterGaps: Boolean = false,
+    /** Buttons in the row under the title (same catalog as the quick row and the tools). */
+    val mod69TopRowItems: List<String> = listOf("decoder", "playlist", "audio_track", "subtitle_track"),
+    /** Buttons not shown anywhere. Everything not in a row and not hidden is in Tools. */
+    val mod69HiddenItems: List<String> = emptyList(),
+    /** Small names under the player buttons (long-press always shows the name). */
+    val mod69ButtonLabels: Boolean = true,
     /** Thickness of the thin progress line shown while the controls are hidden (same as the seek bar line by default). */
     val mod69MiniBarHeight: Int = 4,
     /** Frame-step buttons at both ends of the seek bar. */

@@ -26,6 +26,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.material.icons.automirrored.rounded.VolumeOff
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.BookmarkAdd
@@ -228,7 +232,7 @@ private fun MainPage(
     }
 }
 
-private class ToolEntry(val icon: ImageVector, val label: String, val onClick: () -> Unit)
+private class ToolEntry(val id: String, val icon: ImageVector, val label: String, val onClick: () -> Unit)
 
 /** Height that fits [count] tool buttons (the column scrolls for the rest). */
 private fun Modifier.toolsColumnHeight(count: Int): Modifier =
@@ -243,24 +247,24 @@ private fun toolEntries(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     return listOf(
-        ToolEntry(Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) },
-        ToolEntry(Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) },
-        ToolEntry(Icons.Rounded.Speed, "Speed") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYBACK_SPEED) },
-        ToolEntry(Icons.Rounded.Memory, "Decoder") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) },
-        ToolEntry(Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) },
-        ToolEntry(Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.VIDEO_CONTENT_SCALE) },
-        ToolEntry(Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) },
-        ToolEntry(Icons.Rounded.Bedtime, "Sleep timer") { onOpen(ToolsPage.SLEEP) },
-        ToolEntry(Icons.Rounded.Repeat, "A-B repeat") { onOpen(ToolsPage.AB) },
-        ToolEntry(Icons.Rounded.CameraAlt, "Screenshot") { scope.launch { takeScreenshot(context, player) } },
-        ToolEntry(Icons.Rounded.Bookmark, "Bookmarks") { onOpen(ToolsPage.BOOKMARKS) },
-        ToolEntry(Icons.Rounded.NightsStay, "Night mode") { onOpen(ToolsPage.NIGHT) },
-        ToolEntry(Icons.Rounded.Tune, "Picture") { onOpen(ToolsPage.PICTURE) },
-        ToolEntry(Icons.Rounded.GraphicEq, "Equalizer") { onOpen(ToolsPage.AUDIO) },
-        ToolEntry(Icons.Rounded.ClosedCaption, "Subtitle look") { onOpen(ToolsPage.SUBTITLE) },
-        ToolEntry(Icons.Rounded.Info, "Information") { onOpen(ToolsPage.INFO) },
-        ToolEntry(Icons.Rounded.ContentCut, "Cut / MP3") { onOpen(ToolsPage.CUT) },
-        ToolEntry(Icons.Rounded.Share, "Share") {
+        ToolEntry("audio_track", Icons.Rounded.Audiotrack, "Audio track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.AUDIO_SELECTOR) },
+        ToolEntry("subtitle_track", Icons.Rounded.Subtitles, "Subtitle track") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.SUBTITLE_SELECTOR) },
+        ToolEntry("speed", Icons.Rounded.Speed, "Speed") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYBACK_SPEED) },
+        ToolEntry("decoder", Icons.Rounded.Memory, "Decoder") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.DECODER_SELECTOR) },
+        ToolEntry("aspect", Icons.Rounded.AspectRatio, "Aspect ratio") { onOpen(ToolsPage.ASPECT) },
+        ToolEntry("zoom", Icons.Rounded.ZoomOutMap, "Zoom / fit") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.VIDEO_CONTENT_SCALE) },
+        ToolEntry("playlist", Icons.AutoMirrored.Rounded.PlaylistPlay, "Playlist") { onOpenOverlay(dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView.PLAYLIST) },
+        ToolEntry("sleep", Icons.Rounded.Bedtime, "Sleep timer") { onOpen(ToolsPage.SLEEP) },
+        ToolEntry("ab", Icons.Rounded.Repeat, "A-B repeat") { onOpen(ToolsPage.AB) },
+        ToolEntry("screenshot", Icons.Rounded.CameraAlt, "Screenshot") { scope.launch { takeScreenshot(context, player) } },
+        ToolEntry("bookmark", Icons.Rounded.Bookmark, "Bookmarks") { onOpen(ToolsPage.BOOKMARKS) },
+        ToolEntry("night", Icons.Rounded.NightsStay, "Night mode") { onOpen(ToolsPage.NIGHT) },
+        ToolEntry("picture", Icons.Rounded.Tune, "Picture") { onOpen(ToolsPage.PICTURE) },
+        ToolEntry("equalizer", Icons.Rounded.GraphicEq, "Equalizer") { onOpen(ToolsPage.AUDIO) },
+        ToolEntry("sub_look", Icons.Rounded.ClosedCaption, "Subtitle look") { onOpen(ToolsPage.SUBTITLE) },
+        ToolEntry("info", Icons.Rounded.Info, "Information") { onOpen(ToolsPage.INFO) },
+        ToolEntry("cut", Icons.Rounded.ContentCut, "Cut / MP3") { onOpen(ToolsPage.CUT) },
+        ToolEntry("share", Icons.Rounded.Share, "Share") {
             player.currentMediaItem?.localConfiguration?.uri?.let { uri ->
                 val send = Intent(Intent.ACTION_SEND).apply {
                     type = "video/*"
@@ -272,19 +276,40 @@ private fun toolEntries(
                 }
             }
         },
-        ToolEntry(Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) },
-    )
+        ToolEntry("help", Icons.Rounded.TouchApp, "Gesture help") { onOpen(ToolsPage.HELP) },
+        ToolEntry("loop", Icons.Rounded.Repeat, "Loop") {
+            player.repeatMode = if (player.repeatMode == Player.REPEAT_MODE_OFF) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+            android.widget.Toast.makeText(context, if (player.repeatMode == Player.REPEAT_MODE_OFF) "Loop off" else "Loop this video", android.widget.Toast.LENGTH_SHORT).show()
+        },
+        ToolEntry("shuffle", Icons.Rounded.Shuffle, "Shuffle") {
+            player.shuffleModeEnabled = !player.shuffleModeEnabled
+            android.widget.Toast.makeText(context, if (player.shuffleModeEnabled) "Shuffle on" else "Shuffle off", android.widget.Toast.LENGTH_SHORT).show()
+        },
+        ToolEntry("mute", Icons.AutoMirrored.Rounded.VolumeOff, "Mute") {
+            if (player.volume > 0f) {
+                Mod69Session.volumeBeforeMute = player.volume
+                player.volume = 0f
+            } else {
+                player.volume = Mod69Session.volumeBeforeMute.takeIf { it > 0f } ?: 1f
+            }
+        },
+    ).filter { it.id !in Mod69Session.placedItems && it.id !in Mod69Session.hiddenItems }
 }
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit) {
-    // MX-style tile: round icon with the name under it (never cut off)
+    val context = LocalContext.current
+    // MX-style tile: round icon with the name under it; long-press always tells the name
     androidx.compose.foundation.layout.Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .width(76.dp)
             .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = { android.widget.Toast.makeText(context, label, android.widget.Toast.LENGTH_SHORT).show() },
+            )
             .padding(vertical = 4.dp),
     ) {
         androidx.compose.foundation.layout.Box(
@@ -294,15 +319,18 @@ private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit) {
                 .clip(androidx.compose.foundation.shape.CircleShape)
                 .background(MaterialTheme.colorScheme.secondaryContainer),
         ) {
-            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
+            Icon(icon, contentDescription = label, tint = MaterialTheme.colorScheme.onSecondaryContainer)
         }
-        Text(
-            label,
-            style = MaterialTheme.typography.labelSmall,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            maxLines = 2,
-            modifier = Modifier.padding(top = 4.dp),
-        )
+        if (Mod69Session.buttonLabels) {
+            Text(
+                label,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                maxLines = 2,
+                modifier = Modifier.padding(top = 4.dp),
+            )
+        }
     }
 }
 

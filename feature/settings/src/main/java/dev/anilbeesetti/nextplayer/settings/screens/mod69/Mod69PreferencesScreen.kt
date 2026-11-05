@@ -65,8 +65,9 @@ private val SWATCHES = listOf(
 )
 
 private val QUICK_IDS = listOf(
+    "decoder", "playlist", "audio_track", "subtitle_track",
     "tools", "speed", "screenshot", "bookmark", "night", "background", "rotate", "loop", "shuffle", "pip",
-    "mute", "equalizer", "sleep", "ab", "help",
+    "mute", "equalizer", "sleep", "ab", "aspect", "zoom", "picture", "info", "sub_look", "cut", "share", "help",
 )
 
 @Composable
@@ -86,6 +87,17 @@ private fun quickLabel(id: String): String = when (id) {
     "sleep" -> "Sleep timer"
     "ab" -> "A-B repeat"
     "help" -> "Gesture help"
+    "decoder" -> "Decoder (HW / SW)"
+    "playlist" -> "Playlist"
+    "audio_track" -> "Audio track"
+    "subtitle_track" -> "Subtitle track"
+    "aspect" -> "Aspect ratio"
+    "zoom" -> "Zoom / fit"
+    "picture" -> "Picture (colour, rotate, mirror)"
+    "info" -> "Information"
+    "sub_look" -> "Subtitle look"
+    "cut" -> "Cut / MP3"
+    "share" -> "Share"
     else -> id
 }
 
@@ -449,10 +461,23 @@ private fun Mod69PreferencesContent(
                 )
             }
 
-            ListSectionTitle(text = stringResource(R.string.mod69_quick_items))
-            QuickItemsCard(
-                selected = p.mod69QuickItems,
-                onChange = { list -> player { it.copy(mod69QuickItems = list) } },
+            ListSectionTitle(text = "Player buttons")
+            PlayerButtonsCard(
+                top = p.mod69TopRowItems,
+                second = p.mod69QuickItems,
+                hidden = p.mod69HiddenItems,
+                onChange = { top, second, hidden ->
+                    player { it.copy(mod69TopRowItems = top, mod69QuickItems = second, mod69HiddenItems = hidden) }
+                },
+            )
+            PreferenceSwitch(
+                title = "Names under the buttons",
+                description = "Small labels under the player and tools buttons. Long-press a button to see its name anyway",
+                icon = NextIcons.Title,
+                isChecked = p.mod69ButtonLabels,
+                onClick = { player { it.copy(mod69ButtonLabels = !it.mod69ButtonLabels) } },
+                isFirstItem = true,
+                isLastItem = true,
             )
 
             ListSectionTitle(text = stringResource(R.string.mod69_list))
@@ -693,34 +718,70 @@ private fun ColorCard(
     }
 }
 
+/**
+ * One list of all player buttons. Each goes in the row under the title, the second row,
+ * the Tools panel, or is hidden. Arrows change the order inside a row.
+ */
 @Composable
-private fun QuickItemsCard(selected: List<String>, onChange: (List<String>) -> Unit) {
-    // Selected items first (in their order), then the unselected ones.
-    val ordered = selected.filter { it in QUICK_IDS } + QUICK_IDS.filter { it !in selected }
+private fun PlayerButtonsCard(
+    top: List<String>,
+    second: List<String>,
+    hidden: List<String>,
+    onChange: (List<String>, List<String>, List<String>) -> Unit,
+) {
+    fun place(id: String): Int = when (id) {
+        in top -> 0
+        in second -> 1
+        in hidden -> 3
+        else -> 2
+    }
+    val ordered = top.filter { it in QUICK_IDS } + second.filter { it in QUICK_IDS && it !in top } +
+        QUICK_IDS.filter { it !in top && it !in second }
     SectionSurface {
         Text(
-            stringResource(R.string.mod69_quick_items_description),
+            "Choose where each button goes: Row 1 (under the title), Row 2, Tools (the ⊞ panel) or Hidden. " +
+                "A button is only in one place, so nothing shows twice.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         ordered.forEach { id ->
-            val on = id in selected
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                Checkbox(
-                    checked = on,
-                    onCheckedChange = {
-                        onChange(if (on) selected - id else selected + id)
-                    },
-                )
-                Text(quickLabel(id), modifier = Modifier.weight(1f))
-                if (on) {
-                    val i = selected.indexOf(id)
-                    IconButton(enabled = i > 0, onClick = {
-                        val m = selected.toMutableList(); m.removeAt(i); m.add(i - 1, id); onChange(m)
-                    }) { Icon(NextIcons.ArrowUpward, contentDescription = null) }
-                    IconButton(enabled = i < selected.size - 1, onClick = {
-                        val m = selected.toMutableList(); m.removeAt(i); m.add(i + 1, id); onChange(m)
-                    }) { Icon(NextIcons.ArrowDownward, contentDescription = null) }
+            val where = place(id)
+            Column(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(quickLabel(id), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                    val list = when (where) { 0 -> top; 1 -> second; else -> null }
+                    if (list != null) {
+                        val i = list.indexOf(id)
+                        fun moved(by: Int): List<String> = list.toMutableList().apply { removeAt(i); add(i + by, id) }
+                        IconButton(enabled = i > 0, onClick = {
+                            if (where == 0) onChange(moved(-1), second, hidden) else onChange(top, moved(-1), hidden)
+                        }) { Icon(NextIcons.ArrowUpward, contentDescription = null) }
+                        IconButton(enabled = i < list.size - 1, onClick = {
+                            if (where == 0) onChange(moved(1), second, hidden) else onChange(top, moved(1), hidden)
+                        }) { Icon(NextIcons.ArrowDownward, contentDescription = null) }
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                ) {
+                    listOf("Row 1", "Row 2", "Tools", "Hidden").forEachIndexed { n, label ->
+                        androidx.compose.material3.FilterChip(
+                            selected = where == n,
+                            onClick = {
+                                val t = top - id
+                                val s2 = second - id
+                                val h = hidden - id
+                                when (n) {
+                                    0 -> onChange(t + id, s2, h)
+                                    1 -> onChange(t, s2 + id, h)
+                                    2 -> onChange(t, s2, h)
+                                    else -> onChange(t, s2, h + id)
+                                }
+                            },
+                            label = { Text(label) },
+                        )
+                    }
                 }
             }
         }
