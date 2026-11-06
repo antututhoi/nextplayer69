@@ -232,6 +232,12 @@ class Mod69ServiceHandler(
         handler.removeCallbacks(abRunnable)
     }
 
+    private var restoreSeekTo: androidx.media3.exoplayer.SeekParameters? = null
+    private val restoreSeek = Runnable {
+        val b = restoreSeekTo ?: return@Runnable
+        (playerProvider() as? ExoPlayer)?.setSeekParameters(b)
+    }
+
     fun handle(args: Bundle): Bundle {
         ensureListener()
         val out = Bundle()
@@ -263,6 +269,20 @@ class Mod69ServiceHandler(
             }
 
             "effects" -> applyEffects(args)
+
+            // 69 mod: one exact frame step (normal seeks snap to key frames for speed)
+            "frame_step" -> (playerProvider() as? ExoPlayer)?.let { p ->
+                p.pause()
+                val fps = p.videoFormat?.frameRate?.takeIf { it > 0f } ?: 30f
+                val frameMs = (1000f / fps).toLong().coerceAtLeast(1L)
+                val target = (p.currentPosition + args.getInt("dir", 1) * frameMs).coerceAtLeast(0L)
+                val before = p.seekParameters
+                p.setSeekParameters(androidx.media3.exoplayer.SeekParameters.EXACT)
+                p.seekTo(target)
+                handler.removeCallbacks(restoreSeek)
+                restoreSeekTo = before
+                handler.postDelayed(restoreSeek, 800)
+            }
         }
         out.putLong("sleep_left", if (sleepAtElapsed > 0) sleepAtElapsed - SystemClock.elapsedRealtime() else 0L)
         out.putBoolean("sleep_eof", sleepEndOfFile)

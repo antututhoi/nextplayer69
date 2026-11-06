@@ -237,6 +237,28 @@ private fun Mod69PreferencesContent(
                     onClick = { player { it.copy(mod69TopButtonsMenu = !it.mod69TopButtonsMenu) } },
                 )
                 PreferenceSwitch(
+                    title = "69- Row buttons in a side column",
+                    description = "Row 1 and Row 2 go into a column at the side, in the middle of the screen, so you don't have to reach the top",
+                    icon = NextIcons.ButtonsPosition,
+                    isChecked = p.mod69RowsVertical,
+                    onClick = { player { it.copy(mod69RowsVertical = !it.mod69RowsVertical) } },
+                )
+                if (p.mod69RowsVertical) {
+                    PreferenceSwitch(
+                        title = "69- Side column on the left",
+                        icon = NextIcons.ButtonsPosition,
+                        isChecked = p.mod69RowsVerticalLeft,
+                        onClick = { player { it.copy(mod69RowsVerticalLeft = !it.mod69RowsVerticalLeft) } },
+                    )
+                }
+                PreferenceSwitch(
+                    title = "69- Dark shade behind the buttons",
+                    description = "A soft black fade behind the top, bottom and side buttons (like MX Player)",
+                    icon = NextIcons.ButtonsPosition,
+                    isChecked = p.mod69ButtonShade,
+                    onClick = { player { it.copy(mod69ButtonShade = !it.mod69ButtonShade) } },
+                )
+                PreferenceSwitch(
                     title = "Tools as a side column",
                     description = "A slim column at the screen edge instead of a big panel over the video",
                     icon = NextIcons.ButtonsPosition,
@@ -755,8 +777,8 @@ private fun PlayerButtonsCard(
     onChange: (List<String>, List<String>, List<String>) -> Unit,
 ) {
     // 69 mod: one simple list per place, all buttons with their icon in 2 columns and a tick box.
-    // Ticking a button in a place moves it there (each button is in one place only).
-    // Unticking puts it back into Tools. Buttons show in the order they were ticked.
+    // Ticking a button in a place moves it there (each button is in one place only, the newest
+    // tick wins). A button that is not ticked anywhere is hidden. Buttons show in the order they were ticked.
     fun place(id: String): Int = when (id) {
         in top -> 0
         in second -> 1
@@ -764,7 +786,7 @@ private fun PlayerButtonsCard(
         else -> 2
     }
     val ids = QUICK_IDS.filter { it != "tools" } + "tools"
-    val titles = listOf("Row 1 (under the title)", "Row 2", "Tools panel", "Hidden")
+    val titles = listOf("Row 1 (next to the title)", "Row 2", "Tools panel")
     titles.forEachIndexed { section, title ->
         SectionSurface {
             Text(title, style = MaterialTheme.typography.titleMedium)
@@ -780,7 +802,8 @@ private fun PlayerButtonsCard(
                                     val t = top - id
                                     val s2 = second - id
                                     val h = hidden - id
-                                    val target = if (checked) 2 else section
+                                    // unticked = hidden; ticked = only in this place
+                                    val target = if (checked) 3 else section
                                     when (target) {
                                         0 -> onChange(t + id, s2, h)
                                         1 -> onChange(t, s2 + id, h)

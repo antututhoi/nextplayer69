@@ -66,6 +66,18 @@ fun BoxScope.DecoderSelectorView(
             // 69 mod: HW+ for video (hardware decoder tuned for quick start and seeking)
             var hwPlusState by remember { mutableStateOf(dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.hwPlus) }
             Column(modifier = Modifier.selectableGroup()) {
+                // HW+ first in the list
+                if (selectedTrackType == DecoderTrackType.VIDEO) {
+                    Mod69HwPlusRow(
+                        selected = hwPlusState && (videoMode == null || videoMode == DecoderMode.HARDWARE),
+                        onClick = {
+                            hwPlusState = true
+                            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.hwPlus = true
+                            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.savePrefs { it.copy(mod69HwPlus = true) }
+                            onVideoModeSelected(DecoderMode.HARDWARE)
+                        },
+                    )
+                }
                 DecoderModeGroup(
                     selectedMode = when (selectedTrackType) {
                         DecoderTrackType.VIDEO -> if (hwPlusState && (videoMode == null || videoMode == DecoderMode.HARDWARE)) null else videoMode
@@ -81,17 +93,6 @@ fun BoxScope.DecoderSelectorView(
                         DecoderTrackType.AUDIO -> onAudioModeSelected
                     },
                 )
-                if (selectedTrackType == DecoderTrackType.VIDEO) {
-                    Mod69HwPlusRow(
-                        selected = hwPlusState && (videoMode == null || videoMode == DecoderMode.HARDWARE),
-                        onClick = {
-                            hwPlusState = true
-                            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Flags.hwPlus = true
-                            dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Session.savePrefs { it.copy(mod69HwPlus = true) }
-                            onVideoModeSelected(DecoderMode.HARDWARE)
-                        },
-                    )
-                }
             }
         }
     }

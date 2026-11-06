@@ -12,4 +12,19 @@ import androidx.compose.ui.unit.dp
  */
 object Mod69NavLift {
     var bottom: Dp by mutableStateOf(0.dp)
+
+    /** The screen that set [bottom]; only it may clear it (a closing folder screen used to clear the home's lift). */
+    private var owner: Any? = null
+
+    fun set(token: Any, value: Dp) {
+        owner = token
+        bottom = value
+    }
+
+    fun clear(token: Any) {
+        if (owner == null || owner === token) {
+            owner = null
+            bottom = 0.dp
+        }
+    }
 }

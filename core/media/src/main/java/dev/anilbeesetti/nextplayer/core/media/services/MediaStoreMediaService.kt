@@ -15,7 +15,6 @@ import dev.anilbeesetti.nextplayer.core.common.extensions.prettyName
 import dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary
 import kotlinx.coroutines.flow.combine
 import java.io.File
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -23,7 +22,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -84,7 +83,9 @@ class MediaStoreMediaService(
         awaitClose { context.contentResolver.unregisterContentObserver(observer) }
     }
         .combine(SafLibrary.version) { _, _ -> Unit }
-        .debounce(OBSERVER_DEBOUNCE_MS.milliseconds)
+        // 69 mod: at most one re-query per second, but never wait for a quiet moment: while a cloud
+        // folder is read the list changes all the time, and "debounce" kept the home screen empty
+        .mod69Throttle(1_000L)
         .shareIn(
             scope = applicationScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
@@ -348,5 +349,16 @@ class MediaStoreMediaService(
             dateModified = getLong(dateModifiedIndex),
             dateAdded = getLong(dateAddedIndex),
         )
+    }
+}
+
+// 69 mod: first value at once, then the newest value at most every [ms]
+private fun <T> Flow<T>.mod69Throttle(ms: Long): Flow<T> = kotlinx.coroutines.flow.channelFlow {
+    var last = 0L
+    this@mod69Throttle.conflate().collect { v ->
+        val wait = last + ms - android.os.SystemClock.elapsedRealtime()
+        if (wait > 0) kotlinx.coroutines.delay(wait)
+        send(v)
+        last = android.os.SystemClock.elapsedRealtime()
     }
 }

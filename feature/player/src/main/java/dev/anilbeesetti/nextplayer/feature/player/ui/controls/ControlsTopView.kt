@@ -56,6 +56,8 @@ fun ControlsTopView(
     /** 69 mod: only back + title; the buttons are in the rows below. */
     hideButtons: Boolean = false,
     compactButtons: Boolean = false,
+    /** 69 mod: Row 1 buttons, shown on the title line (right side). */
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     // 69 mod: tap the title to read all of it
     var titleExpanded by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
@@ -96,7 +98,13 @@ fun ControlsTopView(
         )
 
         if (hideButtons) {
-            // 69 mod: buttons live in Row 1 / Row 2 / Tools
+            // 69 mod: buttons live in Row 1 (here, on the title line) / Row 2 / Tools
+            if (trailing != null) {
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier.weight(1.4f, fill = false),
+                    contentAlignment = Alignment.CenterEnd,
+                ) { trailing() }
+            }
         } else if (compactButtons) {
             androidx.compose.foundation.layout.Box {
                 PlayerButton(

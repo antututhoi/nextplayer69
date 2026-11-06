@@ -266,6 +266,8 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
 
         val createdPaths = mutableListOf<String>()
         val movedSources = mutableListOf<Uri>()
+        // 69 mod: what was copied, so a cloud folder's list is updated without a full rescan
+        val mod69Copies = mutableListOf<Pair<Uri, Triple<Uri, Long, String>>>()
         var overallCopied = 0L
         var succeeded = 0
 
@@ -297,6 +299,7 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
                 } ?: return@forEachIndexed
 
             succeeded++
+            mod69Copies += source to Triple(copied.uri, copied.bytes, name)
             overallCopied += copied.bytes
             (runCatching { context.getPath(copied.uri) }.getOrNull() ?: documentPath(copied.uri))
                 ?.let { createdPaths.add(element = it) }
@@ -304,16 +307,10 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
         }
 
         if (createdPaths.isNotEmpty()) context.scanPaths(paths = createdPaths)
-        // 69 mod: copied into a cloud (rclone) folder -> refresh that folder's list
-        dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.roots(context)
-            .firstOrNull { root ->
-                runCatching {
-                    DocumentsContract.getTreeDocumentId(Uri.parse(root.treeUri)) ==
-                        DocumentsContract.getTreeDocumentId(destinationDir) &&
-                        Uri.parse(root.treeUri).authority == destinationDir.authority
-                }.getOrDefault(false)
-            }
-            ?.let { dev.anilbeesetti.nextplayer.core.common.mod69.SafLibrary.rescanInBackground(context, it) }
+        // 69 mod: copied into a cloud (rclone) folder -> add just those files to its list
+        if (mod69Copies.isNotEmpty()) {
+            runCatching { SafLibrary.addCopies(context, destinationDir, mod69Copies) }
+        }
 
         // The copies are already in place, so a failed deletion still counts as a move;
         // the originals are just left behind, which we report separately.

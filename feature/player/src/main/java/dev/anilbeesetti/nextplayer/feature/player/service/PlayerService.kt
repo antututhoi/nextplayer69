@@ -229,7 +229,8 @@ class PlayerService : MediaSessionService() {
                 if (playerPreferences.mod69FastSeek || playerPreferences.mod69HwPlus) {
                     androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC
                 } else {
-                    androidx.media3.exoplayer.SeekParameters.DEFAULT
+                    // 69 mod: snap to a key frame up to 2 s before the target (smooth jumps); frame steps stay exact
+                    androidx.media3.exoplayer.SeekParameters(2_000_000L, 300_000L)
                 },
             )
             super.onMediaItemTransition(
@@ -1001,16 +1002,15 @@ class PlayerService : MediaSessionService() {
         val mod69HwPlus = playerPreferences.mod69HwPlus
         val player = ExoPlayer.Builder(applicationContext)
             .apply {
-                // 69 mod: HW+ starts after a short buffer (0.5 s instead of 2.5 s) and refills faster after seeking
-                if (mod69HwPlus) {
-                    setLoadControl(
-                        androidx.media3.exoplayer.DefaultLoadControl.Builder()
-                            .setBufferDurationsMs(20_000, 50_000, 500, 1_000)
-                            .setPrioritizeTimeOverSizeThresholds(true)
-                            .build(),
-                    )
-                    experimentalSetDynamicSchedulingEnabled(true)
-                }
+                // 69 mod: start after a short buffer (MX-like quick start): 0.5 s (HW+) / 1 s instead of 2.5 s,
+                // and refill faster after seeking. Cloud files keep a bigger buffer ahead.
+                setLoadControl(
+                    androidx.media3.exoplayer.DefaultLoadControl.Builder()
+                        .setBufferDurationsMs(20_000, 60_000, if (mod69HwPlus) 500 else 1_000, if (mod69HwPlus) 1_000 else 2_000)
+                        .setPrioritizeTimeOverSizeThresholds(true)
+                        .build(),
+                )
+                if (mod69HwPlus) experimentalSetDynamicSchedulingEnabled(true)
             }
             .setRenderersFactory(renderersFactory)
             .setTrackSelector(trackSelector)
@@ -1035,6 +1035,8 @@ class PlayerService : MediaSessionService() {
                 it.setPlaybackSpeed(playerPreferences.defaultPlaybackSpeed)
                 if (playerPreferences.mod69FastSeek || mod69HwPlus) {
                     it.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC)
+                } else {
+                    it.setSeekParameters(androidx.media3.exoplayer.SeekParameters(2_000_000L, 300_000L))
                 }
                 it.addListener(playbackStateListener)
                 it.pauseAtEndOfMediaItems = !playerPreferences.autoplay

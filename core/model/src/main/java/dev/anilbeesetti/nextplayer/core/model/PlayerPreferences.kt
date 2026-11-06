@@ -126,6 +126,12 @@ data class PlayerPreferences(
     val mod69ToolsVisible: Int = 6,
     /** Decoder / playlist / audio / subtitle buttons in one ⋮ menu so the title has room. */
     val mod69TopButtonsMenu: Boolean = true,
+    /** Row 1 + Row 2 buttons in a column at the side (middle of the screen, easy to reach). */
+    val mod69RowsVertical: Boolean = false,
+    /** Put that column on the left. */
+    val mod69RowsVerticalLeft: Boolean = false,
+    /** Soft black shade behind the player buttons, like MX Player. */
+    val mod69ButtonShade: Boolean = true,
 ) {
 
     companion object {

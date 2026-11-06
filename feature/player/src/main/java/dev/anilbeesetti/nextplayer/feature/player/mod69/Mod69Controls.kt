@@ -44,7 +44,7 @@ import androidx.compose.material.icons.rounded.TouchApp
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.rounded.Apps
-import androidx.compose.material.icons.rounded.BookmarkAdd
+import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.Forward10
 import androidx.compose.material.icons.rounded.NightsStay
@@ -207,6 +207,10 @@ internal fun Mod69QuickRow(
     expandable: Boolean = true,
     onOverlay: (dev.anilbeesetti.nextplayer.feature.player.ui.OverlayView) -> Unit = {},
     decoderLabel: String = "HW",
+    /** 69 mod: shown inside the title line (no own width / side padding). */
+    inline: Boolean = false,
+    /** 69 mod: a column (side bar) instead of a row. */
+    vertical: Boolean = false,
 ) {
     val items = QuickItem.fromIds(itemIds ?: preferences.mod69QuickItems)
     val context = LocalContext.current
@@ -252,13 +256,18 @@ internal fun Mod69QuickRow(
             QuickItem.SCREENSHOT -> B(item, { player?.let { p -> scope.launch { takeScreenshot(context, p) } } }) {
                 Ic(Icons.Rounded.CameraAlt)
             }
-            QuickItem.BOOKMARK -> B(item, {
-                player?.let { p ->
-                    Mod69Session.loadBookmarks(context, p.mod69Key())
-                    Mod69Session.addBookmark(context, p.currentPosition)
-                    android.widget.Toast.makeText(context, "Bookmark added", android.widget.Toast.LENGTH_SHORT).show()
-                }
-            }) { Ic(Icons.Rounded.BookmarkAdd) }
+            // 69 mod: like MX: tap = the bookmark list (jump, add, rename, delete, move, import/export),
+            // hold = add a bookmark here at once
+            QuickItem.BOOKMARK -> PlayerButton(
+                onClick = { openTools("BOOKMARKS") },
+                onLongClick = {
+                    player?.let { p ->
+                        Mod69Session.loadBookmarks(context, p.mod69Key())
+                        Mod69Session.addBookmark(context, p.currentPosition)
+                        android.widget.Toast.makeText(context, "Bookmark added", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                },
+            ) { Ic(Icons.Rounded.Bookmarks) }
             QuickItem.NIGHT -> B(item, { Mod69Session.nightDim = if (Mod69Session.nightDim > 0f) 0f else 0.4f }) {
                 Ic(Icons.Rounded.NightsStay, Mod69Session.nightDim > 0f)
             }
@@ -327,13 +336,26 @@ internal fun Mod69QuickRow(
 
     val placed = (preferences.mod69TopRowItems + preferences.mod69QuickItems).toSet()
     val rest = QuickItem.entries.filter { it.id !in placed && it.id !in preferences.mod69HiddenItems && it != QuickItem.TOOLS }
+    if (vertical) {
+        androidx.compose.foundation.layout.Column(
+            modifier = modifier.verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items.forEach { Labelled(it) }
+        }
+    } else
     androidx.compose.foundation.layout.Column(modifier = modifier) {
         // 69 mod: Row 1 (under the title) is centred; Row 2 starts at the left
         androidx.compose.foundation.layout.Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(systemBarsPadding.copy(top = 0.dp, bottom = 0.dp))
-                .padding(horizontal = 12.dp),
+            modifier = if (inline) {
+                Modifier
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .padding(systemBarsPadding.copy(top = 0.dp, bottom = 0.dp))
+                    .padding(horizontal = 12.dp)
+            },
             contentAlignment = if (expandable) Alignment.TopStart else Alignment.TopCenter,
         ) {
         Row(

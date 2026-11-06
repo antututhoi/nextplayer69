@@ -412,9 +412,16 @@ internal fun MediaPickerScreenContent(
           val mod69Lift = mod69BarBottom && state.folderPath == null && !selectionManager.isInSelectionMode &&
               navigationBottomPadding > 0.dp
           val mod69Density = androidx.compose.ui.platform.LocalDensity.current
+          val mod69Token = androidx.compose.runtime.remember { Any() }
+          var mod69LastLift by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(0.dp) }
           androidx.compose.runtime.DisposableEffect(mod69Lift) {
-              if (!mod69Lift) dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom = 0.dp
-              onDispose { dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom = 0.dp }
+              if (!mod69Lift) {
+                  dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.set(mod69Token, 0.dp)
+              } else if (mod69LastLift > 0.dp) {
+                  // back on the home screen: lift the buttons again right away
+                  dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.set(mod69Token, mod69LastLift)
+              }
+              onDispose { dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.clear(mod69Token) }
           }
           androidx.compose.foundation.layout.Column(
               modifier = when {
@@ -424,8 +431,8 @@ internal fun MediaPickerScreenContent(
                       .background(MaterialTheme.colorScheme.surfaceContainer)
                       .navigationBarsPadding()
                       .onSizeChanged {
-                          dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.bottom =
-                              with(mod69Density) { it.height.toDp() }
+                          mod69LastLift = with(mod69Density) { it.height.toDp() }
+                          dev.anilbeesetti.nextplayer.core.ui.components.Mod69NavLift.set(mod69Token, mod69LastLift)
                       }
                   navigationBottomPadding > 0.dp -> Modifier.padding(bottom = navigationBottomPadding)
                   else -> Modifier

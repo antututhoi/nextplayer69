@@ -193,6 +193,9 @@ object SafLibrary {
 
     /** Duration / size of one file: Android's reader first, FFmpeg (nextlib) when that fails. */
     private fun readMeta(context: Context, e: Entry): Triple<Long, Int, Int> {
+        // 69 mod: read only the few bytes that hold the length (MP4 "moov", MKV/WebM "Info") –
+        // fast over rclone, where Android's reader often gives up on big files
+        Mod69Duration.read(context, Uri.parse(e.uri))?.let { if (it > 0) return Triple(it, e.width, e.height) }
         val native = runCatching {
             MediaMetadataRetriever().use { r ->
                 r.setDataSource(context, Uri.parse(e.uri))
@@ -329,6 +332,64 @@ object SafLibrary {
             saveEntries()
         }
         bump()
+    }
+
+    /**
+     * 69 mod: files copied / moved into a cloud folder are added to the list directly
+     * (no full rescan). Returns false when [destDir] is not inside a picked cloud folder.
+     * [copies] = (source uri, new document uri, size, name).
+     */
+    fun addCopies(context: Context, destDir: Uri, copies: List<Pair<Uri, Triple<Uri, Long, String>>>): Boolean {
+        ensureLoaded(context)
+        val destId = runCatching { DocumentsContract.getDocumentId(destDir) }.getOrNull()
+            ?: runCatching { DocumentsContract.getTreeDocumentId(destDir) }.getOrNull() ?: return false
+        val root = roots.firstOrNull { r ->
+            val tree = Uri.parse(r.treeUri)
+            val rootId = runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull()
+            tree.authority == destDir.authority && rootId != null && (destId == rootId || destId.startsWith(rootId))
+        } ?: return false
+        val tree = Uri.parse(root.treeUri)
+        val rootId = DocumentsContract.getTreeDocumentId(tree)
+        val rel = destId.removePrefix(rootId).trim('/')
+        val virtualDir = if (rel.isEmpty()) root.virtualPath else root.virtualPath + "/" + rel
+        val added = copies.mapNotNull { (source, info) ->
+            val (newUri, size, name) = info
+            val newId = runCatching { DocumentsContract.getDocumentId(newUri) }.getOrNull() ?: return@mapNotNull null
+            val uri = DocumentsContract.buildDocumentUriUsingTree(tree, newId).toString()
+            val from = byUri[source.toString()]
+            Entry(
+                uri = uri,
+                path = "$virtualDir/$name",
+                name = name,
+                size = size,
+                modified = System.currentTimeMillis(),
+                duration = from?.duration?.takeIf { it > 0 } ?: 0L,
+                width = from?.width ?: 0,
+                height = from?.height ?: 0,
+            )
+        }
+        synchronized(this) {
+            val newUris = added.map { it.uri }.toSet()
+            setEntries(entries.filterNot { it.uri in newUris } + added)
+            saveEntries()
+        }
+        bump()
+        // only the new files that have no duration yet are read
+        val missing = added.filter { it.duration <= 0L }
+        if (missing.isNotEmpty()) {
+            scope.launch {
+                missing.forEach { e ->
+                    Mod69Busy.waitWhilePlaying()
+                    val meta = readMeta(context, e)
+                    synchronized(this@SafLibrary) {
+                        setEntries(entries.map { if (it.uri == e.uri) it.copy(duration = meta.first, width = meta.second, height = meta.third) else it })
+                    }
+                }
+                synchronized(this@SafLibrary) { saveEntries() }
+                bump()
+            }
+        }
+        return true
     }
 
     fun replaceEntry(context: Context, oldUri: String, newEntry: Entry) {

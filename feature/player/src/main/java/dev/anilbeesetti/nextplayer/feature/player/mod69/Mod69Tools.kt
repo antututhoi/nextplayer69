@@ -364,6 +364,13 @@ private fun ToolButton(icon: ImageVector, label: String, floating: Boolean = fal
 }
 
 internal fun frameStep(player: Player, direction: Int) {
+    // 69 mod: the service does an exact step (normal seeks are fast key-frame seeks)
+    if (player is MediaController) {
+        kotlinx.coroutines.MainScope().launch {
+            runCatching { player.mod69("frame_step") { putInt("dir", direction) } }
+        }
+        return
+    }
     player.pause()
     val fps = player.currentTracks.groups
         .firstOrNull { it.type == C.TRACK_TYPE_VIDEO && it.isSelected }
