@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -255,7 +257,7 @@ fun PlayerControls(
                     vertical = true,
                     modifier = sideShade
                         .fillMaxHeight(0.62f)
-                        .windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.displayCutout)
+                        .windowInsetsPadding(WindowInsets.displayCutout)
                         .padding(horizontal = 10.dp, vertical = 8.dp),
                 )
             }
