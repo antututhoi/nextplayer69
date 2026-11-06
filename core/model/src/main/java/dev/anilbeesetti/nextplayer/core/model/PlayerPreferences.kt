@@ -132,6 +132,8 @@ data class PlayerPreferences(
     val mod69RowsVerticalLeft: Boolean = false,
     /** Soft black shade behind the player buttons, like MX Player. */
     val mod69ButtonShade: Boolean = true,
+    /** Buttons at the ends of the bottom bar (first half left of the play buttons, rest right). */
+    val mod69BottomItems: List<String> = listOf("lock", "scale"),
 ) {
 
     companion object {

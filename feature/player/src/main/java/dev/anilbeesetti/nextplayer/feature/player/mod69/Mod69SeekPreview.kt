@@ -48,7 +48,8 @@ import kotlinx.coroutines.withContext
 internal fun Mod69SeekPreview(player: Player?, positionMs: Long?, fraction: Float) {
     val context = LocalContext.current
     val uri = player?.currentMediaItem?.localConfiguration?.uri
-    val usable = uri != null && (uri.scheme == "content" || uri.scheme == "file" || uri.scheme == null)
+    // 69 mod: not for cloud (rclone) files – a second reader on the same file made long videos stall
+    val usable = uri != null && ((uri.scheme == "content" && uri.authority == "media") || uri.scheme == "file" || uri.scheme == null)
     var retriever by remember(uri) { mutableStateOf<MediaMetadataRetriever?>(null) }
     LaunchedEffect(uri) {
         if (!usable) return@LaunchedEffect

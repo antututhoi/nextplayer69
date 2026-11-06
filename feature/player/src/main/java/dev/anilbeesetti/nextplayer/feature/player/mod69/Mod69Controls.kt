@@ -107,6 +107,16 @@ val LocalMod69ButtonSize = compositionLocalOf<androidx.compose.ui.unit.Dp?> { nu
 
 fun Long.toArgbColor(): Color = Color(this.toInt())
 
+/** 69 mod: player actions the buttons need (lock, zoom mode). */
+class Mod69Actions(
+    val lock: () -> Unit = {},
+    val scale: () -> Unit = {},
+    val scaleLong: () -> Unit = {},
+    val scaleIcon: Int = 0,
+)
+
+val LocalMod69Actions = compositionLocalOf { Mod69Actions() }
+
 /** The quick icons that can show in the row under the title. */
 enum class QuickItem(val id: String) {
     SPEED("speed"),
@@ -136,6 +146,10 @@ enum class QuickItem(val id: String) {
     CUT("cut"),
     SHARE("share"),
     CHAPTERS("chapters"),
+    LOCK("lock"),
+    SCALE("scale"),
+    FRAME_BACK("frame_back"),
+    FRAME_NEXT("frame_next"),
     ;
 
     val label: String
@@ -167,6 +181,10 @@ enum class QuickItem(val id: String) {
             CUT -> "Cut"
             SHARE -> "Share"
             CHAPTERS -> "Chapters"
+            LOCK -> "Lock"
+            SCALE -> "Zoom mode"
+            FRAME_BACK -> "Frame back"
+            FRAME_NEXT -> "Frame next"
         }
 
     /** Short name under the button. */
@@ -313,6 +331,25 @@ internal fun Mod69QuickRow(
             QuickItem.SUB_LOOK -> B(item, { openTools("SUBTITLE") }) { Ic(Icons.Rounded.ClosedCaption) }
             QuickItem.CUT -> B(item, { openTools("CUT") }) { Ic(Icons.Rounded.ContentCut) }
             QuickItem.SHARE -> B(item, { player?.let { mod69Share(context, it) } }) { Ic(Icons.Rounded.Share) }
+            QuickItem.LOCK -> B(item, LocalMod69Actions.current.lock) {
+                Icon(painter = painterResource(R.drawable.ic_lock_open), contentDescription = null)
+            }
+            QuickItem.SCALE -> {
+                val actions = LocalMod69Actions.current
+                PlayerButton(onClick = actions.scale, onLongClick = actions.scaleLong) {
+                    if (actions.scaleIcon != 0) {
+                        Icon(painter = painterResource(actions.scaleIcon), contentDescription = null)
+                    } else {
+                        Ic(Icons.Rounded.ZoomOutMap)
+                    }
+                }
+            }
+            QuickItem.FRAME_BACK -> B(item, { player?.let { frameStep(it, -1) } }) {
+                Ic(Icons.AutoMirrored.Rounded.KeyboardArrowLeft)
+            }
+            QuickItem.FRAME_NEXT -> B(item, { player?.let { frameStep(it, 1) } }) {
+                Ic(Icons.AutoMirrored.Rounded.KeyboardArrowRight)
+            }
         }
     }
 
@@ -334,7 +371,7 @@ internal fun Mod69QuickRow(
         }
     }
 
-    val placed = (preferences.mod69TopRowItems + preferences.mod69QuickItems).toSet()
+    val placed = (preferences.mod69TopRowItems + preferences.mod69QuickItems + preferences.mod69BottomItems).toSet()
     val rest = QuickItem.entries.filter { it.id !in placed && it.id !in preferences.mod69HiddenItems && it != QuickItem.TOOLS }
     if (vertical) {
         androidx.compose.foundation.layout.Column(
@@ -455,7 +492,10 @@ internal fun Mod69BottomControls(
     onVideoContentScaleLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     seekPreview: Boolean = true,
-    frameStepButtons: Boolean = true,
+    frameStepButtons: Boolean = false,
+    /** 69 mod: the chosen bottom-bar buttons, left and right of the play buttons. */
+    bottomLeft: @Composable () -> Unit = {},
+    bottomRight: @Composable () -> Unit = {},
 ) {
     val systemBarsPadding = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
     Column(
@@ -606,9 +646,7 @@ internal fun Mod69BottomControls(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            PlayerButton(onClick = onLockControlsClick) {
-                Icon(painter = painterResource(R.drawable.ic_lock_open), contentDescription = null)
-            }
+            bottomLeft()
             PlayerButton(onClick = { player?.let { it.seekTo((it.currentPosition - seekIncrementMs).coerceAtLeast(0)) } }) {
                 Icon(imageVector = Icons.Rounded.Replay10, contentDescription = null)
             }
@@ -631,9 +669,7 @@ internal fun Mod69BottomControls(
             }) {
                 Icon(imageVector = Icons.Rounded.Forward10, contentDescription = null)
             }
-            PlayerButton(onClick = onVideoContentScaleClick, onLongClick = onVideoContentScaleLongClick) {
-                Icon(painter = painterResource(videoContentScale.drawableRes()), contentDescription = null)
-            }
+            bottomRight()
         }
     }
 }
@@ -753,3 +789,6 @@ internal fun mod69JumpChapter(
     val name = chapters[target].title?.value?.takeIf { it.isNotBlank() } ?: "Chapter ${target + 1}"
     android.widget.Toast.makeText(context, "${target + 1}/${chapters.size}  $name", android.widget.Toast.LENGTH_SHORT).show()
 }
+
+/** 69 mod: icon of the current zoom mode (for the zoom-mode button). */
+internal fun mod69ScaleIcon(scale: VideoContentScale): Int = scale.drawableRes()

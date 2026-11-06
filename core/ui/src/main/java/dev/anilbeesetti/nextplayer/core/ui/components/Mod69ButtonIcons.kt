@@ -25,6 +25,10 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material.icons.rounded.Subtitles
 import androidx.compose.material.icons.rounded.TouchApp
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.FitScreen
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material.icons.rounded.Widgets
 import androidx.compose.material.icons.rounded.ZoomOutMap
@@ -60,6 +64,10 @@ object Mod69ButtonIcons {
         "cut" -> Icons.Rounded.ContentCut
         "share" -> Icons.Rounded.Share
         "help" -> Icons.Rounded.TouchApp
+        "lock" -> Icons.Rounded.Lock
+        "scale" -> Icons.Rounded.FitScreen
+        "frame_back" -> Icons.AutoMirrored.Rounded.KeyboardArrowLeft
+        "frame_next" -> Icons.AutoMirrored.Rounded.KeyboardArrowRight
         else -> Icons.Rounded.Widgets
     }
 }

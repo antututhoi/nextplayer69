@@ -79,6 +79,20 @@ fun PlayerControls(
     val isTv = androidx.compose.ui.platform.LocalContext.current.let { ctx ->
         androidx.compose.runtime.remember { ctx.isTelevision }
     }
+    androidx.compose.runtime.CompositionLocalProvider(
+        dev.anilbeesetti.nextplayer.feature.player.mod69.LocalMod69Actions provides dev.anilbeesetti.nextplayer.feature.player.mod69.Mod69Actions(
+            lock = {
+                controlsVisibilityState.showControls()
+                controlsVisibilityState.lockControls()
+            },
+            scale = {
+                controlsVisibilityState.showControls()
+                videoZoomAndContentScaleState.switchToNextVideoContentScale()
+            },
+            scaleLong = { onShowOverlay(OverlayView.VIDEO_CONTENT_SCALE) },
+            scaleIcon = dev.anilbeesetti.nextplayer.feature.player.mod69.mod69ScaleIcon(videoZoomAndContentScaleState.videoContentScale),
+        ),
+    ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -167,7 +181,45 @@ fun PlayerControls(
                     onSeek = seekGestureState::onSeek,
                     onSeekEnd = seekGestureState::onSeekEnd,
                     seekPreview = playerPreferences.mod69SeekPreview,
-                    frameStepButtons = playerPreferences.mod69FrameStepOnBar,
+                    frameStepButtons = false,
+                    bottomLeft = {
+                        val ids = playerPreferences.mod69BottomItems
+                        if (ids.isNotEmpty()) {
+                            Mod69QuickRow(
+                                player = player,
+                                preferences = playerPreferences.copy(mod69ButtonLabels = false),
+                                isPipSupported = isPipSupported,
+                                isTv = isTv,
+                                onPlaybackSpeedClick = { onShowOverlay(OverlayView.PLAYBACK_SPEED) },
+                                onPlayInBackgroundClick = onPlayInBackgroundClick,
+                                onPictureInPictureClick = onPictureInPictureClick,
+                                onToolsClick = { onShowOverlay(OverlayView.MOD69_TOOLS) },
+                                itemIds = ids.take((ids.size + 1) / 2),
+                                expandable = false,
+                                onOverlay = onShowOverlay,
+                                inline = true,
+                            )
+                        }
+                    },
+                    bottomRight = {
+                        val ids = playerPreferences.mod69BottomItems
+                        if (ids.size > 1) {
+                            Mod69QuickRow(
+                                player = player,
+                                preferences = playerPreferences.copy(mod69ButtonLabels = false),
+                                isPipSupported = isPipSupported,
+                                isTv = isTv,
+                                onPlaybackSpeedClick = { onShowOverlay(OverlayView.PLAYBACK_SPEED) },
+                                onPlayInBackgroundClick = onPlayInBackgroundClick,
+                                onPictureInPictureClick = onPictureInPictureClick,
+                                onToolsClick = { onShowOverlay(OverlayView.MOD69_TOOLS) },
+                                itemIds = ids.drop((ids.size + 1) / 2),
+                                expandable = false,
+                                onOverlay = onShowOverlay,
+                                inline = true,
+                            )
+                        }
+                    },
                     onLockControlsClick = {
                         controlsVisibilityState.showControls()
                         controlsVisibilityState.lockControls()
@@ -278,5 +330,6 @@ fun PlayerControls(
                 modifier = middleControlsModifier,
             )
         }
+    }
     }
 }

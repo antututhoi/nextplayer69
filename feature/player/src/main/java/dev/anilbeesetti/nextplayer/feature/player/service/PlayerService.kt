@@ -1006,7 +1006,8 @@ class PlayerService : MediaSessionService() {
                 // and refill faster after seeking. Cloud files keep a bigger buffer ahead.
                 setLoadControl(
                     androidx.media3.exoplayer.DefaultLoadControl.Builder()
-                        .setBufferDurationsMs(20_000, 60_000, if (mod69HwPlus) 500 else 1_000, if (mod69HwPlus) 1_000 else 2_000)
+                        // big buffer ahead (90 s) so short rclone / network slow-downs don't stop the video
+                        .setBufferDurationsMs(40_000, 90_000, if (mod69HwPlus) 500 else 1_000, if (mod69HwPlus) 1_500 else 2_500)
                         .setPrioritizeTimeOverSizeThresholds(true)
                         .build(),
                 )

@@ -68,6 +68,7 @@ private val QUICK_IDS = listOf(
     "decoder", "playlist", "chapters", "audio_track", "subtitle_track",
     "tools", "speed", "screenshot", "bookmark", "night", "background", "rotate", "loop", "shuffle", "pip",
     "mute", "equalizer", "sleep", "ab", "aspect", "zoom", "picture", "info", "sub_look", "cut", "share", "help",
+    "lock", "scale", "frame_back", "frame_next",
 )
 
 @Composable
@@ -99,6 +100,10 @@ private fun quickLabel(id: String): String = when (id) {
     "sub_look" -> "Subtitle look"
     "cut" -> "Cut / MP3"
     "share" -> "Share"
+    "lock" -> "Lock"
+    "scale" -> "Zoom mode"
+    "frame_back" -> "Frame back"
+    "frame_next" -> "Frame next"
     else -> id
 }
 
@@ -222,13 +227,6 @@ private fun Mod69PreferencesContent(
                         trailingContent = { Text("${barH.toInt()} dp") },
                     )
                 }
-                PreferenceSwitch(
-                    title = "Frame-step buttons on the seek bar",
-                    description = "Arrows at both ends of the bar: pause and move one frame",
-                    icon = NextIcons.ButtonsPosition,
-                    isChecked = p.mod69FrameStepOnBar,
-                    onClick = { player { it.copy(mod69FrameStepOnBar = !it.mod69FrameStepOnBar) } },
-                )
                 PreferenceSwitch(
                     title = "Title bar buttons in one ⋮ menu",
                     description = "Decoder, playlist, audio and subtitles go in a menu so the video title has room. Tap the title to read all of it",
@@ -496,8 +494,16 @@ private fun Mod69PreferencesContent(
                 top = p.mod69TopRowItems,
                 second = p.mod69QuickItems,
                 hidden = p.mod69HiddenItems,
-                onChange = { top, second, hidden ->
-                    player { it.copy(mod69TopRowItems = top, mod69QuickItems = second, mod69HiddenItems = hidden) }
+                bottom = p.mod69BottomItems,
+                onChange = { top, second, hidden, bottom ->
+                    player {
+                        it.copy(
+                            mod69TopRowItems = top,
+                            mod69QuickItems = second,
+                            mod69HiddenItems = hidden,
+                            mod69BottomItems = bottom,
+                        )
+                    }
                 },
             )
             PreferenceSwitch(
@@ -774,7 +780,8 @@ private fun PlayerButtonsCard(
     top: List<String>,
     second: List<String>,
     hidden: List<String>,
-    onChange: (List<String>, List<String>, List<String>) -> Unit,
+    bottom: List<String>,
+    onChange: (List<String>, List<String>, List<String>, List<String>) -> Unit,
 ) {
     // 69 mod: one simple list per place, all buttons with their icon in 2 columns and a tick box.
     // Ticking a button in a place moves it there (each button is in one place only, the newest
@@ -782,12 +789,14 @@ private fun PlayerButtonsCard(
     fun place(id: String): Int = when (id) {
         in top -> 0
         in second -> 1
+        in bottom -> 4
         in hidden -> 3
         else -> 2
     }
     val ids = QUICK_IDS.filter { it != "tools" } + "tools"
-    val titles = listOf("Row 1 (next to the title)", "Row 2", "Tools panel")
+    val titles = listOf("Row 1 (next to the title)", "Row 2", "Tools panel", "", "Bottom bar (left / right of the play buttons)")
     titles.forEachIndexed { section, title ->
+        if (title.isEmpty()) return@forEachIndexed
         SectionSurface {
             Text(title, style = MaterialTheme.typography.titleMedium)
             ids.filter { section != 2 || it != "tools" }.chunked(2).forEach { pair ->
@@ -802,13 +811,15 @@ private fun PlayerButtonsCard(
                                     val t = top - id
                                     val s2 = second - id
                                     val h = hidden - id
+                                    val b = bottom - id
                                     // unticked = hidden; ticked = only in this place
                                     val target = if (checked) 3 else section
                                     when (target) {
-                                        0 -> onChange(t + id, s2, h)
-                                        1 -> onChange(t, s2 + id, h)
-                                        3 -> onChange(t, s2, h + id)
-                                        else -> onChange(t, s2, h)
+                                        0 -> onChange(t + id, s2, h, b)
+                                        1 -> onChange(t, s2 + id, h, b)
+                                        3 -> onChange(t, s2, h + id, b)
+                                        4 -> onChange(t, s2, h, b + id)
+                                        else -> onChange(t, s2, h, b)
                                     }
                                 }
                                 .padding(vertical = 2.dp),
