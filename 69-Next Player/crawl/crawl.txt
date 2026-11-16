@@ -1,0 +1,12 @@
+start 69-Next Player player dev.anilbeesetti.nextplayer.mod69 1080 2400
+!! ANR / crash dialog: ["Pixel Launcher isn't responding"]
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+player0 buttons: ['Got it']
+player1 buttons: ['icon', 'sample_subs.mkv', 'SW', 'icon', 'icon', 'icon', 'icon', 'Select playback speed 1.0', 'icon', 'icon', 'Screen Rotation', 'Loop: Off', 'icon', 'icon', '01:30', 'icon', 'icon', 'Player previous', 'Player next', 'icon', 'icon']
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+ settings entries: [['69 mod', 'Player look, list columns, MX-style options'], ['Appearance', 'Adjust the app to your liking'], ['Media library', 'Scan and manage media library'], ['Player', 'Player appearance, playback controls'], ['Gestures', 'Configure player touch gestures'], ['Audio', 'Audio playback options'], ['Subtitle', 'Subtitle appearance, playback options'], ['General', 'User data options'], ['About', 'Version, support, credits']]
+done 52 screenshots 348 s

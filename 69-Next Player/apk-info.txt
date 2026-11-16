@@ -1,0 +1,4 @@
+package: name='dev.anilbeesetti.nextplayer.mod69' versionCode='100023' versionName='0.20.0-69.23' platformBuildVersionName='17' platformBuildVersionCode='37' compileSdkVersion='37' compileSdkVersionCodename='17'
+sdkVersion:'24'
+application-label:'69-Next Player'
+native-code: 'arm64-v8a'

@@ -1,0 +1,1280 @@
+## first_run
+02:30
+2 new videos
+2
+Movies
+/storage/emulated/0
+2 Videos
+69-Next Player
+Search
+Menu
+Settings
+Home
+Playlists
+Network
+More
+2:08
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## main_p0
+2:08
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+02:30
+2 new videos
+2
+Movies
+/storage/emulated/0
+2 Videos
+69-Next Player
+Search
+Menu
+Settings
+Home
+Playlists
+Network
+More
+
+## main_icon0_Search
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Search
+Back
+Switch input method
+2:08
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Popular folders
+02:30
+2 new videos
+Movies
+/storage/emulated/0
+2 Videos
+Navigate up
+Search videos and folders
+
+## main_icon0_Search_item0_Search_videos_and_folders_p0
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Search
+Back
+Switch input method
+2:08
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Popular folders
+02:30
+2 new videos
+Movies
+/storage/emulated/0
+2 Videos
+Navigate up
+Search videos and folders
+
+## main_icon0_Search_item0_Search_videos_and_folders_p1
+More features
+TT
+see
+MI
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Search
+Back
+Switch input method
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+No results found
+Navigate up
+by
+Clear history
+
+## main_icon0_Search_item0_Search_videos_and_folders_p2
+More features
+too
+see
+moo
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Search
+Back
+Switch input method
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+No results found
+Navigate up
+by by
+Clear history
+
+## main_icon1_Menu
+Quick Settings
+Media view mode
+Tree
+Videos
+Folders
+Media Layout
+Grid
+List
+Sort
+Title
+Duration
+Date
+Size
+Location
+Z-A
+A-Z
+Fields
+Folder duration
+Extension
+Path
+Played progress
+Resolution
+Thumbnail
+Done
+Cancel
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_icon2_Settings
+69 mod
+Player look, list columns, MX-style options
+Appearance
+Adjust the app to your liking
+Media library
+Scan and manage media library
+Player
+Player appearance, playback controls
+Gestures
+Configure player touch gestures
+Audio
+Audio playback options
+Subtitle
+Subtitle appearance, playback options
+General
+User data options
+About
+Version, support, credits
+Navigate up
+Settings
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon0_Playlists
+No playlists yet
+Create a local playlist or add an M3U source to start watching.
+Playlists
+Settings
+Home
+Network
+More
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon1_Network
+Network Stream
+Enter a network URL:
+http://example.com/example.mp4
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+Settings
+Home
+Playlists
+More
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon1_Network_item0_http_example.com_example.mp4_p0
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Done
+Back
+Switch input method
+Network Stream
+Enter a network URL:
+http://example.com/example.mp4
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon1_Network_item0_http_example.com_example.mp4_p1
+More features
+too
+see
+MI
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Done
+Back
+Switch input method
+Network Stream
+Enter a network URL:
+by
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+Settings
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon1_Network_item0_http_example.com_example.mp4_p2
+More features
+see
+the
+too
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Done
+Back
+Switch input method
+Network Stream
+Enter a network URL:
+by by
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+Settings
+2:09
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon1_Network_item1_Open_network_stream_p0
+Error: Can't play video
+Source error
+Exit
+2:10
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon2_More
+Vault
+Pick file
+Trash
+History
+No watch history
+More
+Home
+Playlists
+Network
+2:10
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_bottom_icon2_More_item0_Vault_p0
+2:10
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Set vault PIN
+Create a 4-digit PIN to protect your hidden videos
+1
+2
+3
+4
+5
+6
+7
+8
+9
+0
+Navigate up
+
+## main_bottom_icon2_More_item2_Trash_p0
+2:10
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Trash is empty
+Videos you move to trash will show up here. You can restore them or delete them permanently.
+Navigate up
+Trash
+
+## main_bottom_icon3_icon
+Error: Can't play video
+Source error
+Exit
+2:10
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## drawer_p0
+Error: Can't play video
+Source error
+Exit
+2:11
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## drawer_p1
+Error: Can't play video
+Source error
+Exit
+2:11
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## select0_02_30
+02:30
+2 new videos
+2
+Movies
+/storage/emulated/0
+2 Videos
+Navigate up
+1 marked · 1 folders
+Deselect all
+Play
+Add to playlist
+Share
+Copy
+Move
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_icon0_1_marked_1_folders
+Marked videos
+Movies
+/storage/emulated/0/Movies
+Remove
+Done
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_icon1_Deselect_all
+02:30
+2 new videos
+2
+Movies
+/storage/emulated/0
+2 Videos
+Navigate up
+0 marked · 0 folders
+Select all
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon0_Playlists
+No playlists yet
+Create a local playlist or add an M3U source to start watching.
+Playlists
+Settings
+Home
+Network
+More
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon1_Network
+Network Stream
+Enter a network URL:
+http://example.com/example.mp4
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+Settings
+Home
+Playlists
+More
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon1_Network_item0_http_example.com_example.mp4_p0
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Done
+Back
+Switch input method
+Network Stream
+Enter a network URL:
+http://example.com/example.mp4
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon1_Network_item0_http_example.com_example.mp4_p1
+More features
+MI
+see
+MO
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Done
+Back
+Switch input method
+Network Stream
+Enter a network URL:
+by
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+Settings
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon1_Network_item0_http_example.com_example.mp4_p2
+More features
+too
+see
+MI
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Done
+Back
+Switch input method
+Network Stream
+Enter a network URL:
+by by
+Open network stream
+No connections yet
+Add an SMB, FTP, SFTP or WebDAV connection to browse and play videos from your network.
+Network
+Settings
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon1_Network_item1_Open_network_stream_p0
+Error: Can't play video
+Source error
+Exit
+2:11
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon2_More
+Vault
+Pick file
+Trash
+History
+No watch history
+More
+Home
+Playlists
+Network
+2:12
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon2_More_item0_Vault_p0
+2:12
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Set vault PIN
+Create a 4-digit PIN to protect your hidden videos
+1
+2
+3
+4
+5
+6
+7
+8
+9
+0
+Navigate up
+
+## select0_bottom_icon2_More_item2_Trash_p0
+2:12
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Trash is empty
+Videos you move to trash will show up here. You can restore them or delete them permanently.
+Navigate up
+Trash
+
+## select0_bottom_icon3_icon
+Error: Can't play video
+Source error
+Exit
+2:12
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## player0_playing
+Viewing full screen
+To exit, swipe down from the top.
+Got it
+
+## player0_controls
+Viewing full screen
+To exit, swipe down from the top.
+Got it
+
+## player0_btn0_Got_it
+
+
+## player0_longpress
+
+
+## player0_dtap_left
+sample_h264.mp4
+HW
+Decoder
+Playlist
+Audio
+Subtitles
+Tools
+Select playback speed
+1.0
+Speed
+Shot
+Background
+Screen Rotation
+Rotation
+Loop: Off
+Loop
+PiP
+00:09
+8604.0
+01:00
+Player previous
+Play/Pause
+Player next
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## player0_dtap_right
+
+
+## player0_swipe_right_side
+40
+
+## player0_swipe_left_side
+51
+
+## player0_swipe_seek
+
+
+## player1_playing
+
+
+## player1_controls
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+sample_subs.mkv
+SW
+Decoder
+Playlist
+Audio
+Subtitles
+Tools
+Select playback speed
+1.0
+Speed
+Shot
+Background
+Screen Rotation
+Rotation
+Loop: Off
+Loop
+PiP
+00:02
+2287.0
+01:30
+Player previous
+Play/Pause
+Player next
+
+## player1_btn0_icon_left_app
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Mon, Nov 16
+Gmail
+Photos
+YouTube
+Home
+Phone
+Messages
+Chrome
+69-Next Player
+Search
+Google app
+Voice search
+Google Lens
+
+## player1_longpress
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+02:30
+2 new videos
+2
+Movies
+/storage/emulated/0
+2 Videos
+69-Next Player
+Search
+Menu
+Settings
+Home
+Playlists
+Network
+More
+
+## player1_dtap_left
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+01:00
+NEW
+sample_h264
+/storage/emulated/0/Movies
+01:30
+sample_subs
+Navigate up
+Movies
+Search
+Menu
+Settings
+Play
+
+## player1_dtap_right
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+01:00
+NEW
+sample_h264
+/storage/emulated/0/Movies
+01:30
+sample_subs
+Navigate up
+Movies
+Search
+Menu
+Settings
+Play
+
+## player1_swipe_right_side
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+01:00
+NEW
+sample_h264
+/storage/emulated/0/Movies
+01:30
+sample_subs
+Navigate up
+Movies
+Search
+Menu
+Settings
+Play
+
+## player1_swipe_left_side
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+01:00
+NEW
+sample_h264
+/storage/emulated/0/Movies
+01:30
+sample_subs
+Navigate up
+Movies
+Search
+Menu
+Settings
+Play
+
+## player1_swipe_seek
+2:13
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+01:00
+NEW
+sample_h264
+/storage/emulated/0/Movies
+01:30
+sample_subs
+Navigate up
+Movies
+Search
+Menu
+Settings
+Play
+
+## settings_main_p0
+2:14
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+69 mod
+Player look, list columns, MX-style options
+Appearance
+Adjust the app to your liking
+Media library
+Scan and manage media library
+Player
+Player appearance, playback controls
+Gestures
+Configure player touch gestures
+Audio
+Audio playback options
+Subtitle
+Subtitle appearance, playback options
+General
+User data options
+About
+Version, support, credits
+Navigate up
+Settings
+
