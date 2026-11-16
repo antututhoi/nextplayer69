@@ -1,0 +1,82 @@
+name: 69 Virtual phone
+
+# Started by hand (or by Claude). Installs the app(s) from .phone69/apps.txt on a virtual Android phone,
+# walks every screen and setting, and saves screenshots + crash logs on the phone69-results branch.
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "Only this app from apps.txt (empty = all)"
+        required: false
+        default: ""
+      minutes:
+        description: "Minutes per app"
+        required: false
+        default: "70"
+
+concurrency:
+  group: phone69
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  phone:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Allow the virtual phone to run fast (KVM)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Get the apps and make sample files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APP_ONLY: ${{ inputs.app }}
+          BUILD_WORKFLOW: Build 69-Next Player
+        run: bash .phone69/get_apks.sh
+
+      - name: Start the virtual phone and walk the apps
+        env:
+          BUDGET_MIN: ${{ inputs.minutes }}
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash .phone69/run.sh
+
+      - name: Save everything as a download
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phone69-results
+          path: out69/
+
+      - name: Put small screenshots and logs on the phone69-results branch
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          for d in out69/*/; do
+            mkdir -p "$d/shots"
+            for p in "$d"crawl/*.png; do
+              [ -f "$p" ] || continue
+              ffmpeg -nostdin -loglevel error -y -i "$p" -vf "scale=480:-1" -q:v 5 "$d/shots/$(basename "$p" .png).jpg" || true
+            done
+            rm -f "$d"crawl/*.png
+            tail -c 3000000 "$d/logcat.txt" > "$d/logcat_tail.txt" 2>/dev/null || true; rm -f "$d/logcat.txt"
+          done
+          mkdir -p /tmp/res && rsync -a --exclude '*.mp4' out69/ /tmp/res/
+          cd /tmp/res && git init -q && git checkout -q -b phone69-results
+          git add -A && git -c user.name=phone69 -c user.email=phone69@users.noreply.github.com commit -qm "virtual phone results ${{ github.run_number }}"
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" phone69-results

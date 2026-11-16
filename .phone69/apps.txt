@@ -1,0 +1,2 @@
+# name | kind (player / files / other) | source (self = newest good build here, or a download link)
+69-Next Player|player|self
