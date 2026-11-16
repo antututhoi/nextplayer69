@@ -9,6 +9,16 @@ grep -v '^#' .phone69/apps.txt | while IFS='|' read -r name kind src; do
     id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow "$BUILD_WORKFLOW" --status success -L 1 --json databaseId -q '.[0].databaseId')
     rm -rf dl && gh run download "$id" -R "$GITHUB_REPOSITORY" -D dl && f=$(find dl -name '*.apk' | head -1)
     [ -n "${f:-}" ] && cp "$f" "apks/$name.apk" && echo "$name: build run $id $(basename "$f")" | tee -a out69/apps-found.txt
+  elif [ "$src" = "locked" ]; then
+    # a private test app: stored locked on the phone69-apks branch, opened with this repo's secret
+    rm -rf lk && git clone -q --depth 1 -b phone69-apks "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}" lk
+    { printf '302e020100300506032b656e04220420' | xxd -r -p; printf '%s' "phone69:$SEED" | sha256sum | cut -c1-64 | xxd -r -p; } > /tmp/k.der
+    openssl pkey -inform DER -in /tmp/k.der -out /tmp/k.pem
+    openssl pkeyutl -derive -inkey /tmp/k.pem -peerkey lk/eph.pub.pem -out /tmp/shared.bin
+    KEY=$(sha256sum /tmp/shared.bin | cut -c1-64)
+    openssl enc -d -aes-256-ctr -K "$KEY" -iv 00000000000000000000000000000000 -in "lk/$name.apk.enc" -out "apks/$name.apk" \
+      && echo "$name: locked copy opened ($(stat -c %s "apks/$name.apk") bytes)" | tee -a out69/apps-found.txt
+    rm -rf lk /tmp/k.der /tmp/k.pem /tmp/shared.bin
   else
     curl -sSfL -A "Mozilla/5.0" -o "apks/$name.apk" "$src" && echo "$name: $src" | tee -a out69/apps-found.txt || { rm -f "apks/$name.apk"; echo "$name: download failed" | tee -a out69/apps-found.txt; }
   fi

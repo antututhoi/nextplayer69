@@ -1,2 +1,3 @@
-# name | kind (player / files / other) | source (self = newest good build here, or a download link)
-69-Next Player|player|self
+# name | kind (player / files / other) | source (self = newest good build here, locked = private copy on the phone69-apks branch, or a download link)
+69-Next Player | player | self
+MX Player Pro | player | locked

@@ -15,7 +15,7 @@ on:
         default: "70"
 
 concurrency:
-  group: phone69
+  group: phone69-${{ inputs.app }}
   cancel-in-progress: true
 
 permissions:
@@ -24,25 +24,35 @@ permissions:
 
 jobs:
   phone:
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ["69-Next Player", "MX Player Pro"]
+    name: ${{ matrix.app }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 330
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
+        if: inputs.app == '' || inputs.app == matrix.app
 
       - name: Allow the virtual phone to run fast (KVM)
+        if: inputs.app == '' || inputs.app == matrix.app
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Get the apps and make sample files
+        if: inputs.app == '' || inputs.app == matrix.app
         env:
           GH_TOKEN: ${{ github.token }}
-          APP_ONLY: ${{ inputs.app }}
+          APP_ONLY: ${{ matrix.app }}
+          SEED: ${{ secrets.KEYSTORE_B64 }}
           BUILD_WORKFLOW: Build 69-Next Player
         run: bash .phone69/get_apks.sh
 
       - name: Start the virtual phone and walk the apps
+        if: inputs.app == '' || inputs.app == matrix.app
         env:
           BUDGET_MIN: ${{ inputs.minutes }}
         uses: reactivecircus/android-emulator-runner@v2
@@ -56,14 +66,14 @@ jobs:
           script: bash .phone69/run.sh
 
       - name: Save everything as a download
-        if: always()
+        if: always() && (inputs.app == '' || inputs.app == matrix.app)
         uses: actions/upload-artifact@v4
         with:
-          name: phone69-results
+          name: phone69-results-${{ matrix.app }}
           path: out69/
 
       - name: Put small screenshots and logs on the phone69-results branch
-        if: always()
+        if: always() && (inputs.app == '' || inputs.app == matrix.app)
         env:
           TOKEN: ${{ github.token }}
         run: |
@@ -77,6 +87,7 @@ jobs:
             tail -c 3000000 "$d/logcat.txt" > "$d/logcat_tail.txt" 2>/dev/null || true; rm -f "$d/logcat.txt"
           done
           mkdir -p /tmp/res && rsync -a --exclude '*.mp4' out69/ /tmp/res/
-          cd /tmp/res && git init -q && git checkout -q -b phone69-results
+          B="phone69-results-$(echo "${{ matrix.app }}" | tr -c 'A-Za-z0-9\n' '-')"
+          cd /tmp/res && git init -q && git checkout -q -b "$B"
           git add -A && git -c user.name=phone69 -c user.email=phone69@users.noreply.github.com commit -qm "virtual phone results ${{ github.run_number }}"
-          git push -q -f "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" phone69-results
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" "$B"

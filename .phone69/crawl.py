@@ -123,8 +123,12 @@ def rows(root, top=None, bottom=None):
         if y2 < top or y1 > bottom or x2 - x1 < W * .2: continue
         t = texts(n)
         if not t: continue
-        chk = n.get("checkable") == "true" or any(k.get("checkable") == "true" for k in n.iter("node"))
-        res.append(dict(title=t[0], all=t, b=(x1, y1, x2, y2), checkable=chk))
+        tog = None
+        for k in n.iter("node"):
+            c = k.get("class", "")
+            if re.search(r"Switch|CheckBox|RadioButton|ToggleButton", c) or k.get("checked") == "true":
+                tog = "on" if k.get("checked") == "true" else "off"; break
+        res.append(dict(title=t[0], all=t, b=(x1, y1, x2, y2), checkable=tog is not None, state=tog))
     return res
 def icons(root, top=0, bottom=None):
     """small clickable things (toolbar / bottom bar icons)"""
@@ -134,7 +138,11 @@ def icons(root, top=0, bottom=None):
         if n.get("clickable") != "true": continue
         x1, y1, x2, y2 = bounds(n)
         if y1 >= top and y2 <= bottom and 20 < x2 - x1 < W * .35 and y2 - y1 < H * .12:
-            res.append(((x1 + x2) // 2, (y1 + y2) // 2, (n.get("content-desc") or " ".join(texts(n)) or "icon")))
+            rid = ""
+            for k in n.iter("node"):
+                if k.get("resource-id"): rid = k.get("resource-id").split("/")[-1]; break
+            nm = n.get("content-desc") or " ".join(texts(n)) or rid or f"icon_at_{(x1 + x2) // 2}_{(y1 + y2) // 2}"
+            res.append(((x1 + x2) // 2, (y1 + y2) // 2, nm))
     return res
 def is_dialog(root):
     t = [x.lower() for x in texts(root)] if root is not None else []
@@ -207,7 +215,9 @@ def goto(path):
 def crawl_page(path, depth=0, maxdepth=2):
     if not goto(path): L("cannot reach", path); shot("lost_" + "_".join(path)); return
     if depth == 0: page_scroll("settings_main")
-    ents = list_entries(); titles = [e["title"] for e in ents]; L("  " * depth, path or "settings", "entries:", [e["all"] for e in ents])
+    ents = list_entries(); titles = [e["title"] for e in ents]
+    L("  " * depth, "PAGE", " > ".join(path) or "settings")
+    for e in ents: L("  " * depth, "  -", ("[switch " + e["state"] + "] " if e["checkable"] else "") + " | ".join(e["all"][:4]))
     for i, e in enumerate(ents):
         if over(BUDGET * .7): return
         if e["checkable"]: continue
@@ -294,15 +304,20 @@ def player_extra():
             # a playing video never lets the screen be read, so pause first
             adb("shell", "input", "keyevent", "127"); time.sleep(.5)
             r = dump()
+            if find("got it|ok|skip|close", r) is not None: dismiss(3); r = dump()
             if len(icons(r)) < 4: tap(cx, cy, .8); r = dump()
             if len(icons(r)) < 4: tap(cx, cy, .8); r = dump()
             return r
         r = show(); shot(p + "_controls"); ics = icons(r); L(p, "buttons:", [d for _, _, d in ics])
+        def replay():
+            adb("shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", "file:///sdcard/Movies/" + f, "-t", "video/*", "-p", PKG); time.sleep(5); resize()
         for i, (x, y, d) in enumerate(ics):
             if over(): break
             if re.search(r"navigate up|^back$|close|exit", d, re.I) or SKIP.search(d): continue
+            if x < W * .09 and y < H * .2: continue   # the back arrow
             r = show(); base = sig(r); tap(x, y); time.sleep(.6)
-            if PKG not in focus(): shot(f"{p}_btn{i}_{d}_left_app"); ensure_app(); break
+            if PKG not in focus(): shot(f"{p}_btn{i}_{d}_left_app"); replay(); continue
+            if W < H: shot(f"{p}_btn{i}_{d}_closed_player"); replay(); continue
             r2 = dump(); shot(f"{p}_btn{i}_{d}")
             if is_dialog(r2) or len(rows(r2, 0, H)) > len(rows(r, 0, H)) + 1:
                 page_scroll(f"{p}_btn{i}_{d}_panel", 3)
