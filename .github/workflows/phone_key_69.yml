@@ -1,0 +1,19 @@
+name: 69 Virtual phone key
+
+# Prints a public key (safe to show). Claude uses it to lock test apps so only this repo's
+# virtual phone can open them. The matching private key never leaves GitHub.
+on:
+  workflow_dispatch:
+
+jobs:
+  key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show the public key
+        env:
+          SEED: ${{ secrets.KEYSTORE_B64 }}
+        run: |
+          if [ -z "$SEED" ]; then echo "::error::KEYSTORE_B64 secret missing"; exit 1; fi
+          { printf '302e020100300506032b656e04220420' | xxd -r -p; printf '%s' "phone69:$SEED" | sha256sum | cut -c1-64 | xxd -r -p; } > /tmp/k.der
+          openssl pkey -inform DER -in /tmp/k.der -pubout -out /tmp/pub.pem
+          echo "PUBKEY-BEGIN"; cat /tmp/pub.pem; echo "PUBKEY-END"
