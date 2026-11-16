@@ -21,10 +21,25 @@ def size():
     m = re.search(rb"(\d+)x(\d+)", adb("shell", "wm", "size", out=True) or b"")
     return (int(m.group(1)), int(m.group(2))) if m else (1080, 2400)
 W, H = size()
+def resize():
+    """screen size as it is now (the player turns the phone sideways)"""
+    global W, H
+    d = (adb("shell", "dumpsys", "window", "displays", out=True) or b"").decode(errors="ignore")
+    m = re.search(r"cur=(\d+)x(\d+)", d)
+    if m: W, H = int(m.group(1)), int(m.group(2))
 def over(limit=None): return time.time() - T0 > (limit or BUDGET)
 def tap(x, y, wait=1.3): adb("shell", "input", "tap", str(int(x)), str(int(y))); time.sleep(wait)
 def hold(x, y): adb("shell", "input", "swipe", str(int(x)), str(int(y)), str(int(x)), str(int(y)), "900"); time.sleep(1.3)
+try:
+    import uiautomator2 as u2
+    D = u2.connect()
+except Exception as e:
+    D = None; L("uiautomator2 not available:", repr(e))
 def focus():
+    """package that is in front (menus and pop-ups of the app count as the app)"""
+    if D is not None:
+        try: return D.app_current().get("package", "")
+        except Exception: pass
     f = (adb("shell", "dumpsys", "window", out=True) or b"").decode(errors="ignore")
     m = re.search(r"mCurrentFocus=.*", f); return m.group(0) if m else ""
 def launch(): adb("shell", "monkey", "-p", PKG, "-c", "android.intent.category.LAUNCHER", "1"); time.sleep(5)
@@ -55,10 +70,17 @@ def texts(e):
         if t: r.append(t)
     return r
 def dump():
-    for _ in range(4):
-        adb("shell", "uiautomator", "dump", "/sdcard/u.xml"); x = adb("exec-out", "cat", "/sdcard/u.xml", out=True)
-        try: root = ET.fromstring(x)
-        except Exception: time.sleep(1); continue
+    for k in range(4):
+        root = None
+        if D is not None:
+            try: root = ET.fromstring(D.dump_hierarchy(compressed=False))
+            except Exception as e:
+                if k == 3: L("   (screen could not be read:", repr(e)[:80], ")")
+        if root is None:
+            adb("shell", "rm", "-f", "/sdcard/u.xml")
+            adb("shell", "uiautomator", "dump", "/sdcard/u.xml"); x = adb("exec-out", "cat", "/sdcard/u.xml", out=True)
+            try: root = ET.fromstring(x)
+            except Exception: time.sleep(1); continue
         t = texts(root)
         if any("isn't responding" in v or "keeps stopping" in v for v in t):
             L("!! ANR / crash dialog:", [v for v in t if "respond" in v or "stopping" in v])
@@ -152,7 +174,9 @@ def list_entries():
         last = s; up()
     settle_top(); return seen
 def on_page(titles):
-    settle_top(); vis = set(texts(dump()) if dump() is not None else []); first = titles[:4]
+    r = dump(); vis = set(texts(r) if r is not None else []); first = titles[:4]
+    if sum(1 for t in first if t in vis) >= max(1, len(first) // 2): return True
+    settle_top(); r = dump(); vis = set(texts(r) if r is not None else [])
     return sum(1 for t in first if t in vis) >= max(1, len(first) // 2)
 
 def open_settings():
@@ -191,7 +215,8 @@ def crawl_page(path, depth=0, maxdepth=2):
         if i and not on_page(titles) and not goto(path): L("cannot reach", path); return
         if not find_and_tap(e["title"]): L("  " * depth, "cannot find", e["title"]); continue
         name = "settings_" + "_".join(path + [f"{i:02d}", e["title"]])
-        r = dump()
+        time.sleep(1); r = dump()
+        L("  " * depth, "opened", e["title"], "->", (texts(r)[:6] if r is not None else "unreadable"))
         if PKG not in focus(): shot(name + "_left_app"); ensure_app(); goto(path); continue
         if is_dialog(r): shot(name + "_dialog"); back(); continue
         if on_page(titles): continue
@@ -263,10 +288,13 @@ def player_extra():
     for k, f in enumerate(("sample_h264.mp4", "sample_subs.mkv")):
         if over(): return
         adb("shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", "file:///sdcard/Movies/" + f, "-t", "video/*", "-p", PKG); time.sleep(6); dismiss(3)
-        p = f"player{k}"; shot(p + "_playing")
+        p = f"player{k}"; resize(); shot(p + "_playing")
         cx, cy = W // 2, H // 2
         def show():
+            # a playing video never lets the screen be read, so pause first
+            adb("shell", "input", "keyevent", "127"); time.sleep(.5)
             r = dump()
+            if len(icons(r)) < 4: tap(cx, cy, .8); r = dump()
             if len(icons(r)) < 4: tap(cx, cy, .8); r = dump()
             return r
         r = show(); shot(p + "_controls"); ics = icons(r); L(p, "buttons:", [d for _, _, d in ics])
@@ -292,7 +320,7 @@ def player_extra():
         adb("shell", "input", "swipe", str(int(W * .85)), str(int(H * .6)), str(int(W * .85)), str(int(H * .35)), "400"); shot(p + "_swipe_right_side")
         adb("shell", "input", "swipe", str(int(W * .15)), str(int(H * .6)), str(int(W * .15)), str(int(H * .35)), "400"); shot(p + "_swipe_left_side")
         adb("shell", "input", "swipe", str(int(W * .3)), str(cy), str(int(W * .7)), str(cy), "400"); shot(p + "_swipe_seek")
-        adb("shell", "input", "keyevent", "4"); time.sleep(1); adb("shell", "input", "keyevent", "4"); time.sleep(1)
+        adb("shell", "input", "keyevent", "4"); time.sleep(1); adb("shell", "input", "keyevent", "4"); time.sleep(1.5); resize()
 
 L("start", APP, KIND, PKG, W, H)
 launch(); dismiss(8); shot("first_run")

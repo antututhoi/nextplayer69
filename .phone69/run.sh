@@ -17,6 +17,8 @@ done
 adb push samples/note.txt /sdcard/Download/sub/ < /dev/null > /dev/null 2>&1
 adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Movies/sample_h264.mp4 < /dev/null > /dev/null 2>&1
 adb shell "content call --method scan_volume --uri content://media --arg external_primary" < /dev/null > /dev/null 2>&1
+pip install -q --break-system-packages uiautomator2 > /dev/null 2>&1 || pip install -q uiautomator2 > /dev/null 2>&1
+python3 -c "import uiautomator2 as u; d=u.connect(); print(d.info.get('displayWidth'))" < /dev/null
 AAPT=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)aapt
 for apk in apks/*.apk; do
   name=$(basename "$apk" .apk)
@@ -30,7 +32,7 @@ for apk in apks/*.apk; do
   adb shell appops set "$pkg" SYSTEM_ALERT_WINDOW allow < /dev/null
   adb logcat -c
   adb shell "screenrecord --size 540x1200 --bit-rate 600000 --time-limit 170 /sdcard/first_$name.mp4" < /dev/null > /dev/null 2>&1 &
-  BUDGET_MIN="${BUDGET_MIN:-70}" python3 -I .phone69/crawl.py "$out/crawl" "$name" "$kind" "$pkg" < /dev/null > "$out/crawl_stdout.txt" 2>&1
+  BUDGET_MIN="${BUDGET_MIN:-70}" python3 .phone69/crawl.py "$out/crawl" "$name" "$kind" "$pkg" < /dev/null > "$out/crawl_stdout.txt" 2>&1
   adb logcat -d -t 20000 > "$out/logcat.txt" 2>&1
   grep -n -A25 "FATAL EXCEPTION\|ANR in $pkg" "$out/logcat.txt" > "$out/crashes.txt" 2>/dev/null || echo "no crashes" > "$out/crashes.txt"
   grep -c "FATAL EXCEPTION" "$out/logcat.txt" | sed "s/^/$name crashes: /"
