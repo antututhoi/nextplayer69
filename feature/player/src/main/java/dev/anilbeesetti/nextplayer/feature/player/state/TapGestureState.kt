@@ -60,6 +60,34 @@ class TapGestureState(
     private var resetJob: Job? = null
     private var currentSpeed: Float = player.playbackParameters.speed
 
+    // 69: two-finger speed gesture
+    /** Speed shown while two fingers are changing it (null = not changing). */
+    var mod69GestureSpeed by mutableStateOf<Float?>(null)
+    private var mod69SpeedStart = 1f
+    private var mod69SpeedHideJob: Job? = null
+
+    fun mod69SpeedGestureStart() {
+        mod69SpeedStart = player.playbackParameters.speed
+    }
+
+    /** [fraction] = how far the fingers moved up (+) or down (-), in screen heights. */
+    fun mod69SpeedGestureMove(fraction: Float) {
+        // half a screen = 1.0x, in MX-like 0.05 steps
+        val raw = mod69SpeedStart + fraction * 2f
+        val speed = (Math.round(raw * 20f) / 20f).coerceIn(0.25f, 4f)
+        if (speed != player.playbackParameters.speed) player.setPlaybackSpeed(speed)
+        mod69SpeedHideJob?.cancel()
+        mod69GestureSpeed = speed
+    }
+
+    fun mod69SpeedGestureEnd() {
+        mod69SpeedHideJob?.cancel()
+        mod69SpeedHideJob = coroutineScope.launch {
+            delay(800.milliseconds)
+            mod69GestureSpeed = null
+        }
+    }
+
     fun handleDoubleTap(offset: Offset, size: IntSize) {
         if (!player.isCurrentMediaItemSeekable) return
 

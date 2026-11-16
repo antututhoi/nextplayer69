@@ -409,6 +409,20 @@ private fun Mod69PreferencesContent(
                     onClick = { player { it.copy(mod69ResumeBar = !it.mod69ResumeBar) } },
                 )
                 PreferenceSwitch(
+                    title = "Double-tap the middle to zoom",
+                    description = "Double-tap the centre of the video to zoom in 2x, again to go back (sides still seek)",
+                    icon = NextIcons.Size,
+                    isChecked = p.mod69DoubleTapZoom,
+                    onClick = { player { it.copy(mod69DoubleTapZoom = !it.mod69DoubleTapZoom) } },
+                )
+                PreferenceSwitch(
+                    title = "Two fingers change the speed",
+                    description = "Slide two fingers up for faster, down for slower (0.05x steps). Pinch still zooms",
+                    icon = NextIcons.Speed,
+                    isChecked = p.mod69TwoFingerSpeed,
+                    onClick = { player { it.copy(mod69TwoFingerSpeed = !it.mod69TwoFingerSpeed) } },
+                )
+                PreferenceSwitch(
                     title = "Fast seeking",
                     description = "Jump to the nearest key frame. Faster, but less exact",
                     icon = NextIcons.FastForward,

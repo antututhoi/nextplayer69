@@ -118,6 +118,7 @@ internal fun BoxScope.DpadSeekIndicator(visible: Boolean, offsetMs: Long, positi
 @Composable
 internal fun BoxScope.PlayerGestureIndicators(tapGestureState: TapGestureState) {
     DoubleTapIndicator(tapGestureState = tapGestureState)
+    Mod69SpeedGestureIndicator(tapGestureState = tapGestureState)
 
     AnimatedVisibility(
         modifier = Modifier
@@ -142,6 +143,25 @@ internal fun BoxScope.PlayerGestureIndicators(tapGestureState: TapGestureState) 
                     style = MaterialTheme.typography.labelLarge,
                 )
             }
+        }
+    }
+}
+
+/** 69: big speed text while two fingers change the speed (like MX). */
+@Composable
+internal fun BoxScope.Mod69SpeedGestureIndicator(tapGestureState: TapGestureState) {
+    AnimatedVisibility(
+        modifier = Modifier.align(Alignment.Center),
+        visible = tapGestureState.mod69GestureSpeed != null,
+        enter = fadeIn(),
+        exit = fadeOut(),
+    ) {
+        Surface(shape = CircleShape) {
+            Text(
+                text = String.format(java.util.Locale.US, "%.2fx", tapGestureState.mod69GestureSpeed ?: 1f),
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            )
         }
     }
 }

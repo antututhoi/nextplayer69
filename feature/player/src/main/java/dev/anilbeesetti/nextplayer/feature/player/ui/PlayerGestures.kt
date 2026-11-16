@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import dev.anilbeesetti.nextplayer.feature.player.extensions.detectCustomHorizontalDragGestures
 import dev.anilbeesetti.nextplayer.feature.player.extensions.detectCustomTransformGestures
 import dev.anilbeesetti.nextplayer.feature.player.extensions.detectCustomVerticalDragGestures
@@ -39,6 +40,9 @@ fun PlayerGestures(
     videoZoomAndContentScaleState: VideoZoomAndContentScaleState,
     volumeAndBrightnessGestureState: VolumeAndBrightnessGestureState,
     onTapPlayPause: (() -> Unit)? = null,
+    // 69: MX-style gestures
+    mod69DoubleTapZoom: Boolean = false,
+    mod69TwoFingerSpeed: Boolean = false,
 ) {
     // Keep the system's swipe-to-reveal areas reserved even while the bars are hidden.
     val gestureInsets = WindowInsets.systemGestures.union(WindowInsets.systemBarsIgnoringVisibility)
@@ -62,6 +66,12 @@ fun PlayerGestures(
                         },
                         onDoubleTap = {
                             if (controlsVisibilityState.controlsLocked) return@detectTapGestures
+                            // 69: double-tap the middle = zoom in / out
+                            val third = it.x / size.width
+                            if (mod69DoubleTapZoom && third > 0.35f && third < 0.65f) {
+                                videoZoomAndContentScaleState.mod69ToggleQuickZoom()
+                                return@detectTapGestures
+                            }
                             tapGestureState.handleDoubleTap(
                                 offset = it,
                                 size = size,
@@ -136,13 +146,41 @@ fun PlayerGestures(
                 .pointerInput(
                     controlsVisibilityState.controlsLocked,
                     pictureInPictureState.isInPictureInPictureMode,
+                    mod69TwoFingerSpeed,
                 ) {
                     if (controlsVisibilityState.controlsLocked) return@pointerInput
                     if (pictureInPictureState.isInPictureInPictureMode) return@pointerInput
 
+                    // 69: what the two fingers are doing: 0 = not known yet, 1 = zoom / pan, 2 = speed
+                    var mode = 0
+                    var movedY = 0f
+                    var zoomed = 1f
+                    val decideAt = 24.dp.toPx()
                     detectCustomTransformGestures(
+                        onGestureStart = {
+                            mode = if (mod69TwoFingerSpeed) 0 else 1
+                            movedY = 0f
+                            zoomed = 1f
+                            tapGestureState.mod69SpeedGestureStart()
+                        },
                         onGesture = { _, panChange, zoomChange, _ ->
                             if (tapGestureState.isLongPressGestureInAction) {
+                                return@detectCustomTransformGestures
+                            }
+                            if (mode == 0) {
+                                // fingers moving together up / down (no pinch) = speed, anything else = zoom
+                                movedY += panChange.y
+                                zoomed *= zoomChange
+                                if (kotlin.math.abs(zoomed - 1f) > 0.06f) {
+                                    mode = 1
+                                } else if (kotlin.math.abs(movedY) > decideAt) {
+                                    mode = 2
+                                }
+                                if (mode == 0) return@detectCustomTransformGestures
+                            }
+                            if (mode == 2) {
+                                movedY += panChange.y
+                                tapGestureState.mod69SpeedGestureMove(-movedY / size.height)
                                 return@detectCustomTransformGestures
                             }
                             videoZoomAndContentScaleState.onZoomPanGesture(
@@ -151,7 +189,14 @@ fun PlayerGestures(
                                 zoomChange = zoomChange,
                             )
                         },
-                        onGestureEnd = { videoZoomAndContentScaleState.onZoomPanGestureEnd() },
+                        onGestureEnd = {
+                            if (mode == 2) {
+                                tapGestureState.mod69SpeedGestureEnd()
+                            } else {
+                                videoZoomAndContentScaleState.onZoomPanGestureEnd()
+                            }
+                            mode = 1
+                        },
                     )
                 },
         )

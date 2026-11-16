@@ -140,6 +140,14 @@ class VideoZoomAndContentScaleState(
         }
     }
 
+    /** 69: MX-style double-tap zoom - jumps to 2x, or back to normal when zoomed. */
+    fun mod69ToggleQuickZoom() {
+        if (player.duration == C.TIME_UNSET) return
+        zoom = if (zoom > 1.01f || zoom < 0.99f) 1f else 2f
+        offset = Offset.Zero
+        updateVideoScaleMetadataAndSendEvent()
+    }
+
     fun onZoomPanGestureEnd() {
         isZooming = false
         updateVideoScaleMetadataAndSendEvent()

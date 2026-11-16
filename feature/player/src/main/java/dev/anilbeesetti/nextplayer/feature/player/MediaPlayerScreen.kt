@@ -179,6 +179,8 @@ internal fun MediaPlayerContent(
                     seekGestureState = seekGestureState,
                     videoZoomAndContentScaleState = videoZoomAndContentScaleState,
                     volumeAndBrightnessGestureState = volumeAndBrightnessGestureState,
+                    mod69DoubleTapZoom = playerPreferences.mod69DoubleTapZoom,
+                    mod69TwoFingerSpeed = playerPreferences.mod69TwoFingerSpeed,
                     onTapPlayPause = when (playerPreferences.mod69TapAction) {
                         1 -> { { if (player.isPlaying) player.pause() else player.play() } }
                         2 -> {
