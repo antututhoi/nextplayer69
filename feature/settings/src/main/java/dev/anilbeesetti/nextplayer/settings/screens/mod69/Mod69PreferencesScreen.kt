@@ -665,6 +665,27 @@ private fun Mod69PreferencesContent(
                 isFirstItem = true,
                 isLastItem = true,
             )
+            if (android.os.Build.VERSION.SDK_INT >= 33) {
+                val mod69LangCtx = androidx.compose.ui.platform.LocalContext.current
+                ListSectionTitle(text = "Language")
+                ClickablePreferenceItem(
+                    title = "App language",
+                    description = "Use a different language for this app only (opens the phone's language screen)",
+                    icon = NextIcons.Language,
+                    onClick = {
+                        runCatching {
+                            mod69LangCtx.startActivity(
+                                android.content.Intent(
+                                    android.provider.Settings.ACTION_APP_LOCALE_SETTINGS,
+                                    android.net.Uri.fromParts("package", mod69LangCtx.packageName, null),
+                                ),
+                            )
+                        }
+                    },
+                    isFirstItem = true,
+                    isLastItem = true,
+                )
+            }
             ListSectionTitle(text = "Debug log")
             val mod69Ctx = androidx.compose.ui.platform.LocalContext.current
             ClickablePreferenceItem(
