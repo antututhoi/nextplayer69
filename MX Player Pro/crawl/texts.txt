@@ -1,0 +1,2585 @@
+## first_run
+6:14
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+New updates!
+Manage all your preferences in one place with the all-new Me page.
+
+## main_p0
+6:14
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Folders
+Search
+View Menu
+Account
+Music
+Privacy
+MXShare
+Video Playlist
+2
+Movies
+2 videos
+
+## main_icon0_Search
+6:14
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+Music
+Privacy
+MXShare
+Video Playlist
+Movies
+2 videos
+Done
+Search media files
+Voice search
+
+## main_icon0_Search_item0_Space_p0
+6:14
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+Music
+Privacy
+MXShare
+Video Playlist
+Movies
+2 videos
+Done
+Clear query
+
+## main_icon0_Search_item0_Space_p1
+6:14
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+More features
+see
+too
+TT
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+Music
+Privacy
+MXShare
+Video Playlist
+Movies
+2 videos
+Done
+by
+Clear query
+
+## main_icon0_Search_item0_Space_p2
+6:14
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+More features
+see
+too
+TT
+Voice input
+q
+1
+w
+2
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+Music
+Privacy
+MXShare
+Video Playlist
+Movies
+2 videos
+Done
+by by
+Clear query
+
+## main_icon0_Search_item1_Search_media_files_p0
+Music
+Privacy
+MXShare
+Video Playlist
+2
+Movies
+2 videos
+Done
+Search media files
+Voice search
+6:14
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+More features
+Sticker Keyboard
+GIF Keyboard
+Clipboard
+Settings
+Theme settings
+Voice input
+q
+1
+w
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+
+## main_icon0_Search_item1_Search_media_files_p1
+Music
+Privacy
+MXShare
+Video Playlist
+2
+Movies
+2 videos
+Done
+too
+Clear query
+6:14
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+More features
+TT
+see
+MI
+Voice input
+q
+1
+w
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+
+## main_icon0_Search_item1_Search_media_files_p2
+Music
+Privacy
+MXShare
+Video Playlist
+2
+Movies
+2 videos
+Done
+too by
+Clear query
+6:14
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+More features
+too
+see
+mi
+Voice input
+q
+1
+w
+e
+3
+r
+4
+t
+5
+y
+6
+u
+7
+i
+8
+o
+9
+p
+0
+a
+s
+d
+f
+g
+h
+j
+k
+l
+Shift
+z
+x
+c
+v
+b
+n
+m
+Delete
+Symbol keyboard
+,
+Emoji button
+Space
+.
+Go
+Back
+Switch input method
+
+## main_icon1_View_Menu
+View Mode
+All folders
+Files
+Folders
+Layout
+List
+Grid
+Sort
+Title
+Date
+Played time
+Status
+Length
+Size
+Resolution
+Path
+Frame rate
+Type
+Oldest
+Newest
+Fields
+Advanced
+Cancel
+Done
+6:15
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_icon1_View_Menu_item0_Oldest_p0
+6:15
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+View Mode
+All folders
+Files
+Folders
+Layout
+List
+Grid
+Sort
+Title
+Date
+Played time
+Status
+Length
+Size
+Resolution
+Path
+Frame rate
+Type
+Oldest
+Newest
+Fields
+Advanced
+Cancel
+Done
+
+## main_icon1_View_Menu_item1_Newest_p0
+6:15
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+View Mode
+All folders
+Files
+Folders
+Layout
+List
+Grid
+Sort
+Title
+Date
+Played time
+Status
+Length
+Size
+Resolution
+Path
+Frame rate
+Type
+Oldest
+Newest
+Fields
+Advanced
+Cancel
+Done
+
+## main_icon1_View_Menu_item2_Cancel_p0
+6:15
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Folders
+Search
+View Menu
+Account
+Music
+Privacy
+MXShare
+Video Playlist
+2
+Movies
+2 videos
+
+## main_icon2_Account
+File Transfer
+Private Folder
+Video Playlists
+Network Stream
+Local Network
+Media Manager
+Cloud Drive
+WhatsApp Status Saver
+App Theme
+Settings
+Legal
+Help
+6:16
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## main_icon2_Account_item0_File_Transfer_p0
+File Transfer
+SEND
+RECEIVE
+Share with
+Jio
+iOS
+PC
+Tablet
+History
+6:16
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## main_icon2_Account_item1_Private_Folder_p0
+6:16
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Navigate up
+Private Folder
+More options
+You haven't added any files yet.
+
+## main_icon2_Account_item2_Video_Playlists_p0
+6:16
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+No Playlists found.
+Create New Playlist
+
+## main_icon2_Account_item3_Network_Stream_p0
+6:17
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Network Stream
+Please enter a network URL:
+Example: http://www.example.com/video.mkv
+CANCEL
+OK
+
+## main_icon2_Account_item3_Network_Stream_p1
+6:17
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+File Transfer
+Private Folder
+Video Playlists
+Network Stream
+Local Network
+Media Manager
+Cloud Drive
+WhatsApp Status Saver
+App Theme
+Settings
+Legal
+Help
+
+## main_icon2_Account_item4_Local_Network_p0
+Networks
+Add a server by tapping the PLUS BUTTON
+6:17
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_icon2_Account_item5_Media_Manager_p0
+6:17
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Media Manager
+Device storage
+Used 3.07 GB / 8.00 GB
+38.0
+Video
+25.99 MB
+Music
+161 KB
+Image
+14.40 KB
+Clean up for more space
+Your device is clean
+Clean
+Recently Played
+Large Files
+Recently Added
+Haven't Played
+01:30
+sample_subs
+sample_h264
+
+## main_icon2_Account_item5_Media_Manager_p1
+6:17
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Media Manager
+Haven't Played
+01:30
+sample_subs
+01:00
+sample_h264
+
+## main_icon2_Account_item6_Cloud_Drive_p0
+6:18
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Cloud Drive
+How to connect all your Cloud Drives with one tap?
+1. Tap the Add Button “+” and login to your Cloud Drives (Google Drive, Dropbox, OneDrive).
+
+2. Browse all your files and folders safely.
+Add Cloud Drive
+
+## main_icon2_Account_item8_App_Theme_p0
+App Theme
+Using
+Adaptive
+Dark Theme
+Light Theme
+Amoled Black
+Classic Themes
+6:18
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## main_icon2_Account_item9_Settings_p0
+6:18
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Settings
+List
+Player
+Decoder
+Audio
+Subtitle
+General
+Development
+App Language
+
+## main_icon2_Account_item10_Legal_p0
+6:18
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Navigate up
+Legal
+Privacy Policy
+Terms of Service
+
+## main_icon2_Account_item11_Help_p0
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+Help
+Frequently asked questions
+Check for updates
+Feedback
+About
+
+## drawer_p0
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Folders
+Search
+View Menu
+Account
+Music
+Privacy
+MXShare
+Video Playlist
+2
+Movies
+2 videos
+
+## select0_Music
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+Private Folder
+More options
+You haven't added any files yet.
+
+## select0_icon1_More_options
+Refresh
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select0_bottom_icon0_fab_add
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+Private Folder
+More options
+You haven't added any files yet.
+Select Files To Add
+Storage
+Movies
+2 videos
+
+## select0_bottom_icon0_fab_add_item0_Select_Files_To_Add_p0
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+Private Folder
+More options
+You haven't added any files yet.
+Select Files To Add
+Storage
+Movies
+2 videos
+
+## select0_bottom_icon0_fab_add_item1_Movies_p0
+6:19
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+Private Folder
+More options
+You haven't added any files yet.
+Select Files To Add
+Storage
+Movies
+sample_h264.mp4
+23 MB
+sample_subs.mkv
+2.8 MB
+Add Now
+
+## select1_Music
+6:20
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+Tracks
+Playlists
+Albums
+Artists
+Folders
+Search Songs...
+Shuffle All
+00:00
+song.mp3 - Unknown
+
+## select1_icon1_layout_more
+Add to Home Screen
+Add Widget
+Resume Play Settings
+6:20
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## select1_icon1_layout_more_item0_Add_to_Home_Screen_left_app
+6:20
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+MX Player Pro
+Touch & hold the widget to move it around the home screen
+Local Music
+1 × 1
+Cancel
+Add to home screen
+
+## settings_main_p0
+6:20
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Settings
+List
+Player
+Decoder
+Audio
+Subtitle
+General
+Development
+App Language
+
+## settings_00_List_p0
+6:21
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+List
+Appearance
+Theme
+Last media in each folder
+Mark last played media in each folder.
+Scroll down to last media
+Auto-scroll to position of the last played media.
+Select thumbnail
+Switch to selection mode by touching the thumbnail or icon.
+Floating button
+Place a floating button on the bottom right corner of the screen to start last played media.
+Period tagged as "NEW"
+"NEW" tag will be displayed if the file was modified within this period.
+Scan
+Folders
+Select folders to be included in the media library.
+File extensions
+Select file extensions for folder scanning. It is possible to configure decoders per extension types.
+Recognize .nomedia
+Exclude any media file from a video list if a ".nomedia" file exists in that folder or a parent folder.
+
+## settings_00_List_p1
+6:21
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+List
+Theme
+Last media in each folder
+Mark last played media in each folder.
+Scroll down to last media
+Auto-scroll to position of the last played media.
+Select thumbnail
+Switch to selection mode by touching the thumbnail or icon.
+Floating button
+Place a floating button on the bottom right corner of the screen to start last played media.
+Period tagged as "NEW"
+"NEW" tag will be displayed if the file was modified within this period.
+Scan
+Folders
+Select folders to be included in the media library.
+File extensions
+Select file extensions for folder scanning. It is possible to configure decoders per extension types.
+Recognize .nomedia
+Exclude any media file from a video list if a ".nomedia" file exists in that folder or a parent folder.
+Show hidden files and folders
+Show hidden folders and files starting with "." (dot).
+
+## settings_List_00_Theme_p0
+6:21
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+App Theme
+Using
+Adaptive
+Dark Theme
+Light Theme
+Amoled Black
+Classic Themes
+
+## settings_List_05_Period_tagged_as_NEW__dialog
+6:22
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Period tagged as "NEW"
+Enter number of days to display "NEW" tag:
+7
+CANCEL
+OK
+
+## settings_List_06_Folders_p0
+6:22
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+List
+/mnt
+/storage
+/storage/emulated/0
+/storage/emulated/0/Notifications
+/storage/emulated/0/Ringtones
+ADD
+HIDE
+REMOVE
+
+## settings_List_Folders_05_ADD_dialog
+Choose your folder
+/storage/emulated/0
+(Folder up)
+Alarms
+Android
+Audiobooks
+DCIM
+Documents
+Download
+Movies
+Music
+MxPlayerPro
+Notifications
+Pictures
+Podcasts
+Recordings
+Ringtones
+OK
+6:23
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_01_Player_p0
+6:24
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Player
+Interface
+Theme
+Style
+Screen
+Screen settings: Orientation, Full Screen, Brightness, etc.
+Controls
+Input controls: Touch actions, gestures, lock mode, etc.
+Navigation
+Navigation settings: seeking settings, forward/backward buttons, etc.
+Double-tap the back button
+Press the back button twice to close playback screen.
+Quick zoom
+Skip zoom steps between 100% and 'fit to screen' (150%, 200%, etc).
+Playback
+Resume
+Select whether to resume from the point where you stopped.
+Resume only the first file
+Apply resume setting only on the first file. Next files will start from the beginning.
+Default playback speed
+
+## settings_01_Player_p1
+6:24
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Player
+Default playback speed
+Remember selections
+Remember selections for each files such as choice of audio track, subtitle track, decoder…
+Back to list
+Return to the list after playback is completed.
+Preview while seeking
+Display preview image while changing playback position.
+Preview while seeking (network)
+Display preview image for network play.
+Fast seeking
+Seek to nearest key-frame position instead of exact position. This setting applies to HW+ and SW decoder.
+Play alone
+Stop other players while playing back videos or audios. It also makes MX Player stop if other players begin to play or you make a phone call.
+Media buttons
+Respond to media control buttons from headset, Bluetooth, etc.
+Double/Triple Press → Next/Prev
+Treat Double/Triple press events as Next/Prev
+Next/Prev → FF/Rew
+Treat Next/Prev media buttons as FF/Rew button.
+
+## settings_01_Player_p2
+6:24
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Player
+Double/Triple Press → Next/Prev
+Treat Double/Triple press events as Next/Prev
+Next/Prev → FF/Rew
+Treat Next/Prev media buttons as FF/Rew button.
+Toggle playback with play button
+Toggle playback in response to 'play' media button. This option is useful only for devices having trouble with the play button.
+Smart Previous Button
+If you select 'previous' button, it will resume again from the beginning or open the previous file depending upon the current playback position.
+Suppress error message
+Skip to next video without displaying error message if video loading fails.
+Use custom Picture-in-Picture popup
+Use custom Picture-in-Picture resizable popup.
+Background Play
+Background/PiP mode
+Allows you to control the player behavior when switching to another app.
+Background play (audio)
+Use Background play for audio playback.
+Album art
+Display cover art on the lock screen.
+
+## settings_01_Player_p3
+6:24
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Player
+Background play (audio)
+Use Background play for audio playback.
+Album art
+Display cover art on the lock screen.
+Smooth switch
+Fade in and out audio when switching to and return back from background play.
+Miscellaneous
+Video resizing delay
+Set delay time for resizing videos on hardware decoders. Set higher value if screen flickers severely or freezes while resizing.
+Limit Video Resizing
+Do not increase video size if it exceeds its display size. (HW decoder only)
+Turn off button backlight
+Turn off main buttons' back-light during playback. (If back-light keeps turning on in spite of this option, uncheck this option and reboot device if necessary)
+Loading circle animation
+Software navigation buttons
+This device has software navigation buttons. (back, home, menu, etc.) Check this option if buttons are not hidden automatically.
+Android 4.0 compatible mode
+Use this mode if you have problem with screen layout.
+
+## settings_Player_01_Style_dialog
+6:25
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Style
+Preset
+Default
+Frame
+Controls
+Progress bar
+Material
+Place progress bar below buttons.
+CANCEL
+OK
+
+## settings_Player_02_Screen_dialog
+6:25
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Screen
+Orientation
+Use video orientation
+Full Screen
+Auto Switch
+Soft buttons
+Auto hide
+Brightness
+10.0
+10
+Elapsed time
+Battery/clock
+Corner offset
+0.0
+0
+Text
+Background
+Place at the bottom
+Screen rotation button
+Display battery/clock in title bar
+Show Remaining Time
+Keep Screen On
+Pause playback if obstructed by another window
+Show interface at the startup
+CANCEL
+OK
+
+## settings_Player_03_Controls_p0
+Controls
+Touch action
+Show/hide interface
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+CANCEL
+OK
+6:25
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Player_03_Controls_p1
+Controls
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+Show interface when locked screen is touched
+CANCEL
+OK
+6:25
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Player_Controls_00_Show_hide_interface_p0
+6:26
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Show Interface → Pause/Resume
+Show interface + pause/resume
+Pause/resume
+Show/hide interface
+
+## settings_Player_Controls_00_Show_hide_interface_p1
+6:26
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Controls
+Touch action
+Show/hide interface
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+CANCEL
+OK
+
+## settings_Player_Controls_00_Show_hide_interface_p2
+6:26
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Controls
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+Show interface when locked screen is touched
+CANCEL
+OK
+
+## settings_Player_Controls_02_Lock_p0
+Lock
+Kids lock
+Kids lock (+Touch effects)
+6:26
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Player_Controls_02_Lock_p1
+6:26
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Controls
+Touch action
+Show/hide interface
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+CANCEL
+OK
+
+## settings_Player_Controls_02_Lock_p2
+6:26
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Controls
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+Show interface when locked screen is touched
+CANCEL
+OK
+
+## settings_Player_Controls_29_Show_interface_when_locked_screen_is_touched_dialog
+Controls
+Key up/down action
+Change sound volume
+Lock mode
+Lock
+Gestures
+Seek position
+Zoom and Pan
+Video zoom
+Video pan
+Volume
+Brightness
+Play/Pause
+(Double tap)
+Video zoom
+(Double tap)
+FF/RW
+(Double tap)
+Speed FF
+(Long press)
+Playback Speed
+Subtitle scroll
+Subtitle up/down
+Subtitle zoom
+Quick Shortcuts
+Screen Rotation
+Background Play
+Loop
+Mute
+Shuffle
+Equalizer
+Sleep Timer
+A - B Repeat
+Night Mode
+Customise Items
+Screenshot
+Interface
+auto hide
+2.0
+2.0 sec
+Show interface when locked screen is touched
+CANCEL
+OK
+6:28
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Player_04_Navigation_dialog
+6:28
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigation
+Seek Speed
+(sec/inch)
+4.0
+25
+Forward/backward moving button
+Move
+Interval (sec.)
+9.0
+10
+Previous/next button
+Display the current position while changing position
+CANCEL
+OK
+
+## settings_Player_07_Resume_dialog
+6:29
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Resume
+Yes
+No
+Ask at Startup
+CANCEL
+
+## settings_Player_09_Default_playback_speed_dialog
+6:29
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Default playback speed
+Enter default playback speed in percent(%). Valid range is 25% to 400%.
+100
+100%
+CANCEL
+OK
+
+## settings_Player_13_Preview_while_seeking_network__dialog
+6:29
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Preview while seeking (network)
+On
+Off
+Automatic
+CANCEL
+
+## settings_Player_23_Background_PiP_mode_dialog
+6:29
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Background/PiP mode
+Stop
+Play video/audio in background
+Play video/audio in PiP mode
+CANCEL
+
+## settings_Player_28_Video_resizing_delay_dialog
+6:29
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Video resizing delay
+Enter delay time in milliseconds:
+CANCEL
+OK
+
+## settings_02_Decoder_p0
+Decoder
+Hardware decoder
+HW+ decoder (local)
+Set HW+ decoder as the default hardware decoder for local files.
+HW+ decoder (network)
+Set HW+ decoder as the default hardware decoder for network play.
+Try HW decoder
+Try HW decoder if HW+ decoder fails.
+Try HW+ decoder
+Try HW+ decoder if HW decoder fails.
+HW+ video codecs
+Select video codecs to be used with HW+ decoder.
+HW+ audio codecs
+Select audio codecs to be used with HW+ decoder.
+HW+ audio on SW video
+Use HW+ audio decoder if SW audio decoder fails in SW decoding mode.
+Correct aspect ratio
+Correct aspect ratio of HW decoded videos. Use this option if HW decoder ignores aspect ratio.
+Calibrate playback position
+Enter seconds to adjust playback position of HW decoder. This is useful when playback position is displayed incorrectly.
+HW audio track selectable
+6:29
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_02_Decoder_p1
+Decoder
+Enter seconds to adjust playback position of HW decoder. This is useful when playback position is displayed incorrectly.
+HW audio track selectable
+Turn it off only if HW decoder crashes immediately after changing audio track or playing videos using an unsupported audio codec. If this option is turned off, custom audio codecs will not be used automatically with HW decoder.
+Software decoder
+SW decoder (local)
+Use SW decoder for local files stored on the device.
+SW decoder (network)
+Use SW decoder for network play from remote sources via HTTP, FTP, RTSP, MMS and more.
+SW audio
+Use SW audio decoder instead of HW audio decoder.
+SW audio (local)
+Use SW audio decoder for playing for local files stored on the device.
+SW audio (network)
+Use SW audio decoder for playing remote network sources.
+CPU Core Limit
+Specify the maximum number of CPU cores to be used for SW decoding.
+Color format
+YUV is experimental and does not work on all devices.
+6:29
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_02_Decoder_p2
+Decoder
+Use SW decoder for local files stored on the device.
+SW decoder (network)
+Use SW decoder for network play from remote sources via HTTP, FTP, RTSP, MMS and more.
+SW audio
+Use SW audio decoder instead of HW audio decoder.
+SW audio (local)
+Use SW audio decoder for playing for local files stored on the device.
+SW audio (network)
+Use SW audio decoder for playing remote network sources.
+CPU Core Limit
+Specify the maximum number of CPU cores to be used for SW decoding.
+Color format
+YUV is experimental and does not work on all devices.
+Use speedup tricks
+General
+Deinterlace
+Deinterlace by default. Currently deinterlacing works only with SW decoder.
+Custom codec
+Use Unknown type custom codec.
+6:30
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Decoder_04_HW_video_codecs_dialog
+6:30
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+HW+ video codecs
+H.263
+H.264  Hardware accelerated
+H.264 10bits
+H.265  Hardware accelerated
+H.265 10bits
+MPEG-4
+VP8  Hardware accelerated
+VP9  Hardware accelerated
+DEFAULT
+CANCEL
+OK
+
+## settings_Decoder_05_HW_audio_codecs_dialog
+6:30
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+HW+ audio codecs
+AAC
+AMR NB
+AMR WB
+FLAC
+G.711 A-law
+G.711 μ-law
+MP3
+Opus
+PCM
+Vorbis
+DEFAULT
+CANCEL
+OK
+
+## settings_Decoder_09_Enter_seconds_to_adjust_playback_position_of_HW_decoder._This_is_useful_whe
+6:30
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Calibrate playback position
+Enter seconds. E.g., 1.6
+0.0
+CANCEL
+OK
+
+## settings_Decoder_16_CPU_Core_Limit_dialog
+6:31
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+CPU Core Limit
+Default
+1
+2
+3
+4
+5
+6
+7
+8
+CANCEL
+
+## settings_Decoder_20_Deinterlace_dialog
+6:31
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Deinterlace
+None
+Yadif
+W3fdif
+CANCEL
+
+## settings_Decoder_21_Custom_codec_dialog
+6:31
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Select codec file
+/storage/emulated/0/Download
+(Folder up)
+sub
+archive.zip
+USE DEFAULT CODEC
+CANCEL
+
+## settings_03_Audio_p0
+6:31
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Audio
+Audio player
+Use as audio player.
+Audio output
+Change the method that MX uses to output audio.
+Volume boost
+Audio volume can be boosted up to 200% if you use HW+ or SW decoder.
+System volume
+Synchronize sound volume with the system media volume.
+System volume panel
+Show system volume panel while changing volume with the headset plugged in.
+Pause on headset disconnected
+Pause playback when wired/Bluetooth headset disconnected from the device.
+Fade on start
+Fade on seek
+Preferred audio language
+Language of the audio track you want to use. It may not be used with HW decoder.
+Audio delay
+Set audio delay time for audio synchronization. It may not be used with HW decoder.
+Bluetooth audio delay
+
+## settings_03_Audio_p1
+6:31
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Audio
+System volume
+Synchronize sound volume with the system media volume.
+System volume panel
+Show system volume panel while changing volume with the headset plugged in.
+Pause on headset disconnected
+Pause playback when wired/Bluetooth headset disconnected from the device.
+Fade on start
+Fade on seek
+Preferred audio language
+Language of the audio track you want to use. It may not be used with HW decoder.
+Audio delay
+Set audio delay time for audio synchronization. It may not be used with HW decoder.
+Bluetooth audio delay
+Set Bluetooth audio delay time for audio synchronization. It may not be used with HW decoder.
+Prefer audio passthrough mode
+Whenever possible, prefer audio passthrough mode over internal decoders. It allows you to pass the source's audio signal to an external receiver directly. It may not be used with HW decoder.
+Audio equalizer
+
+## settings_Audio_01_Audio_output_dialog
+Audio output
+Auto select
+OpenSL
+Java AudioTrack
+AAudio
+CANCEL
+6:32
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Audio_08_Preferred_audio_language_dialog
+6:32
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Preferred audio language
+Af-Soomaali [so]
+Afrikaans [af]
+Akan [ak]
+Aragonés [an]
+Aymar aru [ay]
+Azərbaycanca [az]
+Bahasa Indonesia [in]
+Bahasa Melayu [ms]
+Basa Jawa [jv]
+Basa Sunda [su]
+Bosanski [bs]
+Brezhoneg [br]
+Català [ca]
+Chewa [ny]
+CLEAR
+CANCEL
+OK
+
+## settings_Audio_09_Audio_delay_dialog
+6:32
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Audio delay
+Enter seconds. E.g., 1.6
+0.0
+CANCEL
+OK
+
+## settings_Audio_10_Bluetooth_audio_delay_dialog
+6:32
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Bluetooth audio delay
+Enter seconds. E.g., 1.6
+0.0
+CANCEL
+OK
+
+## settings_04_Subtitle_p0
+6:32
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Subtitle
+Subtitle Folder
+/storage/emulated/0/Subtitles
+Character encoding
+Select character encoding of your subtitle file.
+Preferred subtitle language
+Language of the subtitle track you want to use. It may not be used with HW decoder.
+Default sync
+Set default time adjustment for subtitle track synchronization.
+Sync for HW decoder
+Adjust subtitle track synchronization for HW decoder.
+Appearance
+Text
+Subtitle text settings: font, size, color, border, etc.
+Layout
+Subtitle layout settings: alignment, padding, background color.
+Font Folder
+/storage/emulated/0
+Text processing
+Italic effect
+Sentences that start with "/" (forward slash) will be displayed in italics.
+
+## settings_04_Subtitle_p1
+6:32
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Subtitle
+Character encoding
+Select character encoding of your subtitle file.
+Preferred subtitle language
+Language of the subtitle track you want to use. It may not be used with HW decoder.
+Default sync
+Set default time adjustment for subtitle track synchronization.
+Sync for HW decoder
+Adjust subtitle track synchronization for HW decoder.
+Appearance
+Text
+Subtitle text settings: font, size, color, border, etc.
+Layout
+Subtitle layout settings: alignment, padding, background color.
+Font Folder
+/storage/emulated/0
+Text processing
+Italic effect
+Sentences that start with "/" (forward slash) will be displayed in italics.
+Force LTR direction
+Force LTR (Left to Right) direction for RTL (Right to Left) subtitles.
+
+## settings_Subtitle_00_Subtitle_Folder_dialog
+6:33
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Select Subtitle Folder
+/storage/emulated/0/Subtitles
+(Folder up)
+CANCEL
+OK
+
+## settings_Subtitle_01_Character_encoding_dialog
+Character encoding
+Auto detect
+Arabic (ISO-8859-6)
+Arabic (Cp1256)
+Baltic (Cp1257)
+Baltic (ISO-8859-13)
+Baltic, Scandinavia (ISO-8859-4)
+Celtic (ISO-8859-14)
+Central European, Slavic (ISO-8859-2)
+Chinese, Simplified (MS936)
+Chinese, Simplified (GB18030)
+Chinese, Simplified (EUC_CN)
+Chinese, Simplified (GBK)
+Chinese, Traditional (MS950)
+Chinese, Traditional (Hong Kong) (MS950_HKSCS)
+Chinese, Traditional (Big5)
+CANCEL
+6:33
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_Subtitle_02_Preferred_subtitle_language_dialog
+Preferred subtitle language
+Af-Soomaali [so]
+Afrikaans [af]
+Akan [ak]
+Aragonés [an]
+Aymar aru [ay]
+Azərbaycanca [az]
+Bahasa Indonesia [in]
+Bahasa Melayu [ms]
+Basa Jawa [jv]
+Basa Sunda [su]
+Bosanski [bs]
+Brezhoneg [br]
+Català [ca]
+Chewa [ny]
+CLEAR
+CANCEL
+OK
+6:33
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## settings_Subtitle_03_Default_sync_dialog
+Default sync
+Enter seconds. E.g., 1.6
+0.0
+CANCEL
+OK
+6:33
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## settings_Subtitle_04_Sync_for_HW_decoder_dialog
+Sync for HW decoder
+Enter seconds. E.g., 1.6
+0.0
+CANCEL
+OK
+6:33
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+
+## settings_Subtitle_05_Text_dialog
+6:33
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Text
+Font
+Default
+Size
+7.0
+23
+Scale
+10.0
+100%
+Color
+Bold
+Background Color
+Border
+3.0
+80%
+Improve stroke rendering
+Shadow
+Fade out
+Improve SSA rendering
+Improve the rendering of complex scripts
+Ignore font specified in SSA subtitles
+Ignore broken fonts specified in SSA subtitles (experimental)
+CANCEL
+OK
+
+## settings_Subtitle_06_Layout_dialog
+6:33
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Layout
+Alignment
+Center
+Bottom margins
+8.0
+8
+Background
+Fit subtitles into video size
+CANCEL
+OK
+
+## settings_Subtitle_07_Font_Folder_dialog
+6:33
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Select font folder
+/storage/emulated/0
+(Folder up)
+Alarms
+Android
+Audiobooks
+DCIM
+Documents
+Download
+Movies
+Music
+MxPlayerPro
+Notifications
+Pictures
+Podcasts
+Recordings
+Ringtones
+CANCEL
+OK
+
+## settings_05_General_p0
+6:34
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+General
+App Language
+System default
+Play media links
+Play HTTP/HTTPS media links. This option can interfere with file downloading.
+Http User-Agent
+Override 'User-Agent' on connecting to web server. Leave blank to use default value.
+Quit Button
+Display Quit button on the menu. This will terminate the app completely unlike 'back' or 'home' button.
+Edit
+Allow editing
+Enable edit menu which allows you to delete or rename files and folders.
+Delete subtitle files together
+User data
+Clear history
+Clear all user activity records, including playback and search history.
+Clear thumbnail cache
+Clear thumbnails cached on the sdcard. Thumbnails will be generated again when media list is opened.
+Cache thumbnail
+
+## settings_05_General_p1
+6:34
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+General
+Display Quit button on the menu. This will terminate the app completely unlike 'back' or 'home' button.
+Edit
+Allow editing
+Enable edit menu which allows you to delete or rename files and folders.
+Delete subtitle files together
+User data
+Clear history
+Clear all user activity records, including playback and search history.
+Clear thumbnail cache
+Clear thumbnails cached on the sdcard. Thumbnails will be generated again when media list is opened.
+Cache thumbnail
+Clear font cache
+Clear font cache for SubStation Alpha subtitle in case of corruption.
+Reset settings
+Reset all settings to their default condition.
+Export
+Export settings and activity records to a file.
+Import
+Import settings and activity records from a file.
+
+## settings_General_00_App_Language_dialog
+6:34
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+App Language
+System default
+Afrikaans [af]
+Azərbaycanca [az]
+Bahasa Indonesia [in]
+Bahasa Melayu [ms]
+Català [ca]
+Dansk [da]
+Deutsch [de]
+Eesti [et]
+English [en]
+Español [es]
+Euskara [eu]
+Français [fr]
+Hrvatski [hr]
+Italiano [it]
+CANCEL
+
+## settings_General_02_Http_User-Agent_dialog
+Http User-Agent
+MXPlayer/1.93.4 (Linux; Android 14; en-US; sdk_gphone64_x86_64 Build/sdk_gphone64_x86_64-userdebug 14 UE1A.230829.050 12077443 dev-keys)
+RESET
+CANCEL
+OK
+6:34
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## settings_06_Development_p0
+6:35
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Development
+Log OpenSubtitles.org operations
+
+## settings_07_App_Language_dialog
+6:35
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+App Language
+System default
+Afrikaans [af]
+Azərbaycanca [az]
+Bahasa Indonesia [in]
+Bahasa Melayu [ms]
+Català [ca]
+Dansk [da]
+Deutsch [de]
+Eesti [et]
+English [en]
+Español [es]
+Euskara [eu]
+Français [fr]
+Hrvatski [hr]
+Italiano [it]
+CANCEL
+
+## player0_playing
+
+
+## player0_controls
+6:36
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Navigate up
+sample_h264
+Audio Track
+Subtitles
+HW
+1X
+00:08
+8462.0
+01:00
+
+## player0_btn0_Audio_Track
+Audio Track
+Audio track #1
+Disable
+Use SW audio decoder
+Open
+Stereo mode
+Synchronization
+AV sync
+
+## player0_btn0_Audio_Track_panel_p0
+Audio Track
+Audio track #1
+Disable
+Use SW audio decoder
+Open
+Stereo mode
+Synchronization
+AV sync
+
+## player0_btn0_Audio_Track_panel_p1
+
+
+## player0_btn0_Audio_Track_sub1_Open
+6:36
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+sample_h264
+Audio Track
+Subtitles
+HW
+1X
+00:08
+8462.0
+01:00
+
+## player0_btn0_Audio_Track_sub2_Stereo_mode
+Audio Track
+Audio track #1
+Disable
+Use SW audio decoder
+Open
+Stereo mode
+Synchronization
+AV sync
+
+## player0_btn1_Subtitles
+Subtitle
+Open
+Online subtitles
+AI Subtitle Translation
+Synchronization
+Speed
+Panel
+Customization
+
+## player0_btn1_Subtitles_panel_p0
+Subtitle
+Open
+Online subtitles
+AI Subtitle Translation
+Synchronization
+Speed
+Panel
+Customization
+
+## player0_btn1_Subtitles_panel_p1
+
+
+## player0_btn1_Subtitles_sub0_Subtitle
+Navigate up
+sample_h264
+Audio Track
+Subtitles
+HW
+1X
+00:12
+12332.0
+01:00
+6:36
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+
+## player0_btn1_Subtitles_sub1_Open
+Open subtitle file
+/sdcard/Movies
+(Folder up)
+.thumbnails
+sample_subs.srt
+
+## player0_btn1_Subtitles_sub2_Online_subtitles
+
+
+## player0_btn1_Subtitles_sub3_AI_Subtitle_Translation
+Subtitle
+Open
+Online subtitles
+AI Subtitle Translation
+Synchronization
+Speed
+Panel
+Customization
+
+## player0_btn1_Subtitles_sub4_Panel
+6:37
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Navigate up
+sample_h264
+Audio Track
+Subtitles
+HW+
+1X
+00:49
+49819.0
+01:00
+
+## player0_btn1_Subtitles_sub5_Customization
+Subtitles Customization
+Layout
+Alignment
+Center
+Bottom margins
+8.0
+8
+Background
+Fit subtitles into video size
+Text
+Font
+Default
+Size
+6.0
+22
+
+## player0_btn2_HW
+6:37
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Select decoder
+HW decoder
+HW+ decoder
+SW decoder
+
+## player0_btn2_HW_panel_p0
+6:37
+Android System notification:
+Wifi signal full.
+Phone signal full.
+Battery charging, 100 percent.
+Select decoder
+HW decoder
+HW+ decoder
+SW decoder
+
+## player0_btn3_iv_more_icon
+Aspect Ratio
+2.0X
+Speed FF
+(Long Press)
+Display Settings
+Playlists
+Network Stream
+Information
+Share
+Cut
+Bookmark
+Tutorial
+More
+Video Display
+Shortcuts
+
+## player0_btn4_00_08
+6:37
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Navigate up
+sample_h264
+Audio Track
+Subtitles
+HW+
+1X
+00:53
+53827.0
+01:00
+
+## player0_btn5_01_00
+6:37
+Android System notification:
+Wifi signal full.
+Phone three bars.
+Battery charging, 100 percent.
+Navigate up
+sample_h264
+Audio Track
+Subtitles
+HW+
+1X
+00:53
+53827.0
+-00:07
+
+## player0_btn6_lock
+
+
+## player0_btn7_prev
+
+
+## player0_btn8_playpause
+
+
+## player0_btn9_next
+
+
+## player0_btn10_zb_left
+
+
+## player0_btn11_zb_right
+
+
+## player0_longpress
+
+
+## player0_dtap_left
+
+
+## player0_dtap_right
+
+
+## player0_swipe_right_side
+
+
+## player0_swipe_left_side
+
+
+## player0_swipe_seek
+
+

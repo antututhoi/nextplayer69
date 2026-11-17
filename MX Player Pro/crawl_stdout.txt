@@ -1,0 +1,274 @@
+start MX Player Pro player com.mxtech.videoplayer.pro 1080 2400
+!! ANR / crash dialog: ["Pixel Launcher isn't responding"]
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+ PAGE settings
+   - List
+   - Player
+   - Decoder
+   - Audio
+   - Subtitle
+   - General
+   - Development
+   - App Language
+ opened List -> ['6:21', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+   PAGE List
+     - Theme
+     - [switch on] Last media in each folder | Mark last played media in each folder.
+     - [switch off] Scroll down to last media | Auto-scroll to position of the last played media.
+     - [switch off] Select thumbnail | Switch to selection mode by touching the thumbnail or icon.
+     - [switch on] Floating button | Place a floating button on the bottom right corner of the screen to start last played media.
+     - Period tagged as "NEW" | "NEW" tag will be displayed if the file was modified within this period.
+     - Folders | Select folders to be included in the media library.
+     - File extensions | Select file extensions for folder scanning. It is possible to configure decoders per extension types.
+     - [switch on] Recognize .nomedia | Exclude any media file from a video list if a ".nomedia" file exists in that folder or a parent folder.
+     - [switch off] Show hidden files and folders | Show hidden folders and files starting with "." (dot).
+   opened Theme -> ['6:21', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'App Theme']
+     PAGE List > Theme
+       - Using | Adaptive
+       - Dark Theme
+       - Light Theme
+       - Amoled Black
+     opened Using -> ['App Theme', 'Using', 'Adaptive', 'Dark Theme', 'Light Theme', 'Amoled Black']
+     opened Dark Theme -> ['App Theme', 'Adaptive', 'Using', 'Dark Theme', 'Light Theme', 'Amoled Black']
+     opened Light Theme -> ['App Theme', 'Adaptive', 'Dark Theme', 'Using', 'Light Theme', 'Amoled Black']
+     opened Amoled Black -> ['App Theme', 'Adaptive', 'Dark Theme', 'Light Theme', 'Using', 'Amoled Black']
+   opened Period tagged as "NEW" -> ['6:22', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Period tagged as "NEW"']
+   opened Folders -> ['6:22', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'List']
+     PAGE List > Folders
+       - /mnt
+       - /storage
+       - /storage/emulated/0
+       - /storage/emulated/0/Notifications
+       - /storage/emulated/0/Ringtones
+       - ADD
+       - HIDE
+       - REMOVE
+     opened /mnt -> ['6:23', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+     opened /storage -> ['6:23', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+     opened /storage/emulated/0 -> ['6:23', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+     opened /storage/emulated/0/Notifications -> ['6:23', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+     opened /storage/emulated/0/Ringtones -> ['6:23', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+     opened ADD -> ['Choose your folder', '/storage/emulated/0', '(Folder up)', 'Alarms', 'Android', 'Audiobooks']
+     opened HIDE -> ['6:23', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'List']
+     skip REMOVE
+   skip (long list) File extensions
+ opened Player -> ['6:24', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Player']
+   PAGE Player
+     - Theme
+     - Style
+     - Screen | Screen settings: Orientation, Full Screen, Brightness, etc.
+     - Controls | Input controls: Touch actions, gestures, lock mode, etc.
+     - Navigation | Navigation settings: seeking settings, forward/backward buttons, etc.
+     - [switch off] Double-tap the back button | Press the back button twice to close playback screen.
+     - [switch on] Quick zoom | Skip zoom steps between 100% and 'fit to screen' (150%, 200%, etc).
+     - Resume | Select whether to resume from the point where you stopped.
+     - [switch off] Resume only the first file | Apply resume setting only on the first file. Next files will start from the beginning.
+     - Default playback speed
+     - [switch on] Remember selections | Remember selections for each files such as choice of audio track, subtitle track, decoder…
+     - [switch off] Back to list | Return to the list after playback is completed.
+     - [switch on] Preview while seeking | Display preview image while changing playback position.
+     - Preview while seeking (network) | Display preview image for network play.
+     - [switch on] Fast seeking | Seek to nearest key-frame position instead of exact position. This setting applies to HW+ and SW decoder.
+     - [switch on] Play alone | Stop other players while playing back videos or audios. It also makes MX Player stop if other players begin to play or you make a phone call.
+     - [switch on] Media buttons | Respond to media control buttons from headset, Bluetooth, etc.
+     - [switch on] Double/Triple Press → Next/Prev | Treat Double/Triple press events as Next/Prev
+     - [switch off] Next/Prev → FF/Rew | Treat Next/Prev media buttons as FF/Rew button.
+     - [switch off] Toggle playback with play button | Toggle playback in response to 'play' media button. This option is useful only for devices having trouble with the play button.
+     - [switch on] Smart Previous Button | If you select 'previous' button, it will resume again from the beginning or open the previous file depending upon the current playback position.
+     - [switch off] Suppress error message | Skip to next video without displaying error message if video loading fails.
+     - [switch on] Use custom Picture-in-Picture popup | Use custom Picture-in-Picture resizable popup.
+     - Background/PiP mode | Allows you to control the player behavior when switching to another app.
+     - [switch on] Background play (audio) | Use Background play for audio playback.
+     - [switch on] Album art | Display cover art on the lock screen.
+     - [switch on] If you select 'previous' button, it will resume again from the beginning or open the previous file depending upon the current playback position.
+     - [switch off] Smooth switch | Fade in and out audio when switching to and return back from background play.
+     - Video resizing delay | Set delay time for resizing videos on hardware decoders. Set higher value if screen flickers severely or freezes while resizing.
+     - [switch off] Limit Video Resizing | Do not increase video size if it exceeds its display size. (HW decoder only)
+     - [switch on] Turn off button backlight | Turn off main buttons' back-light during playback. (If back-light keeps turning on in spite of this option, uncheck this option and reboot device if necessary)
+     - [switch on] Loading circle animation
+     - [switch on] Software navigation buttons | This device has software navigation buttons. (back, home, menu, etc.) Check this option if buttons are not hidden automatically.
+     - [switch off] Android 4.0 compatible mode | Use this mode if you have problem with screen layout.
+   opened Theme -> ['6:25', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Theme']
+   opened Style -> ['6:25', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Style']
+   opened Screen -> ['6:25', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Screen']
+   opened Controls -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     PAGE Player > Controls
+       - Show/hide interface
+       - Change sound volume
+       - Lock
+       - Seek position
+       - Zoom and Pan
+       - Video zoom
+       - Video pan
+       - Volume
+       - Brightness
+       - Play/Pause
+(Double tap)
+       - Video zoom
+(Double tap)
+       - FF/RW
+(Double tap)
+       - Speed FF
+(Long press)
+       - Playback Speed
+       - Subtitle scroll
+       - Subtitle up/down
+       - Subtitle zoom
+       - Screen Rotation
+       - Background Play
+       - Loop
+       - Mute
+       - Shuffle
+       - Equalizer
+       - Sleep Timer
+       - A - B Repeat
+       - Night Mode
+       - Customise Items
+       - Screenshot
+       - [switch on] Interface
+auto hide
+       - Show interface when locked screen is touched
+     opened Show/hide interface -> ['6:26', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Show Interface → Pause/Resume']
+     opened Change sound volume -> ['6:26', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Change sound volume']
+     opened Lock -> ['Lock', 'Kids lock', 'Kids lock (+Touch effects)', '6:26', 'Android System notification:', 'Wifi signal full.']
+     opened Seek position -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Zoom and Pan -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Video zoom -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Video pan -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Volume -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Brightness -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Play/Pause
+(Double tap) -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Video zoom
+(Double tap) -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened FF/RW
+(Double tap) -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Speed FF
+(Long press) -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Playback Speed -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Subtitle scroll -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Subtitle up/down -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Subtitle zoom -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Screen Rotation -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Background Play -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Loop -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Mute -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Shuffle -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Equalizer -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Sleep Timer -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened A - B Repeat -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Night Mode -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Customise Items -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Screenshot -> ['Controls', 'Touch action', 'Show/hide interface', 'Key up/down action', 'Change sound volume', 'Lock mode']
+     opened Show interface when locked screen is touched -> ['Controls', 'Key up/down action', 'Change sound volume', 'Lock mode', 'Lock', 'Gestures']
+   opened Navigation -> ['6:28', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Navigation']
+   opened Resume -> ['6:28', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Resume']
+   opened Default playback speed -> ['6:29', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Default playback speed']
+   opened Preview while seeking (network) -> ['6:29', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Preview while seeking (network)']
+   opened Background/PiP mode -> ['6:29', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Background/PiP mode']
+   opened Video resizing delay -> ['6:29', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Video resizing delay']
+ opened Decoder -> ['Decoder', 'Hardware decoder', 'HW+ decoder (local)', 'Set HW+ decoder as the default hardware decoder for local files.', 'HW+ decoder (network)', 'Set HW+ decoder as the default hardware decoder for network play.']
+   PAGE Decoder
+     - [switch off] HW+ decoder (local) | Set HW+ decoder as the default hardware decoder for local files.
+     - [switch off] HW+ decoder (network) | Set HW+ decoder as the default hardware decoder for network play.
+     - [switch on] Try HW decoder | Try HW decoder if HW+ decoder fails.
+     - [switch on] Try HW+ decoder | Try HW+ decoder if HW decoder fails.
+     - HW+ video codecs | Select video codecs to be used with HW+ decoder.
+     - HW+ audio codecs | Select audio codecs to be used with HW+ decoder.
+     - [switch on] HW+ audio on SW video | Use HW+ audio decoder if SW audio decoder fails in SW decoding mode.
+     - [switch on] Correct aspect ratio | Correct aspect ratio of HW decoded videos. Use this option if HW decoder ignores aspect ratio.
+     - Calibrate playback position | Enter seconds to adjust playback position of HW decoder. This is useful when playback position is displayed incorrectly.
+     - Enter seconds to adjust playback position of HW decoder. This is useful when playback position is displayed incorrectly.
+     - [switch on] HW audio track selectable | Turn it off only if HW decoder crashes immediately after changing audio track or playing videos using an unsupported audio codec. If this option is turned off, custom audio codecs will not be used automatically with HW decoder.
+     - [switch off] SW decoder (local) | Use SW decoder for local files stored on the device.
+     - [switch off] SW decoder (network) | Use SW decoder for network play from remote sources via HTTP, FTP, RTSP, MMS and more.
+     - [switch off] SW audio | Use SW audio decoder instead of HW audio decoder.
+     - [switch off] SW audio (local) | Use SW audio decoder for playing for local files stored on the device.
+     - [switch off] SW audio (network) | Use SW audio decoder for playing remote network sources.
+     - CPU Core Limit | Specify the maximum number of CPU cores to be used for SW decoding.
+     - Color format | YUV is experimental and does not work on all devices.
+     - [switch off] Use SW decoder for local files stored on the device.
+     - [switch off] Use speedup tricks
+     - Deinterlace | Deinterlace by default. Currently deinterlacing works only with SW decoder.
+     - Custom codec | Use Unknown type custom codec.
+   opened HW+ video codecs -> ['6:30', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'HW+ video codecs']
+   opened HW+ audio codecs -> ['6:30', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'HW+ audio codecs']
+   skip Calibrate playback position
+   opened Enter seconds to adjust playback position of HW decoder. This is useful when playback position is displayed incorrectly. -> ['6:30', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Calibrate playback position']
+   opened CPU Core Limit -> ['6:31', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'CPU Core Limit']
+   skip Color format
+   opened Deinterlace -> ['6:31', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Deinterlace']
+   opened Custom codec -> ['6:31', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Select codec file']
+ opened Audio -> ['6:31', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Audio']
+   PAGE Audio
+     - [switch off] Audio player | Use as audio player.
+     - Audio output | Change the method that MX uses to output audio.
+     - [switch on] Volume boost | Audio volume can be boosted up to 200% if you use HW+ or SW decoder.
+     - [switch on] System volume | Synchronize sound volume with the system media volume.
+     - [switch on] System volume panel | Show system volume panel while changing volume with the headset plugged in.
+     - [switch on] Pause on headset disconnected | Pause playback when wired/Bluetooth headset disconnected from the device.
+     - [switch on] Fade on start
+     - [switch on] Fade on seek
+     - Preferred audio language | Language of the audio track you want to use. It may not be used with HW decoder.
+     - Audio delay | Set audio delay time for audio synchronization. It may not be used with HW decoder.
+     - Bluetooth audio delay | Set Bluetooth audio delay time for audio synchronization. It may not be used with HW decoder.
+     - [switch on] Prefer audio passthrough mode | Whenever possible, prefer audio passthrough mode over internal decoders. It allows you to pass the source's audio signal to an external receiver directly. It may not be used with HW decoder.
+     - [switch off] Audio equalizer
+   opened Audio output -> ['Audio output', 'Auto select', 'OpenSL', 'Java AudioTrack', 'AAudio', 'CANCEL']
+   opened Preferred audio language -> ['6:32', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Preferred audio language']
+   opened Audio delay -> ['6:32', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Audio delay']
+   opened Bluetooth audio delay -> ['6:32', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Bluetooth audio delay']
+ opened Subtitle -> ['6:32', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Subtitle']
+   PAGE Subtitle
+     - Subtitle Folder | /storage/emulated/0/Subtitles
+     - Character encoding | Select character encoding of your subtitle file.
+     - Preferred subtitle language | Language of the subtitle track you want to use. It may not be used with HW decoder.
+     - Default sync | Set default time adjustment for subtitle track synchronization.
+     - Sync for HW decoder | Adjust subtitle track synchronization for HW decoder.
+     - Text | Subtitle text settings: font, size, color, border, etc.
+     - Layout | Subtitle layout settings: alignment, padding, background color.
+     - Font Folder | /storage/emulated/0
+     - [switch off] Italic effect | Sentences that start with "/" (forward slash) will be displayed in italics.
+     - [switch on] Force LTR direction | Force LTR (Left to Right) direction for RTL (Right to Left) subtitles.
+   opened Subtitle Folder -> ['6:33', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Select Subtitle Folder']
+   opened Character encoding -> ['Character encoding', 'Auto detect', 'Arabic (ISO-8859-6)', 'Arabic (Cp1256)', 'Baltic (Cp1257)', 'Baltic (ISO-8859-13)']
+   opened Preferred subtitle language -> ['Preferred subtitle language', 'Af-Soomaali [so]', 'Afrikaans [af]', 'Akan [ak]', 'Aragonés [an]', 'Aymar aru [ay]']
+   opened Default sync -> ['Default sync', 'Enter seconds. E.g., 1.6', '0.0', 'CANCEL', 'OK', '6:33']
+   opened Sync for HW decoder -> ['Sync for HW decoder', 'Enter seconds. E.g., 1.6', '0.0', 'CANCEL', 'OK', '6:33']
+   opened Text -> ['6:33', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Text']
+   opened Layout -> ['6:33', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Layout']
+   opened Font Folder -> ['6:33', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Select font folder']
+ opened General -> ['6:34', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'General']
+   PAGE General
+     - App Language | System default
+     - [switch on] Play media links | Play HTTP/HTTPS media links. This option can interfere with file downloading.
+     - Http User-Agent | Override 'User-Agent' on connecting to web server. Leave blank to use default value.
+     - [switch off] Quit Button | Display Quit button on the menu. This will terminate the app completely unlike 'back' or 'home' button.
+     - [switch on] Allow editing | Enable edit menu which allows you to delete or rename files and folders.
+     - [switch on] Delete subtitle files together
+     - Clear history | Clear all user activity records, including playback and search history.
+     - Clear thumbnail cache | Clear thumbnails cached on the sdcard. Thumbnails will be generated again when media list is opened.
+     - [switch on] Cache thumbnail
+     - [switch off] Display Quit button on the menu. This will terminate the app completely unlike 'back' or 'home' button.
+     - Clear font cache | Clear font cache for SubStation Alpha subtitle in case of corruption.
+     - Reset settings | Reset all settings to their default condition.
+     - Export | Export settings and activity records to a file.
+     - Import | Import settings and activity records from a file.
+   opened App Language -> ['6:34', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'App Language']
+   opened Http User-Agent -> ['Http User-Agent', 'MXPlayer/1.93.4 (Linux; Android 14; en-US; sdk_gphone64_x86_64 Build/sdk_gphone64_x86_64-userdebug 14 UE1A.230829.050 12077443 dev-keys)', 'RESET', 'CANCEL', 'OK', '6:34']
+   skip Clear history
+   skip Clear thumbnail cache
+   skip Clear font cache
+   skip Reset settings
+   skip Export
+   skip Import
+ opened Development -> ['6:35', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Development']
+   PAGE Development
+     - [switch off] Log OpenSubtitles.org operations
+ opened App Language -> ['6:35', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'App Language']
+dismiss: Got it
+player0 buttons: ['Audio Track', 'Subtitles', 'HW', 'iv_more_icon', '00:08', '01:00', 'lock', 'prev', 'playpause', 'next', 'zb_left', 'zb_right']
+done 128 screenshots 1484 s

@@ -1,0 +1,4 @@
+package: name='com.mxtech.videoplayer.pro' versionCode='2001002584' versionName='1.93.4' platformBuildVersionName='14' platformBuildVersionCode='34' compileSdkVersion='34' compileSdkVersionCodename='14'
+sdkVersion:'21'
+application-label:'MX Player Pro'
+native-code: 'arm64-v8a'
