@@ -33,10 +33,10 @@ for apk in apks/*.apk; do
   adb logcat -c
   adb shell "screenrecord --size 540x1200 --bit-rate 600000 --time-limit 170 /sdcard/first_$name.mp4" < /dev/null > /dev/null 2>&1 &
   BUDGET_MIN="${BUDGET_MIN:-70}" python3 .phone69/crawl.py "$out/crawl" "$name" "$kind" "$pkg" < /dev/null > "$out/crawl_stdout.txt" 2>&1
-  adb logcat -d -t 20000 > "$out/logcat.txt" 2>&1
+  timeout 90 adb logcat -d -t 20000 > "$out/logcat.txt" 2>&1
   grep -n -A25 "FATAL EXCEPTION\|ANR in $pkg" "$out/logcat.txt" > "$out/crashes.txt" 2>/dev/null || echo "no crashes" > "$out/crashes.txt"
   grep -c "FATAL EXCEPTION" "$out/logcat.txt" | sed "s/^/$name crashes: /"
-  adb pull "/sdcard/first_$name.mp4" "$out/" < /dev/null > /dev/null 2>&1
-  adb shell am force-stop "$pkg" < /dev/null
+  timeout 60 adb pull "/sdcard/first_$name.mp4" "$out/" < /dev/null > /dev/null 2>&1
+  timeout 30 adb shell am force-stop "$pkg" < /dev/null
 done
 exit 0

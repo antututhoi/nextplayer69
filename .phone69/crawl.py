@@ -75,6 +75,8 @@ def dump():
         if D is not None:
             try: root = ET.fromstring(D.dump_hierarchy(compressed=False))
             except Exception as e:
+                if "not found" in repr(e) or "offline" in repr(e):
+                    L("the virtual phone is gone, stopping:", repr(e)[:80]); sys.exit(0)
                 if k == 3: L("   (screen could not be read:", repr(e)[:80], ")")
         if root is None:
             adb("shell", "rm", "-f", "/sdcard/u.xml")
@@ -324,7 +326,7 @@ def player_extra():
             if is_dialog(r2) or len(rows(r2, 0, H)) > len(rows(r, 0, H)) + 1:
                 page_scroll(f"{p}_btn{i}_{d}_panel", 3)
                 for j, row in enumerate([q for q in rows(r2, 0, H) if q["title"] not in set(texts(r))][:8]):
-                    if SKIP.search(row["title"]) or row["checkable"]: continue
+                    if SKIP.search(row["title"]) or row["checkable"] or re.search("decoder", row["title"], re.I): continue
                     x1, y1, x2, y2 = row["b"]; tap((x1 + x2) // 2, (y1 + y2) // 2); shot(f"{p}_btn{i}_{d}_sub{j}_{row['title']}"); back()
                     if find(re.escape(row["title"])) is None: tap(x, y)
                 back()
@@ -341,7 +343,7 @@ def player_extra():
 
 L("start", APP, KIND, PKG, W, H)
 launch(); dismiss(8); shot("first_run")
-for part in ([main_screen] + ([files_extra] if KIND == "files" else []) + ([player_extra] if KIND == "player" else []) + [lambda: crawl_page([], 0)]):
+for part in ([main_screen] + ([files_extra] if KIND == "files" else []) + [lambda: crawl_page([], 0)] + ([player_extra] if KIND == "player" else [])):
     try: part()
     except Exception as e: L("part failed", repr(e))
 L("done", shots, "screenshots", int(time.time() - T0), "s")
