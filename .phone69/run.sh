@@ -22,7 +22,7 @@ python3 -c "import uiautomator2 as u; d=u.connect(); print(d.info.get('displayWi
 AAPT=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)aapt
 for apk in apks/*.apk; do
   name=$(basename "$apk" .apk)
-  kind=$(grep "^$name|" .phone69/apps.txt | head -1 | cut -d'|' -f2 | xargs); kind=${kind:-other}
+  kind=$(grep -F "$name |" .phone69/apps.txt | head -1 | cut -d'|' -f2 | xargs); kind=${kind:-other}
   pkg=$("$AAPT" dump badging "$apk" 2>/dev/null | sed -n "s/^package: name='\([^']*\)'.*/\1/p")
   out="$PWD/out69/$name"; mkdir -p "$out"
   "$AAPT" dump badging "$apk" 2>/dev/null | grep -E "^package|sdkVersion|native-code|application-label:" > "$out/apk-info.txt"

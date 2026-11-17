@@ -126,7 +126,9 @@ def rows(root, top=None, bottom=None):
         tog = None
         for k in n.iter("node"):
             c = k.get("class", "")
-            if re.search(r"Switch|CheckBox|RadioButton|ToggleButton", c) or k.get("checked") == "true":
+            kx1, ky1, kx2, ky2 = bounds(k)
+            # a real switch / tick box is a small thing inside the row (Compose marks whole rows as "checkable")
+            if (re.search(r"Switch|CheckBox|RadioButton|ToggleButton", c) or k.get("checked") == "true") and (kx2 - kx1) < W * .3:
                 tog = "on" if k.get("checked") == "true" else "off"; break
         res.append(dict(title=t[0], all=t, b=(x1, y1, x2, y2), checkable=tog is not None, state=tog))
     return res
@@ -189,7 +191,7 @@ def on_page(titles):
 
 def open_settings():
     if tap_text("settings"): return True
-    for rx in ("more options", "more", "menu", "open navigation drawer", "navigate up", "open drawer"):
+    for rx in ("account", "me", "more options", "more", "menu", "open navigation drawer", "navigate up", "open drawer"):
         if tap_text(rx):
             time.sleep(.8)
             if tap_text("settings"): return True
