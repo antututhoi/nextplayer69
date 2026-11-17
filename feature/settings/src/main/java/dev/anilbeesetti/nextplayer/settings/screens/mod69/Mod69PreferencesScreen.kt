@@ -551,6 +551,31 @@ private fun Mod69PreferencesContent(
                     onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69MarkLastInFolder = !it.mod69MarkLastInFolder) }) },
                     isFirstItem = true,
                 )
+                val mod69HidCtx = androidx.compose.ui.platform.LocalContext.current
+                var mod69Hidden by remember {
+                    mutableStateOf(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69HiddenScan.showHidden(mod69HidCtx))
+                }
+                PreferenceSwitch(
+                    title = "Show hidden files and folders",
+                    description = "Also lists videos in dot-folders and in folders with a .nomedia file " +
+                        "(needs All files access; pull down in the list to rescan)",
+                    icon = NextIcons.Folder,
+                    isChecked = mod69Hidden,
+                    onClick = {
+                        mod69Hidden = !mod69Hidden
+                        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69HiddenScan.setShowHidden(mod69HidCtx, mod69Hidden)
+                        if (mod69Hidden && !dev.anilbeesetti.nextplayer.core.common.mod69.Mod69HiddenScan.hasAccess()) {
+                            runCatching {
+                                mod69HidCtx.startActivity(
+                                    android.content.Intent(
+                                        android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                                        android.net.Uri.fromParts("package", mod69HidCtx.packageName, null),
+                                    ),
+                                )
+                            }
+                        }
+                    },
+                )
                 PreferenceSwitch(
                     title = "Scroll to the last watched video",
                     description = "When you open a folder",

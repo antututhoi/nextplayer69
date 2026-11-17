@@ -148,7 +148,15 @@ class MediaStoreMediaService(
     override suspend fun fetchVideos(folderPath: String?): List<MediaVideo> =
         withContext(Dispatchers.IO) {
             val local = if (SafLibrary.isVirtualPath(folderPath)) emptyList() else queryVideos(folderPath = folderPath)
-            local + SafLibrary.entriesUnder(context, folderPath).map { it.toMediaVideo() }
+            // 69 mod: hidden / .nomedia folders (MX "Show hidden files and folders")
+            val hidden = if (SafLibrary.isVirtualPath(folderPath)) {
+                emptyList()
+            } else {
+                val known = local.mapTo(HashSet()) { it.path }
+                dev.anilbeesetti.nextplayer.core.common.mod69.Mod69HiddenScan.entriesUnder(context, folderPath)
+                    .filter { it.path !in known }.map { it.toMediaVideo() }
+            }
+            local + hidden + SafLibrary.entriesUnder(context, folderPath).map { it.toMediaVideo() }
         }
 
     private fun SafLibrary.Entry.toMediaVideo() = MediaVideo(
