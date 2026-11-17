@@ -319,7 +319,9 @@ def player_extra():
             if over(): break
             if re.search(r"navigate up|^back$|close|exit", d, re.I) or SKIP.search(d): continue
             if x < W * .09 and y < H * .2: continue   # the back arrow
-            r = show(); base = sig(r); tap(x, y); time.sleep(.6)
+            resize()
+            if W < H: replay()
+            r = show(); base = sig(r); tap(x, y); time.sleep(.6); resize()
             if PKG not in focus(): shot(f"{p}_btn{i}_{d}_left_app"); replay(); continue
             if W < H: shot(f"{p}_btn{i}_{d}_closed_player"); replay(); continue
             r2 = dump(); shot(f"{p}_btn{i}_{d}")
@@ -327,7 +329,8 @@ def player_extra():
                 page_scroll(f"{p}_btn{i}_{d}_panel", 3)
                 for j, row in enumerate([q for q in rows(r2, 0, H) if q["title"] not in set(texts(r))][:8]):
                     if SKIP.search(row["title"]) or row["checkable"] or re.search("decoder", row["title"], re.I): continue
-                    x1, y1, x2, y2 = row["b"]; tap((x1 + x2) // 2, (y1 + y2) // 2); shot(f"{p}_btn{i}_{d}_sub{j}_{row['title']}"); back()
+                    x1, y1, x2, y2 = row["b"]; tap((x1 + x2) // 2, (y1 + y2) // 2); shot(f"{p}_btn{i}_{d}_sub{j}_{row['title']}"); back(); resize()
+                    if W < H or PKG not in focus(): replay(); show()
                     if find(re.escape(row["title"])) is None: tap(x, y)
                 back()
             if "player" not in focus().lower() and PKG not in focus(): ensure_app(); break
