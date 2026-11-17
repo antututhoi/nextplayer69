@@ -27,7 +27,8 @@ def resize():
     d = (adb("shell", "dumpsys", "window", "displays", out=True) or b"").decode(errors="ignore")
     m = re.search(r"cur=(\d+)x(\d+)", d)
     if m: W, H = int(m.group(1)), int(m.group(2))
-def over(limit=None): return time.time() - T0 > (limit or BUDGET)
+SLICE = [None]   # deadline for the settings section being walked, so one long page can't eat all the time
+def over(limit=None): return time.time() - T0 > (limit or BUDGET) or (SLICE[0] is not None and limit is not None and time.time() > SLICE[0])
 def tap(x, y, wait=1.3): adb("shell", "input", "tap", str(int(x)), str(int(y))); time.sleep(wait)
 def hold(x, y): adb("shell", "input", "swipe", str(int(x)), str(int(y)), str(int(x)), str(int(y)), "900"); time.sleep(1.3)
 try:
@@ -222,9 +223,15 @@ def crawl_page(path, depth=0, maxdepth=2):
     ents = list_entries(); titles = [e["title"] for e in ents]
     L("  " * depth, "PAGE", " > ".join(path) or "settings")
     for e in ents: L("  " * depth, "  -", ("[switch " + e["state"] + "] " if e["checkable"] else "") + " | ".join(e["all"][:4]))
+    ents = ents[:45]
     for i, e in enumerate(ents):
+        if depth == 0: SLICE[0] = None
         if over(BUDGET * .7): return
+        if depth == 0:
+            left = BUDGET * .7 - (time.time() - T0)
+            SLICE[0] = time.time() + max(120, left / max(1, len(ents) - i))
         if e["checkable"]: continue
+        if re.search(r"file extensions", e["title"], re.I): L("  " * depth, "skip (long list)", e["title"]); continue
         if SKIP.search(e["title"]): L("  " * depth, "skip", e["title"]); continue
         if i and not on_page(titles) and not goto(path): L("cannot reach", path); return
         if not find_and_tap(e["title"]): L("  " * depth, "cannot find", e["title"]); continue
@@ -299,7 +306,9 @@ def files_extra():
 
 def player_extra():
     """play the sample videos; every button, panel and gesture overlay of the player screen"""
-    for k, f in enumerate(("sample_h264.mp4", "sample_subs.mkv")):
+    SLICE[0] = None
+    # the .mkv sample kills the virtual phone inside MX Player (its own decoder), so MX only gets the .mp4
+    for k, f in enumerate(("sample_h264.mp4",) if "MX" in APP else ("sample_h264.mp4", "sample_subs.mkv")):
         if over(): return
         adb("shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", "file:///sdcard/Movies/" + f, "-t", "video/*", "-p", PKG); time.sleep(6); dismiss(3)
         p = f"player{k}"; resize(); shot(p + "_playing")
