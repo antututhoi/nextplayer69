@@ -527,6 +527,10 @@ class PlayerService : MediaSessionService() {
         }
     }
 
+    // 69 mod: counts quick headset presses (1x play/pause, 2x next, 3x previous)
+    private var mod69Presses = 0
+    private val mod69PressHandler = android.os.Handler(android.os.Looper.getMainLooper())
+
     private val mediaSessionCallback = object : MediaSession.Callback {
         // 69 mod: headset / Bluetooth media buttons options
         override fun onMediaButtonEvent(
@@ -535,9 +539,35 @@ class PlayerService : MediaSessionService() {
             intent: Intent,
         ): Boolean {
             if (!playerPreferences.mod69MediaButtons) return true
-            if (!playerPreferences.mod69NextPrevAsSeek) return false
             @Suppress("DEPRECATION")
             val event = intent.getParcelableExtra<android.view.KeyEvent>(Intent.EXTRA_KEY_EVENT) ?: return false
+            val code = event.keyCode
+            if (playerPreferences.mod69PlayToggles && code == android.view.KeyEvent.KEYCODE_MEDIA_PLAY) {
+                if (event.action == android.view.KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                    val p = session.player
+                    if (p.isPlaying) p.pause() else p.play()
+                }
+                return true
+            }
+            if (playerPreferences.mod69MultiPress &&
+                (code == android.view.KeyEvent.KEYCODE_HEADSETHOOK || code == android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+            ) {
+                if (event.action == android.view.KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                    mod69Presses++
+                    mod69PressHandler.removeCallbacksAndMessages(null)
+                    mod69PressHandler.postDelayed({
+                        val p = session.player
+                        when (mod69Presses) {
+                            1 -> if (p.isPlaying) p.pause() else p.play()
+                            2 -> p.seekToNextMediaItem()
+                            else -> p.seekToPreviousMediaItem()
+                        }
+                        mod69Presses = 0
+                    }, 450L)
+                }
+                return true
+            }
+            if (!playerPreferences.mod69NextPrevAsSeek) return false
             val step = playerPreferences.seekIncrement * 1000L
             val forward = when (event.keyCode) {
                 android.view.KeyEvent.KEYCODE_MEDIA_NEXT, android.view.KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> true

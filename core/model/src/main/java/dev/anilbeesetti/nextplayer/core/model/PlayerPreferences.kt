@@ -105,6 +105,10 @@ data class PlayerPreferences(
     val mod69MediaButtons: Boolean = true,
     /** Headset next/previous buttons jump forward/back instead of changing video. */
     val mod69NextPrevAsSeek: Boolean = false,
+    /** MX "Double/Triple press → Next/Prev": headset button 1x play/pause, 2x next, 3x previous. */
+    val mod69MultiPress: Boolean = false,
+    /** MX "Toggle playback with play button": a "play" button press also pauses. */
+    val mod69PlayToggles: Boolean = false,
     /** Aspect ratio kept for all videos (width / height), 0 = each video's own. */
     val mod69AspectAll: Float = 0f,
     val mod69UserAgent: String = "",

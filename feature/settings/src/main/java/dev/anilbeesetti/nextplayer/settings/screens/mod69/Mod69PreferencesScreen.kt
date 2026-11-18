@@ -456,6 +456,20 @@ private fun Mod69PreferencesContent(
                     icon = NextIcons.SwipeHorizontal,
                     isChecked = p.mod69NextPrevAsSeek,
                     onClick = { player { it.copy(mod69NextPrevAsSeek = !it.mod69NextPrevAsSeek) } },
+                )
+                PreferenceSwitch(
+                    title = "Double / triple press → next / previous",
+                    description = "Headset button: press once to play/pause, twice for the next video, three times for the previous one",
+                    icon = NextIcons.Headset,
+                    isChecked = p.mod69MultiPress,
+                    onClick = { player { it.copy(mod69MultiPress = !it.mod69MultiPress) } },
+                )
+                PreferenceSwitch(
+                    title = "Play button also pauses",
+                    description = "For headsets that only send \"play\": pressing it again pauses",
+                    icon = NextIcons.Play,
+                    isChecked = p.mod69PlayToggles,
+                    onClick = { player { it.copy(mod69PlayToggles = !it.mod69PlayToggles) } },
                     isLastItem = true,
                 )
                 SectionSurface {
