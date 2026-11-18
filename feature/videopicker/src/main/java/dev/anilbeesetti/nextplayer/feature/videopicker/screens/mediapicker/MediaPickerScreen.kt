@@ -3,6 +3,7 @@ package dev.anilbeesetti.nextplayer.feature.videopicker.screens.mediapicker
 import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.statusBars
+import dev.anilbeesetti.nextplayer.feature.videopicker.composables.mod69AllowEditing
 import dev.anilbeesetti.nextplayer.feature.videopicker.composables.mod69HideActionLabels
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -242,6 +243,7 @@ internal fun MediaPickerScreenContent(
         (state.mediaDataState as? DataState.Success)?.value?.run { folders.size + videos.size } ?: 0
 
     mod69HideActionLabels = state.preferences.mod69HideActionLabels
+    mod69AllowEditing = state.preferences.mod69AllowEditing
     // 69 mod: Copy / Move remember the videos; browse to the place and tap "Paste here".
     // "Other place" opens the in-app folder picker instead.
     var mod69ShowPicker by remember { mutableStateOf(false) }
@@ -1412,7 +1414,7 @@ private fun SelectionActionsSheet(
                     title = stringResource(R.string.add_to_playlist),
                     onClick = onAddToPlaylistAction,
                 )
-                if (showRenameAction) {
+                if (showRenameAction && mod69AllowEditing) {
                     SelectionAction(
                         isTv = isTv,
                         imageVector = NextIcons.Edit,
@@ -1454,12 +1456,14 @@ private fun SelectionActionsSheet(
                         onClick = onHideAction,
                     )
                 }
-                SelectionAction(
-                    isTv = isTv,
-                    imageVector = NextIcons.Delete,
-                    title = stringResource(id = R.string.delete),
-                    onClick = onDeleteAction,
-                )
+                if (mod69AllowEditing) {
+                    SelectionAction(
+                        isTv = isTv,
+                        imageVector = NextIcons.Delete,
+                        title = stringResource(id = R.string.delete),
+                        onClick = onDeleteAction,
+                    )
+                }
             }
         }
     }

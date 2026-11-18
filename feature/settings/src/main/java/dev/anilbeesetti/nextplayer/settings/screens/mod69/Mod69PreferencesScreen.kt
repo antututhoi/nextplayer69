@@ -640,6 +640,13 @@ private fun Mod69PreferencesContent(
                     onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69TitleLeft = !it.mod69TitleLeft) }) },
                 )
                 PreferenceSwitch(
+                    title = "Allow editing",
+                    description = "Show Rename and Delete on the long-press bar. Turn off so nothing gets deleted by accident",
+                    icon = NextIcons.Edit,
+                    isChecked = a.mod69AllowEditing,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69AllowEditing = !it.mod69AllowEditing) }) },
+                )
+                PreferenceSwitch(
                     title = "Hide words on the long-press bar",
                     description = "Only icons in the bottom bar while marking, so all buttons fit",
                     icon = NextIcons.SelectAll,

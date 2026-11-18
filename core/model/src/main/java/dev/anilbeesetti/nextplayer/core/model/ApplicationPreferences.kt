@@ -53,6 +53,8 @@ data class ApplicationPreferences(
     val mod69ListBarAtBottom: Boolean = false,
     /** Hide the words under the buttons of the long-press (selection) bar. */
     val mod69HideActionLabels: Boolean = false,
+    /** MX "Allow editing": off hides Rename and Delete in the list, so nothing is deleted by accident. */
+    val mod69AllowEditing: Boolean = true,
     /** Folders always sorted A–Z by name, whatever the video sort is (like MX). */
     val mod69FoldersByName: Boolean = true,
     /** Video names left-aligned under grid thumbnails (like MX). */

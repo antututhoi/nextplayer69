@@ -67,3 +67,4 @@ internal fun SelectionAction(
 
 /** 69 mod: set from the list screen; hides the words under the selection bar icons. */
 internal var mod69HideActionLabels: Boolean = false
+internal var mod69AllowEditing: Boolean = true
