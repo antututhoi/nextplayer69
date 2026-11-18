@@ -1,0 +1,184 @@
+start 69-Next Player player dev.anilbeesetti.nextplayer.mod69 1080 2400
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+ PAGE settings
+   - 69 mod | Player look, list columns, MX-style options
+   - Appearance | Adjust the app to your liking
+   - Media library | Scan and manage media library
+   - Player | Player appearance, playback controls
+   - Gestures | Configure player touch gestures
+   - Audio | Audio playback options
+   - Subtitle | Subtitle appearance, playback options
+   - General | User data options
+   - About | Version, support, credits
+ opened 69 mod -> ['8:00', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Player look']
+   PAGE 69 mod
+     - Play controls at the bottom | Play/pause, previous and next sit in the bottom row (MX style) instead of the middle of the video
+     - Picture preview while seeking | Small picture above the seekbar while you drag it
+     - Progress line when controls are hidden | A thin bar along the bottom edge
+     - Progress line thickness | The thin line at the bottom while the buttons are hidden | 4.0 | 4 dp
+     - Title bar buttons in one ⋮ menu | Decoder, playlist, audio and subtitles go in a menu so the video title has room. Tap the title to read all of it
+     - 69- Row buttons in a side column | Row 1 and Row 2 go into a column at the side, in the middle of the screen, so you don't have to reach the top
+     - 69- Dark shade behind the buttons | A soft black fade behind the top, bottom and side buttons (like MX Player)
+     - Tools as a side column | A slim column at the screen edge instead of a big panel over the video
+     - Time in the top-left corner | Elapsed / total time while the controls are hidden
+     - Decoder, playlist, audio and subtitles go in a menu so the video title has room. Tap the title to read all of it
+     - Battery and clock in the top-right corner | While the controls are hidden
+     - Swap brightness and volume sides | Volume on the left, brightness on the right
+     - Dead zone at the screen edges | Swipes starting this close to the left/right edge are ignored (avoids the system back gesture) | 0.0 | 0%
+     - Chapter gaps on the seek bar | Off: one smooth bar (chapters are still in the chapter menu)
+     - Snap to chapters while dragging | The seek bar sticks to a chapter start when you get close to it
+     - Hold to fast forward | Press and hold the video to play faster, let go to go back
+     - Press back twice to close the player
+     - Resume only the video I opened | Next videos in the list start from the beginning
+     - Next videos in the list start from the beginning
+     - Show/hide controls
+     - [switch off] Play/pause
+     - Kids lock | While locked, back does nothing and the lock needs a long press to open
+     - Show controls when a video starts
+     - "Continue / Start over" bar | Shows when a video resumes, tap START OVER to play from the beginning
+     - Double-tap the middle to zoom | Double-tap the centre of the video to zoom in 2x, again to go back (sides still seek)
+     - Two fingers change the speed | Slide two fingers up for faster, down for slower (0.05x steps). Pinch still zooms
+     - Fast seeking | Jump to the nearest key frame. Faster, but less exact
+     - Loading circle | Spinner while the video buffers
+     - Suppress error messages | Skip to the next video instead of showing an error
+     - Media buttons | React to headset / Bluetooth buttons
+     - Next / previous buttons seek | Headset next/previous jump forward/back by the seek step instead of changing video
+     - Double / triple press → next / previous | Headset button: press once to play/pause, twice for the next video, three times for the previous one
+     - Play button also pauses | For headsets that only send "play": pressing it again pauses
+     - Save
+     - Headset button: press once to play/pause, twice for the next video, three times for the previous one
+     - Decoder (HW / SW)
+     - Playlist
+     - Chapters list
+     - Audio track
+     - Subtitle track
+     - Speed
+     - Screenshot
+     - Add bookmark
+     - Night mode
+     - Background play
+     - Rotate
+     - Loop
+     - Shuffle
+     - Popup / picture-in-picture
+     - Mute
+     - Equalizer
+     - Sleep timer
+     - A-B repeat
+     - Aspect ratio
+     - Zoom / fit
+     - Picture (colour, rotate, mirror)
+     - Information
+     - Subtitle look
+     - Cut / MP3
+     - Share
+     - Gesture help
+     - Lock
+     - Zoom mode
+   cannot find Play controls at the bottom
+   opened Picture preview while seeking -> ['8:02', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Player look']
+   opened Progress line when controls are hidden -> ['8:02', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Player look']
+   cannot find Progress line thickness
+ opened Appearance -> ['8:03', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Appearance']
+   PAGE Appearance
+     - Dark theme | System Default
+     - High contrast dark theme | Use pure black background for dark theme
+     - Dynamic color theme | Apply colors from system wallpaper to the application theme
+   opened Dark theme -> ['Dark theme', 'System Default', 'Off', 'On', 'Cancel', '8:03']
+   opened High contrast dark theme -> ['8:03', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Appearance']
+   opened Dynamic color theme -> ['8:03', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Appearance']
+ opened Media library -> ['Media library', 'Mark last played media', 'Mark last played media in home and in each folder', 'Mark newly added media as new', '7 days', '7.0']
+   PAGE Media library
+     - Mark last played media | Mark last played media in home and in each folder
+     - Mark newly added media as new | 7 days | 7.0
+     - Manage folders | Select folders to be excluded in the media library
+     - Watch history | Keep a record of videos you watch
+     - Network watch history | Include video played over the network in watch history.
+     - Thumbnail generation | Frame at position
+   opened Mark last played media -> ['8:04', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Media library']
+   opened Mark newly added media as new -> ['8:04', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Media library']
+   opened Manage folders -> ['8:04', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Excluded folders (0)']
+     PAGE Media library > Manage folders
+       - Add folder
+       - Choose from found folders
+     opened Add folder -> ['8:05', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'sdk_gphone64_x86_64']
+left the app ( com.google.android.documentsui ) - relaunching
+     skip Choose from found folders
+   opened Watch history -> ['8:05', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Turn off watch history']
+   opened Network watch history -> ['8:06', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Media library']
+   opened Thumbnail generation -> ['8:06', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Thumbnail generation strategy']
+     PAGE Media library > Thumbnail generation
+       - First frame | Use the first frame of the video
+       - Frame at position | Use frame at specific position in the video
+       - Hybrid (smart) | Attempts to use the first frame. If it's mostly a solid color, uses a frame from at specific position in the video instead
+       - Frame position | Frame at 33% of the video duration | 33.0 | Reset seek sensitivity
+ opened Player -> ['8:06', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Interface']
+   PAGE Player
+     - Material You controls | Use material you style controls
+     - Controller timeout | 4 seconds | 4.0 | Reset controller timeout
+     - Resume | Select whether to resume played videos from the point where you stopped
+     - Default playback speed | 1.0 | 1.0 | Reset default playback speed
+     - Autoplay | Automatically play the next video in the current folder
+     - Tunneled playback | Use tunneled playback when supported by the device and media. May improve Dolby Vision and HDR10+ playback on Android TVs. Applies to new playback sessions.
+     - Picture in Picture Mode | Automatically switch to miniature player when tapping Home Button
+     - Background play | Play in background when tapped on home or screen is locked.
+     - Remember brightness level | Remember brightness level between playback sessions
+     - Remember selections | Remember selections for each file like audio track, subtitle track, etc.
+     - Player screen orientation | Video Orientation
+   opened Material You controls -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Interface']
+   opened Controller timeout -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Interface']
+   opened Resume -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Resume']
+   opened Default playback speed -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Interface']
+   opened Autoplay -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Interface']
+   opened Tunneled playback -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Interface']
+   opened Picture in Picture Mode -> ['8:07', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Playback']
+   opened Background play -> ['8:08', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Playback']
+   opened Remember brightness level -> ['8:08', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Playback']
+   opened Remember selections -> ['8:08', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Default playback speed']
+   opened Player screen orientation -> ['8:08', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Player screen orientation']
+ opened Gestures -> ['8:08', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Gestures']
+   PAGE Gestures
+     - Seek gesture | Swipe horizontally to seek forwards or backwards
+     - Seek gesture sensitivity | 0.50 | 0.5 | Reset seek sensitivity
+     - Brightness gesture | Adjust brightness by swiping vertically
+     - Brightness gesture sensitivity | 0.50 | 0.5 | Reset brightness gesture sensitivity
+     - Volume gesture | Adjust volume by swiping vertically
+     - Volume gesture sensitivity | 0.50 | 0.5 | Reset volume gesture sensitivity
+     - Zoom gesture | Pinch to zoom the video
+     - Pan gesture | Zoom and pan the video
+     - [switch on] Double tap gesture | Select double tap gesture action
+     - Long press gesture | Long press to play at 2.0x speed
+     - Seek increment | 10 seconds | 10.0 | Reset seek increment
+   opened Seek gesture -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Seek gesture sensitivity -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Brightness gesture -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Brightness gesture sensitivity -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone signal full.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Volume gesture -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Volume gesture sensitivity -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Zoom gesture -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Gestures']
+   opened Pan gesture -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', '0.5']
+   opened Long press gesture -> ['8:09', 'Android System notification:', 'Wifi signal full.', 'Phone three bars.', 'Battery charging, 100 percent.', 'Long press gesture']
+player0 buttons: ['icon_at_231_145', 'sample_h264.mp4', 'HW', 'icon_at_1409_124', 'icon_at_1556_124', 'icon_at_1703_124', 'icon_at_221_329', 'Select playback speed 2.2', 'icon_at_515_329', 'icon_at_671_327', 'Screen Rotation', 'Loop: Off', 'icon_at_1120_329', 'icon_at_1267_329', '01:00', 'icon_at_385_934', 'icon_at_671_934', 'Player previous', 'Player next', 'icon_at_1859_934', 'icon_at_2144_934']
+dismiss: Got it
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+player1 buttons: ['icon_at_231_145', 'sample_subs.mkv', 'SW', 'icon_at_1409_124', 'icon_at_1556_124', 'icon_at_1703_124', 'icon_at_221_329', 'Select playback speed 2.2', 'icon_at_515_329', 'icon_at_671_327', 'Screen Rotation', 'Loop: Off', 'icon_at_1120_329', 'icon_at_1267_329', '-01:27', 'icon_at_385_934', 'icon_at_671_934', 'Player previous', 'Player next', 'icon_at_1859_934', 'icon_at_2144_934']
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+left the app ( com.google.android.apps.nexuslauncher ) - relaunching
+done 151 screenshots 1584 s
