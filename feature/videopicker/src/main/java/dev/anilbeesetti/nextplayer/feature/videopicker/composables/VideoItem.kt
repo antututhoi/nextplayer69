@@ -1,6 +1,7 @@
 package dev.anilbeesetti.nextplayer.feature.videopicker.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -145,6 +146,7 @@ fun VideoListItem(
                 video = video,
                 preferences = preferences,
                 modifier = Modifier
+                    .mod69SelectByThumb(preferences, onLongClick)
                     .width(
                         width = min(
                             150.dp,
@@ -245,6 +247,7 @@ fun VideoGridItem(
                 ThumbnailView(
                     video = video,
                     preferences = preferences,
+                    modifier = Modifier.mod69SelectByThumb(preferences, onLongClick),
                 )
                 Text(
                     text = if (preferences.showExtensionField) {
@@ -268,6 +271,10 @@ fun VideoGridItem(
 }
 
 /** True if the video is local. Remote videos avoid full download and use a placeholder. */
+/** 69 mod (MX "Select thumbnail"): tapping the thumbnail selects the video instead of playing it. */
+private fun Modifier.mod69SelectByThumb(preferences: ApplicationPreferences, onLongClick: (() -> Unit)?): Modifier =
+    if (preferences.mod69SelectByThumb && onLongClick != null) clickable { onLongClick() } else this
+
 private fun Video.isLocalUri(): Boolean {
     val scheme = uriString.toUri().scheme
     return scheme.equals(

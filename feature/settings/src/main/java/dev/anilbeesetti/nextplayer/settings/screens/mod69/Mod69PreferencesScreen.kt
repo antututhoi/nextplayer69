@@ -576,6 +576,27 @@ private fun Mod69PreferencesContent(
                         }
                     },
                 )
+                var mod69DelSubs by remember {
+                    mutableStateOf(dev.anilbeesetti.nextplayer.core.common.mod69.Mod69SubtitleCleanup.enabled(mod69HidCtx))
+                }
+                PreferenceSwitch(
+                    title = "Delete subtitle files together",
+                    description = "Deleting a video also deletes movie.srt / movie.en.srt / movie.ass … next to it " +
+                        "(for good, even when the video goes to the trash; needs All files access)",
+                    icon = NextIcons.Delete,
+                    isChecked = mod69DelSubs,
+                    onClick = {
+                        mod69DelSubs = !mod69DelSubs
+                        dev.anilbeesetti.nextplayer.core.common.mod69.Mod69SubtitleCleanup.setEnabled(mod69HidCtx, mod69DelSubs)
+                    },
+                )
+                PreferenceSwitch(
+                    title = "Tap a thumbnail to select",
+                    description = "Tapping the picture selects the video; tapping the name still plays it",
+                    icon = NextIcons.CheckBox,
+                    isChecked = a.mod69SelectByThumb,
+                    onClick = { onAction(Mod69PreferencesUiEvent.UpdateApp { it.copy(mod69SelectByThumb = !it.mod69SelectByThumb) }) },
+                )
                 PreferenceSwitch(
                     title = "Scroll to the last watched video",
                     description = "When you open a folder",

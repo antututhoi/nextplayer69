@@ -76,11 +76,18 @@ class LocalMediaOperationsService(private val context: Context) : MediaOperation
             }
             @Suppress("NAME_SHADOWING")
             val uris = mediaUris
-            return@withContext if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // 69 mod: remember the paths so subtitle files next to them can be removed afterwards
+            val mod69Paths = uris.mapNotNull { runCatching { context.getPath(uri = it) }.getOrNull() }
+            val ok = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (permanently) deleteMediaR(uris = uris) else trashMediaR(uris = uris)
             } else {
                 deleteMediaBelowR(uris = uris)
             }
+            runCatching {
+                // a trashed video is renamed to .trashed-…, so its old path no longer exists either
+                dev.anilbeesetti.nextplayer.core.common.mod69.Mod69SubtitleCleanup.deleteFor(context, mod69Paths)
+            }
+            return@withContext ok
         }
 
     override suspend fun restoreMedia(uris: List<Uri>): Boolean = withContext(Dispatchers.IO) {

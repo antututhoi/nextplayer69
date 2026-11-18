@@ -45,6 +45,8 @@ data class ApplicationPreferences(
     val mod69ThumbnailMaxPx: Int = 384,
     val mod69MarkLastInFolder: Boolean = true,
     val mod69ScrollToLast: Boolean = true,
+    /** MX "Select thumbnail": tap a thumbnail to select the video. */
+    val mod69SelectByThumb: Boolean = false,
     /** Folder path bar at the bottom of the video list. */
     val mod69PathBar: Boolean = true,
     /** Folder/video list title bar at the bottom of the screen. */
